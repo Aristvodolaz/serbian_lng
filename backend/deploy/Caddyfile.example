@@ -1,0 +1,8 @@
+# Reverse proxy + automatic HTTPS (Let's Encrypt) for the API.
+# Copy to /etc/caddy/Caddyfile on the server, replace the domain, then:
+#   sudo systemctl reload caddy
+# (or run Caddy itself in Docker on the same network as the "app" service).
+
+api.example.com {
+	reverse_proxy localhost:3000
+}

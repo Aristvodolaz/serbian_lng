@@ -11,6 +11,7 @@
     "start:prod": "node dist/main.js",
     "swagger:generate": "ts-node -r tsconfig-paths/register src/generate-swagger.ts",
     "seed": "ts-node -r tsconfig-paths/register src/database/seed.ts",
+    "seed:prod": "node dist/database/seed.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -23,7 +24,7 @@
     "@nestjs/platform-express": "^10.4.4",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/typeorm": "^10.0.2",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "passport": "^0.7.0",
@@ -37,7 +38,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.4.5",
     "@nestjs/schematics": "^10.1.4",
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/node": "^22.7.4",
     "@types/passport-jwt": "^4.0.1",

@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ContentModule } from './content/content.module';
 import { VocabularyModule } from './vocabulary/vocabulary.module';
 import { BadgesModule } from './badges/badges.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -21,5 +22,6 @@ import { BadgesModule } from './badges/badges.module';
     VocabularyModule,
     BadgesModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}

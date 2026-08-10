@@ -5,7 +5,30 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+const INSECURE_DEFAULTS = ['change-me-access-secret', 'change-me-refresh-secret'];
+
+// Local dev falls back to placeholder secrets for convenience — refuse to
+// boot with those (or with them missing) once actually running in prod.
+function assertProductionEnv(): void {
+  if (process.env.NODE_ENV !== 'production') return;
+
+  const required = ['DATABASE_URL', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
+  const missing = required.filter((key) => !process.env[key]);
+  if (missing.length > 0) {
+    throw new Error(`Missing required env vars in production: ${missing.join(', ')}`);
+  }
+
+  const insecure = INSECURE_DEFAULTS.filter(
+    (value) => process.env.JWT_ACCESS_SECRET === value || process.env.JWT_REFRESH_SECRET === value,
+  );
+  if (insecure.length > 0) {
+    throw new Error('JWT secrets are still set to the local-dev placeholder values — set real secrets.');
+  }
+}
+
 async function bootstrap() {
+  assertProductionEnv();
+
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
@@ -30,6 +53,7 @@ async function bootstrap() {
     .addTag('lessons', 'Lesson detail, exercises, completion')
     .addTag('vocabulary', 'Flashcard review queue and spaced repetition')
     .addTag('badges', 'Achievement catalog and earned badges')
+    .addTag('health', 'Liveness check')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
