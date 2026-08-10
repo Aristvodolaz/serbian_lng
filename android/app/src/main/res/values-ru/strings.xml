@@ -1,0 +1,88 @@
+<resources>
+    <!-- app_name, auth_eyebrow, auth_wordmark_*, auth_tagline* stay
+         un-overridden here on purpose — brand name/tagline, not UI chrome. -->
+
+    <string name="nav_home">Учёба</string>
+    <string name="nav_vocabulary">Словарь</string>
+    <string name="nav_profile">Профиль</string>
+
+    <string name="cd_back">Назад</string>
+    <string name="cd_close">Закрыть</string>
+
+    <string name="auth_dual_script_explainer">Оба алфавита идут рядом — кириллица и латиница изучаются вместе, а не по отдельности.</string>
+    <string name="auth_get_started">Начать</string>
+    <string name="auth_have_account">У меня уже есть аккаунт</string>
+
+    <string name="auth_login_title">Войти</string>
+    <string name="auth_login_subtitle">Продолжите с того места, где остановились.</string>
+    <string name="auth_login_submit">Войти</string>
+    <string name="auth_no_account">Нет аккаунта? Создать</string>
+
+    <string name="auth_script_title">Выберите алфавит</string>
+    <!-- Omitted: the Serbian build shows an English gloss under the
+         heading, which wouldn\'t help a Russian-speaking reader either. -->
+    <string name="auth_script_subtitle"></string>
+    <string name="script_cyrillic">Кириллица</string>
+    <string name="script_latin">Латиница</string>
+    <string name="script_both">Оба алфавита</string>
+    <string name="auth_script_helper">Это определяет алфавит каждого следующего урока. Можно изменить позже в профиле.</string>
+    <string name="auth_continue">Далее</string>
+
+    <string name="auth_register_title">Создайте аккаунт</string>
+    <string name="auth_register_subtitle">Ваш прогресс и серия дней сохраняются в аккаунте.</string>
+    <string name="field_name">Имя</string>
+    <string name="field_email">Эл. почта</string>
+    <string name="field_password">Пароль</string>
+    <string name="field_password_helper">Не менее 8 символов.</string>
+    <string name="auth_register_submit">Создать аккаунт</string>
+
+    <string name="auth_error_missing_login_fields">Введите эл. почту и пароль.</string>
+    <string name="auth_error_missing_register_fields">Заполните имя, эл. почту и пароль (не менее 8 символов).</string>
+    <string name="auth_error_invalid_credentials">Неверный имейл или пароль.</string>
+    <string name="auth_error_email_taken">Этот имейл уже зарегистрирован.</string>
+    <string name="auth_error_server">Ошибка сервера (%1$d).</string>
+    <string name="auth_error_network">Не удалось подключиться. Проверьте интернет.</string>
+
+    <string name="home_error_load">Не удалось загрузить путь уроков.</string>
+
+    <string name="lesson_prompt_label">Переведите предложение</string>
+    <string name="lesson_check">Проверить</string>
+    <string name="lesson_continue">Далее</string>
+    <string name="lesson_finished_title">Урок завершён!</string>
+    <string name="lesson_score_format">%1$d / %2$d правильно</string>
+    <string name="lesson_new_badge">Новый значок</string>
+    <string name="lesson_done">Готово</string>
+    <string name="lesson_error_no_exercises">В этом уроке пока нет упражнений.</string>
+    <string name="lesson_error_load">Не удалось загрузить урок.</string>
+    <string name="lesson_error_save">Не удалось сохранить результат урока.</string>
+
+    <string name="vocab_empty_title">Все слова просмотрены</string>
+    <string name="vocab_empty_subtitle">Возвращайтесь позже за новыми словами для повторения.</string>
+    <string name="vocab_progress_format">%1$d / %2$d слов</string>
+    <string name="cd_pronounce">Произношение</string>
+    <string name="vocab_learning">Учу</string>
+    <string name="vocab_know">Знаю</string>
+    <string name="vocab_done_title">Готово!</string>
+    <string name="vocab_reviewed_format">Вы повторили %1$d слов.</string>
+    <string name="vocab_restart">Ещё раз</string>
+    <string name="vocab_error_load">Не удалось загрузить карточки.</string>
+    <string name="example_quote_format">«%1$s»</string>
+
+    <string name="profile_error_load">Не удалось загрузить профиль.</string>
+    <string name="stat_words">слов</string>
+    <string name="stat_accuracy">точность</string>
+    <string name="stat_lessons">уроков</string>
+    <string name="stat_weeks">недель</string>
+    <string name="profile_badges">Значки</string>
+    <string name="profile_logout">Выйти</string>
+
+    <string-array name="weekday_letters">
+        <item>П</item>
+        <item>В</item>
+        <item>С</item>
+        <item>Ч</item>
+        <item>П</item>
+        <item>С</item>
+        <item>В</item>
+    </string-array>
+</resources>

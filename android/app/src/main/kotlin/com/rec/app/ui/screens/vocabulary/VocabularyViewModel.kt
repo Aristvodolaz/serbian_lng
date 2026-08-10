@@ -2,8 +2,11 @@ package com.rec.app.ui.screens.vocabulary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rec.app.R
 import com.rec.app.data.remote.dto.ReviewWordResponse
 import com.rec.app.data.repository.VocabularyRepository
+import com.rec.app.ui.common.UiText
+import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +24,7 @@ data class CardUi(
 sealed interface FlashcardsUiState {
     data object Loading : FlashcardsUiState
     data object Empty : FlashcardsUiState
-    data class Error(val message: String) : FlashcardsUiState
+    data class Error(val message: UiText) : FlashcardsUiState
     data class Reviewing(val card: CardUi, val index: Int, val total: Int, val isSubmitting: Boolean = false) : FlashcardsUiState
     data class Done(val reviewedCount: Int, val newBadgeTitles: List<String>) : FlashcardsUiState
 }
@@ -46,7 +49,7 @@ class VocabularyViewModel(
                     queue = words
                     if (words.isEmpty()) _state.value = FlashcardsUiState.Empty else showCurrent()
                 }
-                .onFailure { _state.value = FlashcardsUiState.Error("Није успело учитавање картица.") }
+                .onFailure { _state.value = FlashcardsUiState.Error(uiText(R.string.vocab_error_load)) }
         }
     }
 

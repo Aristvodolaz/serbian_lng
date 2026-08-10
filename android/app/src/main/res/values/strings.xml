@@ -1,3 +1,117 @@
 <resources>
     <string name="app_name">РЕЧ</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Учење</string>
+    <string name="nav_vocabulary">Речник</string>
+    <string name="nav_profile">Профил</string>
+
+    <!-- Shared -->
+    <string name="cd_back">Назад</string>
+    <string name="cd_close">Затвори</string>
+
+    <!-- Auth — brand block, fixed across locales: this is the app's own
+         name/tagline, not UI chrome, so it is intentionally NOT overridden
+         in values-en or values-ru. -->
+    <string name="auth_eyebrow">УЧИТЕ СРПСКИ · РЕЧ ПО РЕЧ</string>
+    <string name="auth_wordmark_cyr">РЕЧ</string>
+    <string name="auth_wordmark_lat">REČ</string>
+    <string name="auth_tagline">Учите српски, реч по реч.</string>
+    <string name="auth_tagline_en">Learn Serbian, word by word.</string>
+
+    <!-- Auth — Welcome -->
+    <string name="auth_dual_script_explainer">Оба писма стоје једно уз друго — ћирилица и латиница се уче заједно, а не одвојено.</string>
+    <string name="auth_get_started">Почни</string>
+    <string name="auth_have_account">Већ имам налог</string>
+
+    <!-- Auth — Login -->
+    <string name="auth_login_title">Пријавите се</string>
+    <string name="auth_login_subtitle">Наставите тамо где сте стали.</string>
+    <string name="auth_login_submit">Пријави се</string>
+    <string name="auth_no_account">Немате налог? Направите га</string>
+
+    <!-- Auth — Script picker -->
+    <string name="auth_script_title">Изаберите писмо</string>
+    <!-- English gloss under the Serbian heading, matching the mockup\'s
+         dual-caption convention — only shown in the default build; the
+         localized (en/ru) builds omit it since it would be redundant or
+         wouldn\'t help a non-Serbian reader. -->
+    <string name="auth_script_subtitle">Choose your script</string>
+    <string name="script_cyrillic">Ћирилица</string>
+    <string name="script_latin">Latinica</string>
+    <string name="script_both">Оба писма</string>
+    <!-- Script samples are a literal demonstration of each script, so they
+         stay fixed Serbian text in every locale — translating them would
+         defeat the point of showing what the script looks like. -->
+    <string name="script_sample_cyrillic">Здраво, како си?</string>
+    <string name="script_sample_latin">Zdravo, kako si?</string>
+    <string name="script_sample_both">Здраво / Zdravo</string>
+    <string name="auth_script_helper">Избор одређује сваку следећу лекцију. Може се променити у профилу.</string>
+    <string name="auth_continue">Настави</string>
+
+    <!-- Auth — Register -->
+    <string name="auth_register_title">Направите налог</string>
+    <string name="auth_register_subtitle">Напредак и серија дана се чувају на серверу.</string>
+    <string name="field_name">Име</string>
+    <string name="field_name_placeholder">Милица</string>
+    <string name="field_email">Е-пошта</string>
+    <string name="field_email_placeholder">milica@example.com</string>
+    <string name="field_password">Лозинка</string>
+    <string name="field_password_helper">Најмање 8 знакова.</string>
+    <string name="auth_register_submit">Направи налог</string>
+
+    <!-- Auth — errors -->
+    <string name="auth_error_missing_login_fields">Унесите имејл и лозинку.</string>
+    <string name="auth_error_missing_register_fields">Попуните име, имејл и лозинку (најмање 8 знакова).</string>
+    <string name="auth_error_invalid_credentials">Погрешан имејл или лозинка.</string>
+    <string name="auth_error_email_taken">Овај имејл је већ регистрован.</string>
+    <string name="auth_error_server">Грешка на серверу (%1$d).</string>
+    <string name="auth_error_network">Веза није успела. Проверите интернет.</string>
+
+    <!-- Home -->
+    <string name="home_error_load">Није успело учитавање пута лекција.</string>
+
+    <!-- Lesson -->
+    <string name="lesson_prompt_label">Преведите реченицу</string>
+    <string name="lesson_check">Провери</string>
+    <string name="lesson_continue">Настави</string>
+    <string name="lesson_finished_title">Лекција завршена!</string>
+    <string name="lesson_score_format">%1$d / %2$d тачно</string>
+    <string name="lesson_new_badge">Нова значка</string>
+    <string name="lesson_done">Готово</string>
+    <string name="lesson_error_no_exercises">Ова лекција још нема вежби.</string>
+    <string name="lesson_error_load">Није успело учитавање лекције.</string>
+    <string name="lesson_error_save">Није успело чување резултата лекције.</string>
+
+    <!-- Vocabulary -->
+    <string name="vocab_empty_title">Све речи су прегледане</string>
+    <string name="vocab_empty_subtitle">Вратите се касније за нове речи за понављање.</string>
+    <string name="vocab_progress_format">%1$d / %2$d речи</string>
+    <string name="cd_pronounce">Изговор</string>
+    <string name="vocab_learning">Учим</string>
+    <string name="vocab_know">Знам</string>
+    <string name="vocab_done_title">Готово!</string>
+    <string name="vocab_reviewed_format">Прегледали сте %1$d речи.</string>
+    <string name="vocab_restart">Још једном</string>
+    <string name="vocab_error_load">Није успело учитавање картица.</string>
+    <string name="example_quote_format">„%1$s“</string>
+
+    <!-- Profile -->
+    <string name="profile_error_load">Није успело учитавање профила.</string>
+    <string name="stat_words">речи</string>
+    <string name="stat_accuracy">тачност</string>
+    <string name="stat_lessons">лекција</string>
+    <string name="stat_weeks">недеље</string>
+    <string name="profile_badges">Значке</string>
+    <string name="profile_logout">Одјава</string>
+
+    <string-array name="weekday_letters">
+        <item>П</item>
+        <item>У</item>
+        <item>С</item>
+        <item>Ч</item>
+        <item>П</item>
+        <item>С</item>
+        <item>Н</item>
+    </string-array>
 </resources>

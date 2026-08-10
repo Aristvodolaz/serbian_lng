@@ -30,17 +30,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rec.app.R
+import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.PageDots
-import com.rec.app.ui.components.RecPrimaryButton
 import com.rec.app.ui.components.RecGhostButton
+import com.rec.app.ui.components.RecPrimaryButton
 import com.rec.app.ui.components.RecTextField
 import com.rec.app.ui.components.ScriptCard
 import com.rec.app.ui.components.ScriptSummaryChip
 import com.rec.app.ui.components.WeaveDots
+import com.rec.app.ui.theme.RecColors
 import com.rec.app.ui.theme.RecPalette
 import com.rec.app.ui.theme.RecTheme
 
@@ -98,61 +102,67 @@ private fun WelcomeStep(viewModel: AuthViewModel) {
                 .padding(top = 32.dp, bottom = 24.dp, start = 28.dp, end = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-        Text(
-            "УЧИТЕ СРПСКИ · РЕЧ ПО РЕЧ",
-            style = MaterialTheme.typography.labelMedium,
-            color = colors.ochre,
-        )
-        Spacer(Modifier.height(18.dp))
-        Row(verticalAlignment = Alignment.Bottom) {
-            Text("РЕЧ", style = MaterialTheme.typography.displayLarge, color = colors.cream)
-            Spacer(Modifier.height(0.dp).padding(horizontal = 4.dp))
+            // Brand block (eyebrow/wordmark/tagline) is fixed Serbian+English
+            // in every locale — it's the app's name and strapline, not UI
+            // chrome, so it isn't pulled from a locale-specific override.
             Text(
-                "REČ",
-                style = MaterialTheme.typography.titleLarge,
-                fontStyle = FontStyle.Italic,
+                stringResource(R.string.auth_eyebrow),
+                style = MaterialTheme.typography.labelMedium,
                 color = colors.ochre,
-                modifier = Modifier.padding(start = 8.dp, bottom = 6.dp),
             )
-        }
-        Spacer(Modifier.height(14.dp))
-        Text(
-            "Учите српски, реч по реч.",
-            style = MaterialTheme.typography.bodyLarge,
-            color = colors.cream,
-            textAlign = TextAlign.Center,
-        )
-        Text(
-            "Learn Serbian, word by word.",
-            style = MaterialTheme.typography.bodySmall,
-            fontStyle = FontStyle.Italic,
-            color = Color(0xFFB7C4DD),
-        )
-        Spacer(Modifier.height(20.dp))
-        WeaveDots(count = 7, color = colors.ochre.copy(alpha = 0.55f))
+            Spacer(Modifier.height(18.dp))
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    stringResource(R.string.auth_wordmark_cyr),
+                    style = MaterialTheme.typography.displayLarge,
+                    color = colors.cream,
+                )
+                Text(
+                    stringResource(R.string.auth_wordmark_lat),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontStyle = FontStyle.Italic,
+                    color = colors.ochre,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 6.dp),
+                )
+            }
+            Spacer(Modifier.height(14.dp))
+            Text(
+                stringResource(R.string.auth_tagline),
+                style = MaterialTheme.typography.bodyLarge,
+                color = colors.cream,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                stringResource(R.string.auth_tagline_en),
+                style = MaterialTheme.typography.bodySmall,
+                fontStyle = FontStyle.Italic,
+                color = Color(0xFFB7C4DD),
+            )
+            Spacer(Modifier.height(20.dp))
+            WeaveDots(count = 7, color = colors.ochre.copy(alpha = 0.55f))
 
-        Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
-        Text(
-            "Оба писма стоје једно уз друго — ћирилица и латиница се уче заједно, а не одвојено.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.cream.copy(alpha = 0.85f),
-            textAlign = TextAlign.Center,
-        )
-        Spacer(Modifier.height(22.dp))
-        RecPrimaryButton(
-            text = "Почни",
-            onClick = viewModel::goToRegister,
-            containerColor = colors.cream,
-            contentColor = RecPalette.DarkGround,
-        )
-        Spacer(Modifier.height(10.dp))
-        RecGhostButton(
-            text = "Већ имам налог",
-            onClick = viewModel::goToLogin,
-            borderColor = colors.cream.copy(alpha = 0.4f),
-            contentColor = colors.cream,
-        )
+            Text(
+                stringResource(R.string.auth_dual_script_explainer),
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.cream.copy(alpha = 0.85f),
+                textAlign = TextAlign.Center,
+            )
+            Spacer(Modifier.height(22.dp))
+            RecPrimaryButton(
+                text = stringResource(R.string.auth_get_started),
+                onClick = viewModel::goToRegister,
+                containerColor = colors.cream,
+                contentColor = RecPalette.DarkGround,
+            )
+            Spacer(Modifier.height(10.dp))
+            RecGhostButton(
+                text = stringResource(R.string.auth_have_account),
+                onClick = viewModel::goToLogin,
+                borderColor = colors.cream.copy(alpha = 0.4f),
+                contentColor = colors.cream,
+            )
         }
     }
 }
@@ -169,45 +179,44 @@ private fun LoginStep(state: AuthFormState, viewModel: AuthViewModel) {
             .padding(24.dp),
     ) {
         IconButton(onClick = viewModel::backToWelcome) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад", tint = colors.ink)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back), tint = colors.ink)
         }
         Spacer(Modifier.height(16.dp))
-        Text("Пријавите се", style = MaterialTheme.typography.headlineSmall, color = colors.ink)
+        Text(stringResource(R.string.auth_login_title), style = MaterialTheme.typography.headlineSmall, color = colors.ink)
         Text(
-            "Наставите тамо где сте стали.",
+            stringResource(R.string.auth_login_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = colors.inkSoft,
         )
         Spacer(Modifier.height(24.dp))
 
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            fieldColors(colors).let { fc ->
-                RecTextField(
-                    label = "Е-пошта",
-                    value = state.email,
-                    onValueChange = viewModel::updateEmail,
-                    placeholder = "milica@example.com",
-                    keyboardType = KeyboardType.Email,
-                    fieldColor = fc.field,
-                    labelColor = fc.label,
-                    textColor = fc.text,
-                    placeholderColor = fc.placeholder,
-                )
-                RecTextField(
-                    label = "Лозинка",
-                    value = state.password,
-                    onValueChange = viewModel::updatePassword,
-                    isPassword = true,
-                    keyboardType = KeyboardType.Password,
-                    fieldColor = fc.field,
-                    labelColor = fc.label,
-                    textColor = fc.text,
-                    placeholderColor = fc.placeholder,
-                )
-            }
+            val fc = fieldColors(colors)
+            RecTextField(
+                label = stringResource(R.string.field_email),
+                value = state.email,
+                onValueChange = viewModel::updateEmail,
+                placeholder = stringResource(R.string.field_email_placeholder),
+                keyboardType = KeyboardType.Email,
+                fieldColor = fc.field,
+                labelColor = fc.label,
+                textColor = fc.text,
+                placeholderColor = fc.placeholder,
+            )
+            RecTextField(
+                label = stringResource(R.string.field_password),
+                value = state.password,
+                onValueChange = viewModel::updatePassword,
+                isPassword = true,
+                keyboardType = KeyboardType.Password,
+                fieldColor = fc.field,
+                labelColor = fc.label,
+                textColor = fc.text,
+                placeholderColor = fc.placeholder,
+            )
 
             state.error?.let {
-                Text(it, color = colors.oxblood, style = MaterialTheme.typography.bodySmall)
+                Text(it.asString(), color = colors.oxblood, style = MaterialTheme.typography.bodySmall)
             }
 
             Spacer(Modifier.height(4.dp))
@@ -217,14 +226,14 @@ private fun LoginStep(state: AuthFormState, viewModel: AuthViewModel) {
                 }
             } else {
                 RecPrimaryButton(
-                    text = "Пријави се",
+                    text = stringResource(R.string.auth_login_submit),
                     onClick = viewModel::submitLogin,
                     enabled = state.email.isNotBlank() && state.password.isNotBlank(),
                 )
             }
 
             TextButton(onClick = viewModel::goToRegister, modifier = Modifier.fillMaxWidth()) {
-                Text("Немате налог? Направите га", color = colors.inkSoft)
+                Text(stringResource(R.string.auth_no_account), color = colors.inkSoft)
             }
         }
     }
@@ -241,7 +250,7 @@ private fun ScriptStep(state: AuthFormState, viewModel: AuthViewModel) {
             .padding(24.dp),
     ) {
         IconButton(onClick = viewModel::backToWelcome) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад", tint = colors.ink)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back), tint = colors.ink)
         }
         Spacer(Modifier.height(4.dp))
         PageDots(
@@ -252,43 +261,42 @@ private fun ScriptStep(state: AuthFormState, viewModel: AuthViewModel) {
         )
 
         Spacer(Modifier.height(20.dp))
-        Text("Изаберите писмо", style = MaterialTheme.typography.headlineSmall, color = colors.ink)
-        Text(
-            "Choose your script",
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.inkSoft,
-        )
+        Text(stringResource(R.string.auth_script_title), style = MaterialTheme.typography.headlineSmall, color = colors.ink)
+        val scriptSubtitle = stringResource(R.string.auth_script_subtitle)
+        if (scriptSubtitle.isNotBlank()) {
+            Text(scriptSubtitle, style = MaterialTheme.typography.bodyMedium, color = colors.inkSoft)
+        }
 
         Spacer(Modifier.height(20.dp))
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             ScriptCard(
-                label = "Ћирилица",
-                sample = "Здраво, како си?",
+                label = stringResource(R.string.script_cyrillic),
+                sample = stringResource(R.string.script_sample_cyrillic),
                 selected = state.scriptPreference == "cyrillic",
                 onClick = { viewModel.updateScriptPreference("cyrillic") },
             )
             ScriptCard(
-                label = "Latinica",
-                sample = "Zdravo, kako si?",
+                label = stringResource(R.string.script_latin),
+                sample = stringResource(R.string.script_sample_latin),
                 selected = state.scriptPreference == "latin",
                 onClick = { viewModel.updateScriptPreference("latin") },
             )
             ScriptCard(
-                label = "Оба писма",
-                sample = "Здраво / Zdravo",
+                label = stringResource(R.string.script_both),
+                sample = stringResource(R.string.script_sample_both),
                 selected = state.scriptPreference == "both",
                 onClick = { viewModel.updateScriptPreference("both") },
             )
         }
         Spacer(Modifier.height(14.dp))
         Text(
-            "Избор одређује сваку следећу лекцију. Може се променити у профилу.",
+            stringResource(R.string.auth_script_helper),
             style = MaterialTheme.typography.bodySmall,
             color = colors.inkSoft,
         )
 
         Spacer(Modifier.weight(1f))
-        RecPrimaryButton(text = "Настави", onClick = viewModel::proceedToCredentials)
+        RecPrimaryButton(text = stringResource(R.string.auth_continue), onClick = viewModel::proceedToCredentials)
     }
 }
 
@@ -304,7 +312,7 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
             .padding(24.dp),
     ) {
         IconButton(onClick = viewModel::backToScript) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад", tint = colors.ink)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back), tint = colors.ink)
         }
         Spacer(Modifier.height(4.dp))
         PageDots(
@@ -315,9 +323,9 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
         )
 
         Spacer(Modifier.height(20.dp))
-        Text("Направите налог", style = MaterialTheme.typography.headlineSmall, color = colors.ink)
+        Text(stringResource(R.string.auth_register_title), style = MaterialTheme.typography.headlineSmall, color = colors.ink)
         Text(
-            "Напредак и серија дана се чувају на серверу.",
+            stringResource(R.string.auth_register_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = colors.inkSoft,
         )
@@ -326,20 +334,20 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             val fc = fieldColors(colors)
             RecTextField(
-                label = "Име",
+                label = stringResource(R.string.field_name),
                 value = state.displayName,
                 onValueChange = viewModel::updateDisplayName,
-                placeholder = "Милица",
+                placeholder = stringResource(R.string.field_name_placeholder),
                 fieldColor = fc.field,
                 labelColor = fc.label,
                 textColor = fc.text,
                 placeholderColor = fc.placeholder,
             )
             RecTextField(
-                label = "Е-пошта",
+                label = stringResource(R.string.field_email),
                 value = state.email,
                 onValueChange = viewModel::updateEmail,
-                placeholder = "milica@example.com",
+                placeholder = stringResource(R.string.field_email_placeholder),
                 keyboardType = KeyboardType.Email,
                 fieldColor = fc.field,
                 labelColor = fc.label,
@@ -347,12 +355,12 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
                 placeholderColor = fc.placeholder,
             )
             RecTextField(
-                label = "Лозинка",
+                label = stringResource(R.string.field_password),
                 value = state.password,
                 onValueChange = viewModel::updatePassword,
                 isPassword = true,
                 keyboardType = KeyboardType.Password,
-                helperText = "Најмање 8 знакова.",
+                helperText = stringResource(R.string.field_password_helper),
                 fieldColor = fc.field,
                 labelColor = fc.label,
                 textColor = fc.text,
@@ -363,7 +371,7 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
             ScriptSummaryChip(label = scriptLabel, sample = scriptSample, onClick = viewModel::backToScript)
 
             state.error?.let {
-                Text(it, color = colors.oxblood, style = MaterialTheme.typography.bodySmall)
+                Text(it.asString(), color = colors.oxblood, style = MaterialTheme.typography.bodySmall)
             }
 
             Spacer(Modifier.height(4.dp))
@@ -373,7 +381,7 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
                 }
             } else {
                 RecPrimaryButton(
-                    text = "Направи налог",
+                    text = stringResource(R.string.auth_register_submit),
                     onClick = viewModel::submitRegister,
                     enabled = state.displayName.isNotBlank() && state.email.isNotBlank() && state.password.length >= 8,
                 )
@@ -384,15 +392,16 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
 
 private data class FieldColors(val field: Color, val label: Color, val text: Color, val placeholder: Color)
 
-private fun fieldColors(colors: com.rec.app.ui.theme.RecColors) = FieldColors(
+private fun fieldColors(colors: RecColors) = FieldColors(
     field = colors.surface2,
     label = colors.inkSoft,
     text = colors.ink,
     placeholder = colors.inkSoft.copy(alpha = 0.5f),
 )
 
+@Composable
 private fun scriptSummary(preference: String): Pair<String, String> = when (preference) {
-    "cyrillic" -> "Ћирилица" to "Здраво, како си?"
-    "latin" -> "Latinica" to "Zdravo, kako si?"
-    else -> "Оба писма" to "Здраво / Zdravo"
+    "cyrillic" -> stringResource(R.string.script_cyrillic) to stringResource(R.string.script_sample_cyrillic)
+    "latin" -> stringResource(R.string.script_latin) to stringResource(R.string.script_sample_latin)
+    else -> stringResource(R.string.script_both) to stringResource(R.string.script_sample_both)
 }

@@ -28,9 +28,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rec.app.R
+import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.RecGhostButton
 import com.rec.app.ui.components.RecPrimaryButton
 import com.rec.app.ui.theme.RecTheme
@@ -46,7 +49,7 @@ fun VocabularyScreen(viewModel: VocabularyViewModel) {
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is FlashcardsUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message, color = RecTheme.colors.oxblood)
+                Text(s.message.asString(), color = RecTheme.colors.oxblood)
             }
             is FlashcardsUiState.Empty -> EmptyContent()
             is FlashcardsUiState.Reviewing -> ReviewingContent(s, viewModel)
@@ -60,8 +63,8 @@ private fun EmptyContent() {
     Column(Modifier.fillMaxSize().padding(24.dp), Arrangement.Center, Alignment.CenterHorizontally) {
         Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = RecTheme.colors.good, modifier = Modifier.size(48.dp))
         Spacer(Modifier.height(12.dp))
-        Text("Све речи су прегледане", style = MaterialTheme.typography.titleLarge, color = RecTheme.colors.ink, textAlign = TextAlign.Center)
-        Text("Вратите се касније за нове речи за понављање.", style = MaterialTheme.typography.bodyMedium, color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.vocab_empty_title), style = MaterialTheme.typography.titleLarge, color = RecTheme.colors.ink, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.vocab_empty_subtitle), style = MaterialTheme.typography.bodyMedium, color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
     }
 }
 
@@ -69,7 +72,7 @@ private fun EmptyContent() {
 private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: VocabularyViewModel) {
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         Text(
-            "${state.index} / ${state.total} речи",
+            stringResource(R.string.vocab_progress_format, state.index, state.total),
             style = MaterialTheme.typography.labelMedium,
             color = RecTheme.colors.inkSoft,
             modifier = Modifier.fillMaxWidth(),
@@ -96,7 +99,7 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
                     modifier = Modifier.size(38.dp).background(RecTheme.colors.indigo, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Изговор", tint = RecTheme.colors.cream, modifier = Modifier.size(18.dp))
+                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.cd_pronounce), tint = RecTheme.colors.cream, modifier = Modifier.size(18.dp))
                 }
 
                 Spacer(Modifier.height(14.dp))
@@ -105,7 +108,7 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
                 if (state.card.exampleCyrillic != null) {
                     Spacer(Modifier.height(14.dp))
                     Text(
-                        "„${state.card.exampleCyrillic}“",
+                        stringResource(R.string.example_quote_format, state.card.exampleCyrillic ?: ""),
                         style = MaterialTheme.typography.bodySmall,
                         color = RecTheme.colors.inkSoft,
                         textAlign = TextAlign.Center,
@@ -124,8 +127,8 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
             }
         } else {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                RecGhostButton(text = "Учим", onClick = { viewModel.submitReview("learning") }, modifier = Modifier.weight(1f))
-                RecPrimaryButton(text = "Знам", onClick = { viewModel.submitReview("know") }, modifier = Modifier.weight(1f))
+                RecGhostButton(text = stringResource(R.string.vocab_learning), onClick = { viewModel.submitReview("learning") }, modifier = Modifier.weight(1f))
+                RecPrimaryButton(text = stringResource(R.string.vocab_know), onClick = { viewModel.submitReview("know") }, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -134,8 +137,8 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
 @Composable
 private fun DoneContent(state: FlashcardsUiState.Done, onRestart: () -> Unit) {
     Column(Modifier.fillMaxSize().padding(24.dp), Arrangement.Center, Alignment.CenterHorizontally) {
-        Text("Готово!", style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)
-        Text("Прегледали сте ${state.reviewedCount} речи.", style = MaterialTheme.typography.bodyMedium, color = RecTheme.colors.inkSoft)
+        Text(stringResource(R.string.vocab_done_title), style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)
+        Text(stringResource(R.string.vocab_reviewed_format, state.reviewedCount), style = MaterialTheme.typography.bodyMedium, color = RecTheme.colors.inkSoft)
         if (state.newBadgeTitles.isNotEmpty()) {
             Spacer(Modifier.height(12.dp))
             state.newBadgeTitles.forEach {
@@ -143,6 +146,6 @@ private fun DoneContent(state: FlashcardsUiState.Done, onRestart: () -> Unit) {
             }
         }
         Spacer(Modifier.height(20.dp))
-        RecPrimaryButton(text = "Још једном", onClick = onRestart)
+        RecPrimaryButton(text = stringResource(R.string.vocab_restart), onClick = onRestart)
     }
 }

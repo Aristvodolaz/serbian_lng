@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.rec.app.R
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -31,12 +33,12 @@ import com.rec.app.ui.screens.profile.ProfileViewModel
 import com.rec.app.ui.screens.vocabulary.VocabularyScreen
 import com.rec.app.ui.screens.vocabulary.VocabularyViewModel
 
-private data class BottomTab(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
+private data class BottomTab(val route: String, @androidx.annotation.StringRes val labelRes: Int, val icon: androidx.compose.ui.graphics.vector.ImageVector)
 
 private val bottomTabs = listOf(
-    BottomTab(Routes.HOME, "Учење", Icons.Filled.AutoStories),
-    BottomTab(Routes.VOCABULARY, "Речник", Icons.Filled.Style),
-    BottomTab(Routes.PROFILE, "Профил", Icons.Filled.Person),
+    BottomTab(Routes.HOME, R.string.nav_home, Icons.Filled.AutoStories),
+    BottomTab(Routes.VOCABULARY, R.string.nav_vocabulary, Icons.Filled.Style),
+    BottomTab(Routes.PROFILE, R.string.nav_profile, Icons.Filled.Person),
 )
 
 @Composable
@@ -62,8 +64,8 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
                                     restoreState = true
                                 }
                             },
-                            icon = { Icon(tab.icon, contentDescription = tab.label) },
-                            label = { Text(tab.label) },
+                            icon = { Icon(tab.icon, contentDescription = stringResource(tab.labelRes)) },
+                            label = { Text(stringResource(tab.labelRes)) },
                         )
                     }
                 }

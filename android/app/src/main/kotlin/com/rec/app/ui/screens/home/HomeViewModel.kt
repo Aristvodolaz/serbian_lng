@@ -2,9 +2,12 @@ package com.rec.app.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rec.app.R
 import com.rec.app.data.remote.dto.UnitPathDto
 import com.rec.app.data.repository.ContentRepository
 import com.rec.app.data.repository.UserRepository
+import com.rec.app.ui.common.UiText
+import com.rec.app.ui.common.uiText
 import com.rec.app.ui.components.LessonPathStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +30,7 @@ data class UnitUi(
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState
-    data class Error(val message: String) : HomeUiState
+    data class Error(val message: UiText) : HomeUiState
     data class Success(val units: List<UnitUi>, val xp: Int, val streakDays: Int) : HomeUiState
 }
 
@@ -52,7 +55,7 @@ class HomeViewModel(
             val path = pathResult.getOrNull()
             val user = userResult.getOrNull()
             if (path == null || user == null) {
-                _state.value = HomeUiState.Error("Није успело учитавање пута лекција.")
+                _state.value = HomeUiState.Error(uiText(R.string.home_error_load))
                 return@launch
             }
 

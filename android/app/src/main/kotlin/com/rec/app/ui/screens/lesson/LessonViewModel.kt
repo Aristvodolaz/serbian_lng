@@ -2,9 +2,12 @@ package com.rec.app.ui.screens.lesson
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rec.app.R
 import com.rec.app.data.remote.dto.EarnedBadgeDto
 import com.rec.app.data.remote.dto.ExercisePublicDto
 import com.rec.app.data.repository.ContentRepository
+import com.rec.app.ui.common.UiText
+import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +19,7 @@ data class EarnedBadgeUi(val titleCyrillic: String, val titleLatin: String)
 
 sealed interface LessonUiState {
     data object Loading : LessonUiState
-    data class Error(val message: String) : LessonUiState
+    data class Error(val message: UiText) : LessonUiState
     data class InProgress(
         val exercise: ExerciseUi,
         val exerciseNumber: Int,
@@ -55,13 +58,13 @@ class LessonViewModel(private val contentRepository: ContentRepository) : ViewMo
                     index = 0
                     correctCount = 0
                     if (exercises.isEmpty()) {
-                        _state.value = LessonUiState.Error("Ова лекција још нема вежби.")
+                        _state.value = LessonUiState.Error(uiText(R.string.lesson_error_no_exercises))
                     } else {
                         showCurrentExercise()
                     }
                 }
                 .onFailure {
-                    _state.value = LessonUiState.Error("Није успело учитавање лекције.")
+                    _state.value = LessonUiState.Error(uiText(R.string.lesson_error_load))
                 }
         }
     }
@@ -131,7 +134,7 @@ class LessonViewModel(private val contentRepository: ContentRepository) : ViewMo
                     )
                 }
                 .onFailure {
-                    _state.value = LessonUiState.Error("Није успело чување резултата лекције.")
+                    _state.value = LessonUiState.Error(uiText(R.string.lesson_error_save))
                 }
         }
     }

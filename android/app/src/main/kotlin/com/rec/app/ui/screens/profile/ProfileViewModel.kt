@@ -2,9 +2,12 @@ package com.rec.app.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rec.app.R
 import com.rec.app.data.repository.AuthRepository
 import com.rec.app.data.repository.BadgesRepository
 import com.rec.app.data.repository.UserRepository
+import com.rec.app.ui.common.UiText
+import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +18,7 @@ data class EarnedBadgeUi(val titleCyrillic: String, val titleLatin: String)
 
 sealed interface ProfileUiState {
     data object Loading : ProfileUiState
-    data class Error(val message: String) : ProfileUiState
+    data class Error(val message: UiText) : ProfileUiState
     data class Success(
         val displayName: String,
         val streakDays: Int,
@@ -45,7 +48,7 @@ class ProfileViewModel(
             val badges = badgesRepository.getMyBadges().getOrNull()
 
             if (me == null || stats == null || week == null) {
-                _state.value = ProfileUiState.Error("Није успело учитавање профила.")
+                _state.value = ProfileUiState.Error(uiText(R.string.profile_error_load))
                 return@launch
             }
 

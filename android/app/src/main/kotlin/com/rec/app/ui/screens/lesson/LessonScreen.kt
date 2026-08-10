@@ -25,8 +25,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import com.rec.app.R
+import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.ChoiceCard
 import com.rec.app.ui.components.ChoiceState
 import com.rec.app.ui.components.RecPrimaryButton
@@ -51,7 +54,7 @@ fun LessonScreen(
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is LessonUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message, color = RecTheme.colors.oxblood)
+                Text(s.message.asString(), color = RecTheme.colors.oxblood)
             }
             is LessonUiState.InProgress -> ExerciseContent(s, viewModel, onClose)
             is LessonUiState.Finished -> FinishedContent(s, onFinished)
@@ -64,7 +67,7 @@ private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonVi
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             IconButton(onClick = onClose) {
-                Icon(Icons.Filled.Close, contentDescription = "Затвори", tint = RecTheme.colors.inkSoft)
+                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_close), tint = RecTheme.colors.inkSoft)
             }
             RecProgressBar(
                 progress = state.exerciseNumber.toFloat() / state.totalExercises,
@@ -73,7 +76,7 @@ private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonVi
         }
 
         Spacer(Modifier.height(20.dp))
-        Text("Преведите реченицу", style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
+        Text(stringResource(R.string.lesson_prompt_label), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
         Text(state.exercise.promptCyrillic, style = MaterialTheme.typography.displayMedium, color = RecTheme.colors.ink)
         Text(
             state.exercise.promptLatin,
@@ -107,12 +110,12 @@ private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonVi
             }
         } else if (state.correctChoiceId == null) {
             RecPrimaryButton(
-                text = "Провери",
+                text = stringResource(R.string.lesson_check),
                 enabled = state.selectedChoiceId != null,
                 onClick = viewModel::submitAnswer,
             )
         } else {
-            RecPrimaryButton(text = "Настави", onClick = viewModel::nextExercise)
+            RecPrimaryButton(text = stringResource(R.string.lesson_continue), onClick = viewModel::nextExercise)
         }
     }
 }
@@ -131,9 +134,9 @@ private fun FinishedContent(state: LessonUiState.Finished, onFinished: () -> Uni
             modifier = Modifier.size(56.dp),
         )
         Spacer(Modifier.height(12.dp))
-        Text("Лекција завршена!", style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)
+        Text(stringResource(R.string.lesson_finished_title), style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)
         Text(
-            "${state.correctCount} / ${state.totalCount} тачно",
+            stringResource(R.string.lesson_score_format, state.correctCount, state.totalCount),
             style = MaterialTheme.typography.bodyMedium,
             color = RecTheme.colors.inkSoft,
         )
@@ -146,13 +149,13 @@ private fun FinishedContent(state: LessonUiState.Finished, onFinished: () -> Uni
 
         if (state.newBadges.isNotEmpty()) {
             Spacer(Modifier.height(20.dp))
-            Text("Нова значка", style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
+            Text(stringResource(R.string.lesson_new_badge), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
             state.newBadges.forEach {
                 Text(it.titleCyrillic, style = MaterialTheme.typography.titleMedium, color = RecTheme.colors.oxblood)
             }
         }
 
         Spacer(Modifier.height(32.dp))
-        RecPrimaryButton(text = "Готово", onClick = onFinished)
+        RecPrimaryButton(text = stringResource(R.string.lesson_done), onClick = onFinished)
     }
 }

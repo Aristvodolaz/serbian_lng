@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.LessonPathStatus
 import com.rec.app.ui.components.PathNode
 import com.rec.app.ui.components.StreakPill
@@ -45,7 +46,7 @@ fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit) {
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is HomeUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message, color = RecTheme.colors.oxblood)
+                Text(s.message.asString(), color = RecTheme.colors.oxblood)
             }
             is HomeUiState.Success -> HomeContent(s, onLessonClick)
         }

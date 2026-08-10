@@ -28,14 +28,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rec.app.R
+import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.BadgeDiamond
 import com.rec.app.ui.components.StatCard
 import com.rec.app.ui.components.StreakPill
 import com.rec.app.ui.theme.RecTheme
-
-private val WeekdayLetters = listOf("П", "У", "С", "Ч", "П", "С", "Н")
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel, onLoggedOut: () -> Unit) {
@@ -48,7 +50,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onLoggedOut: () -> Unit) {
                 androidx.compose.material3.CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is ProfileUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message, color = RecTheme.colors.oxblood)
+                Text(s.message.asString(), color = RecTheme.colors.oxblood)
             }
             is ProfileUiState.Success -> ProfileContent(s, onLogout = { viewModel.logout(); onLoggedOut() })
         }
@@ -80,13 +82,14 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit) 
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.height(120.dp),
         ) {
-            item { StatCard(value = state.wordsLearned.toString(), label = "речи") }
-            item { StatCard(value = "${state.accuracy}%", label = "тачност") }
-            item { StatCard(value = state.lessonsCompleted.toString(), label = "лекција") }
-            item { StatCard(value = state.weeksActive.toString(), label = "недеље") }
+            item { StatCard(value = state.wordsLearned.toString(), label = stringResource(R.string.stat_words)) }
+            item { StatCard(value = "${state.accuracy}%", label = stringResource(R.string.stat_accuracy)) }
+            item { StatCard(value = state.lessonsCompleted.toString(), label = stringResource(R.string.stat_lessons)) }
+            item { StatCard(value = state.weeksActive.toString(), label = stringResource(R.string.stat_weeks)) }
         }
 
         Spacer(Modifier.height(20.dp))
+        val weekdayLetters = stringArrayResource(R.array.weekday_letters)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             state.week.forEach { day ->
                 Surface(
@@ -96,7 +99,7 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit) 
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            WeekdayLetters.getOrElse(day.weekday - 1) { "" },
+                            weekdayLetters.getOrElse(day.weekday - 1) { "" },
                             style = MaterialTheme.typography.labelSmall,
                             color = if (day.active) androidx.compose.ui.graphics.Color.White else RecTheme.colors.inkSoft,
                         )
@@ -107,7 +110,7 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit) 
 
         if (state.badges.isNotEmpty()) {
             Spacer(Modifier.height(24.dp))
-            Text("Значке", style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
+            Text(stringResource(R.string.profile_badges), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 state.badges.forEach { badge ->
@@ -128,7 +131,7 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit) 
 
         Spacer(Modifier.weight(1f))
         TextButton(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
-            Text("Одјава", color = RecTheme.colors.inkSoft)
+            Text(stringResource(R.string.profile_logout), color = RecTheme.colors.inkSoft)
         }
     }
 }

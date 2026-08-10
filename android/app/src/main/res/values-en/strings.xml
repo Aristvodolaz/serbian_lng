@@ -1,0 +1,89 @@
+<resources>
+    <!-- app_name, auth_eyebrow, auth_wordmark_*, auth_tagline* stay
+         un-overridden here on purpose — brand name/tagline, not UI chrome. -->
+
+    <string name="nav_home">Learn</string>
+    <string name="nav_vocabulary">Vocabulary</string>
+    <string name="nav_profile">Profile</string>
+
+    <string name="cd_back">Back</string>
+    <string name="cd_close">Close</string>
+
+    <string name="auth_dual_script_explainer">Both scripts stand side by side — Cyrillic and Latin are learned together, not separately.</string>
+    <string name="auth_get_started">Get started</string>
+    <string name="auth_have_account">I already have an account</string>
+
+    <string name="auth_login_title">Log in</string>
+    <string name="auth_login_subtitle">Pick up where you left off.</string>
+    <string name="auth_login_submit">Log in</string>
+    <string name="auth_no_account">No account? Create one</string>
+
+    <string name="auth_script_title">Choose your script</string>
+    <!-- Omitted: the Serbian build shows an English gloss under the
+         heading, which would be redundant once the heading is already
+         localized. -->
+    <string name="auth_script_subtitle"></string>
+    <string name="script_cyrillic">Cyrillic</string>
+    <string name="script_latin">Latin</string>
+    <string name="script_both">Both scripts</string>
+    <string name="auth_script_helper">This sets every following lesson\'s script. You can change it later in your profile.</string>
+    <string name="auth_continue">Continue</string>
+
+    <string name="auth_register_title">Create your account</string>
+    <string name="auth_register_subtitle">Your progress and streak are saved to your account.</string>
+    <string name="field_name">Name</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Password</string>
+    <string name="field_password_helper">At least 8 characters.</string>
+    <string name="auth_register_submit">Create account</string>
+
+    <string name="auth_error_missing_login_fields">Enter your email and password.</string>
+    <string name="auth_error_missing_register_fields">Fill in your name, email and password (at least 8 characters).</string>
+    <string name="auth_error_invalid_credentials">Incorrect email or password.</string>
+    <string name="auth_error_email_taken">This email is already registered.</string>
+    <string name="auth_error_server">Server error (%1$d).</string>
+    <string name="auth_error_network">Connection failed. Check your internet.</string>
+
+    <string name="home_error_load">Couldn\'t load the lesson path.</string>
+
+    <string name="lesson_prompt_label">Translate the sentence</string>
+    <string name="lesson_check">Check</string>
+    <string name="lesson_continue">Continue</string>
+    <string name="lesson_finished_title">Lesson complete!</string>
+    <string name="lesson_score_format">%1$d / %2$d correct</string>
+    <string name="lesson_new_badge">New badge</string>
+    <string name="lesson_done">Done</string>
+    <string name="lesson_error_no_exercises">This lesson has no exercises yet.</string>
+    <string name="lesson_error_load">Couldn\'t load the lesson.</string>
+    <string name="lesson_error_save">Couldn\'t save the lesson result.</string>
+
+    <string name="vocab_empty_title">All words reviewed</string>
+    <string name="vocab_empty_subtitle">Come back later for new words to review.</string>
+    <string name="vocab_progress_format">%1$d / %2$d words</string>
+    <string name="cd_pronounce">Pronounce</string>
+    <string name="vocab_learning">Still learning</string>
+    <string name="vocab_know">I know it</string>
+    <string name="vocab_done_title">Done!</string>
+    <string name="vocab_reviewed_format">You reviewed %1$d words.</string>
+    <string name="vocab_restart">Once more</string>
+    <string name="vocab_error_load">Couldn\'t load the flashcards.</string>
+    <string name="example_quote_format">“%1$s”</string>
+
+    <string name="profile_error_load">Couldn\'t load your profile.</string>
+    <string name="stat_words">words</string>
+    <string name="stat_accuracy">accuracy</string>
+    <string name="stat_lessons">lessons</string>
+    <string name="stat_weeks">weeks</string>
+    <string name="profile_badges">Badges</string>
+    <string name="profile_logout">Log out</string>
+
+    <string-array name="weekday_letters">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+</resources>

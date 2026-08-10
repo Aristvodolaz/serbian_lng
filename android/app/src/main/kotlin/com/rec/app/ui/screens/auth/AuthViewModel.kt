@@ -2,7 +2,10 @@ package com.rec.app.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rec.app.R
 import com.rec.app.data.repository.AuthRepository
+import com.rec.app.ui.common.UiText
+import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +22,7 @@ data class AuthFormState(
     val displayName: String = "",
     val scriptPreference: String = "both",
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val error: UiText? = null,
 )
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -41,7 +44,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun submitLogin() {
         val s = _state.value
         if (s.email.isBlank() || s.password.isBlank()) {
-            _state.update { it.copy(error = "Унесите имејл и лозинку.") }
+            _state.update { it.copy(error = uiText(R.string.auth_error_missing_login_fields)) }
             return
         }
         viewModelScope.launch {
@@ -55,7 +58,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun submitRegister() {
         val s = _state.value
         if (s.displayName.isBlank() || s.email.isBlank() || s.password.length < 8) {
-            _state.update { it.copy(error = "Попуните име, имејл и лозинку (најмање 8 знакова).") }
+            _state.update { it.copy(error = uiText(R.string.auth_error_missing_register_fields)) }
             return
         }
         viewModelScope.launch {
@@ -66,10 +69,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    private fun mapError(t: Throwable): String = when {
-        t is HttpException && t.code() == 401 -> "Погрешан имејл или лозинка."
-        t is HttpException && t.code() == 409 -> "Овај имејл је већ регистрован."
-        t is HttpException -> "Грешка на серверу (${t.code()})."
-        else -> "Веза није успела. Проверите интернет."
+    private fun mapError(t: Throwable): UiText = when {
+        t is HttpException && t.code() == 401 -> uiText(R.string.auth_error_invalid_credentials)
+        t is HttpException && t.code() == 409 -> uiText(R.string.auth_error_email_taken)
+        t is HttpException -> uiText(R.string.auth_error_server, t.code())
+        else -> uiText(R.string.auth_error_network)
     }
 }
