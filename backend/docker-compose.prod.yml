@@ -1,3 +1,12 @@
+# Explicit project name so this stack's containers/volumes never collide
+# with docker-compose.yml's (dev) — both live in the same directory, and
+# Compose otherwise derives the project name from the directory itself,
+# meaning "up" here would reuse the dev Postgres volume. That silently
+# breaks POSTGRES_PASSWORD: Postgres only applies it when initializing an
+# *empty* data directory, so re-pointing an already-initialized dev volume
+# at a new password here leaves the container serving the old one.
+name: rec-backend-prod
+
 services:
   postgres:
     image: postgres:16-alpine
