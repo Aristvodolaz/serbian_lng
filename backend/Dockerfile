@@ -19,7 +19,9 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=builder /app/dist ./dist
 
-# Runs as the image's built-in non-root "node" user rather than root.
+# Runs as the image's built-in non-root "node" user rather than root — it
+# needs to own /app since main.ts writes openapi.json into the workdir.
+RUN chown -R node:node /app
 USER node
 
 EXPOSE 3000
