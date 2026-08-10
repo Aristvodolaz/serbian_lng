@@ -1,0 +1,158 @@
+package com.rec.app.ui.screens.lesson
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.dp
+import com.rec.app.ui.components.ChoiceCard
+import com.rec.app.ui.components.ChoiceState
+import com.rec.app.ui.components.RecPrimaryButton
+import com.rec.app.ui.components.RecProgressBar
+import com.rec.app.ui.components.StreakPill
+import com.rec.app.ui.components.XpPill
+import com.rec.app.ui.theme.RecTheme
+
+@Composable
+fun LessonScreen(
+    lessonId: String,
+    viewModel: LessonViewModel,
+    onClose: () -> Unit,
+    onFinished: () -> Unit,
+) {
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(lessonId) { viewModel.load(lessonId) }
+
+    Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
+        when (val s = state) {
+            is LessonUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
+                CircularProgressIndicator(color = RecTheme.colors.indigo)
+            }
+            is LessonUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
+                Text(s.message, color = RecTheme.colors.oxblood)
+            }
+            is LessonUiState.InProgress -> ExerciseContent(s, viewModel, onClose)
+            is LessonUiState.Finished -> FinishedContent(s, onFinished)
+        }
+    }
+}
+
+@Composable
+private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonViewModel, onClose: () -> Unit) {
+    Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            IconButton(onClick = onClose) {
+                Icon(Icons.Filled.Close, contentDescription = "Закрыть", tint = RecTheme.colors.inkSoft)
+            }
+            RecProgressBar(
+                progress = state.exerciseNumber.toFloat() / state.totalExercises,
+                modifier = Modifier.weight(1f),
+            )
+        }
+
+        Spacer(Modifier.height(20.dp))
+        Text("Преведите реченицу", style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
+        Text(state.exercise.promptCyrillic, style = MaterialTheme.typography.displayMedium, color = RecTheme.colors.ink)
+        Text(
+            state.exercise.promptLatin,
+            style = MaterialTheme.typography.bodyMedium,
+            fontStyle = FontStyle.Italic,
+            color = RecTheme.colors.oxblood,
+        )
+
+        Spacer(Modifier.height(24.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            state.exercise.choices.forEach { choice ->
+                val choiceState = when {
+                    state.correctChoiceId == null -> if (choice.id == state.selectedChoiceId) ChoiceState.SELECTED else ChoiceState.NEUTRAL
+                    choice.id == state.correctChoiceId -> ChoiceState.CORRECT
+                    choice.id == state.selectedChoiceId -> ChoiceState.WRONG
+                    else -> ChoiceState.NEUTRAL
+                }
+                ChoiceCard(
+                    text = choice.text,
+                    state = choiceState,
+                    onClick = { viewModel.selectChoice(choice.id) },
+                )
+            }
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        if (state.isSubmitting) {
+            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                CircularProgressIndicator(color = RecTheme.colors.indigo)
+            }
+        } else if (state.correctChoiceId == null) {
+            RecPrimaryButton(
+                text = "Провери",
+                enabled = state.selectedChoiceId != null,
+                onClick = viewModel::submitAnswer,
+            )
+        } else {
+            RecPrimaryButton(text = "Настави", onClick = viewModel::nextExercise)
+        }
+    }
+}
+
+@Composable
+private fun FinishedContent(state: LessonUiState.Finished, onFinished: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Icon(
+            Icons.Filled.EmojiEvents,
+            contentDescription = null,
+            tint = RecTheme.colors.ochre,
+            modifier = Modifier.size(56.dp),
+        )
+        Spacer(Modifier.height(12.dp))
+        Text("Лекција завршена!", style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)
+        Text(
+            "${state.correctCount} / ${state.totalCount} тачно",
+            style = MaterialTheme.typography.bodyMedium,
+            color = RecTheme.colors.inkSoft,
+        )
+
+        Spacer(Modifier.height(20.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            XpPill(xp = state.totalXp)
+            StreakPill(days = state.streakDays)
+        }
+
+        if (state.newBadges.isNotEmpty()) {
+            Spacer(Modifier.height(20.dp))
+            Text("Нова значка", style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
+            state.newBadges.forEach {
+                Text(it.titleCyrillic, style = MaterialTheme.typography.titleMedium, color = RecTheme.colors.oxblood)
+            }
+        }
+
+        Spacer(Modifier.height(32.dp))
+        RecPrimaryButton(text = "Готово", onClick = onFinished)
+    }
+}

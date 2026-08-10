@@ -1,0 +1,148 @@
+package com.rec.app.ui.screens.vocabulary
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.rec.app.ui.components.RecGhostButton
+import com.rec.app.ui.components.RecPrimaryButton
+import com.rec.app.ui.theme.RecTheme
+
+@Composable
+fun VocabularyScreen(viewModel: VocabularyViewModel) {
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(Unit) { viewModel.load() }
+
+    Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
+        when (val s = state) {
+            is FlashcardsUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
+                CircularProgressIndicator(color = RecTheme.colors.indigo)
+            }
+            is FlashcardsUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
+                Text(s.message, color = RecTheme.colors.oxblood)
+            }
+            is FlashcardsUiState.Empty -> EmptyContent()
+            is FlashcardsUiState.Reviewing -> ReviewingContent(s, viewModel)
+            is FlashcardsUiState.Done -> DoneContent(s, onRestart = viewModel::load)
+        }
+    }
+}
+
+@Composable
+private fun EmptyContent() {
+    Column(Modifier.fillMaxSize().padding(24.dp), Arrangement.Center, Alignment.CenterHorizontally) {
+        Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = RecTheme.colors.good, modifier = Modifier.size(48.dp))
+        Spacer(Modifier.height(12.dp))
+        Text("Све речи су прегледане", style = MaterialTheme.typography.titleLarge, color = RecTheme.colors.ink, textAlign = TextAlign.Center)
+        Text("Вратите се касније за нове речи за понављање.", style = MaterialTheme.typography.bodyMedium, color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: VocabularyViewModel) {
+    Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+        Text(
+            "${state.index} / ${state.total} речи",
+            style = MaterialTheme.typography.labelMedium,
+            color = RecTheme.colors.inkSoft,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(16.dp))
+
+        Surface(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            shape = RoundedCornerShape(18.dp),
+            color = RecTheme.colors.surface2,
+            border = BorderStroke(1.5.dp, RecTheme.colors.thread.copy(alpha = 0.5f)),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(state.card.cyrillic, style = MaterialTheme.typography.displayLarge, color = RecTheme.colors.ink)
+                Text(state.card.latin, style = MaterialTheme.typography.titleMedium, fontStyle = FontStyle.Italic, color = RecTheme.colors.oxblood)
+
+                Spacer(Modifier.height(10.dp))
+                Box(
+                    modifier = Modifier.size(38.dp).background(RecTheme.colors.indigo, CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Изговор", tint = RecTheme.colors.cream, modifier = Modifier.size(18.dp))
+                }
+
+                Spacer(Modifier.height(14.dp))
+                Text(state.card.translation, style = MaterialTheme.typography.bodyLarge, color = RecTheme.colors.inkSoft)
+
+                if (state.card.exampleCyrillic != null) {
+                    Spacer(Modifier.height(14.dp))
+                    Text(
+                        "„${state.card.exampleCyrillic}“",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = RecTheme.colors.inkSoft,
+                        textAlign = TextAlign.Center,
+                    )
+                    state.card.exampleTranslation?.let {
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+        if (state.isSubmitting) {
+            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                CircularProgressIndicator(color = RecTheme.colors.indigo)
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                RecGhostButton(text = "Учим", onClick = { viewModel.submitReview("learning") }, modifier = Modifier.weight(1f))
+                RecPrimaryButton(text = "Знам", onClick = { viewModel.submitReview("know") }, modifier = Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun DoneContent(state: FlashcardsUiState.Done, onRestart: () -> Unit) {
+    Column(Modifier.fillMaxSize().padding(24.dp), Arrangement.Center, Alignment.CenterHorizontally) {
+        Text("Готово!", style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)
+        Text("Прегледали сте ${state.reviewedCount} речи.", style = MaterialTheme.typography.bodyMedium, color = RecTheme.colors.inkSoft)
+        if (state.newBadgeTitles.isNotEmpty()) {
+            Spacer(Modifier.height(12.dp))
+            state.newBadgeTitles.forEach {
+                Text(it, style = MaterialTheme.typography.titleMedium, color = RecTheme.colors.oxblood)
+            }
+        }
+        Spacer(Modifier.height(20.dp))
+        RecPrimaryButton(text = "Још једном", onClick = onRestart)
+    }
+}

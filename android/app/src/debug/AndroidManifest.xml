@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Merged only into debug builds: the dev backend runs over plain HTTP
+         (via `adb reverse`/emulator loopback), which API 28+ blocks by
+         default. Release stays on HTTPS and doesn't get this. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>
