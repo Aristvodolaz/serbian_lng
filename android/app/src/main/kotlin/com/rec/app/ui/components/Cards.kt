@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.TextFields
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -93,6 +95,38 @@ fun ChoiceCard(
 }
 
 enum class ChoiceState { NEUTRAL, SELECTED, CORRECT, WRONG }
+
+/** Read-only summary of the chosen script on the register form — tapping it jumps back to the picker. */
+@Composable
+fun ScriptSummaryChip(
+    label: String,
+    sample: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = RecTheme.colors
+    Surface(
+        modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
+        shape = RoundedCornerShape(14.dp),
+        color = colors.surface2,
+        border = BorderStroke(1.dp, colors.thread.copy(alpha = 0.5f)),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Filled.TextFields, contentDescription = null, tint = colors.inkSoft, modifier = Modifier.size(18.dp))
+                Column(modifier = Modifier.padding(start = 10.dp)) {
+                    Text(label, style = MaterialTheme.typography.titleMedium, color = colors.ink)
+                    Text(sample, style = MaterialTheme.typography.bodySmall, color = colors.inkSoft)
+                }
+            }
+            Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = colors.inkSoft)
+        }
+    }
+}
 
 @Composable
 fun StatCard(value: String, label: String, modifier: Modifier = Modifier) {

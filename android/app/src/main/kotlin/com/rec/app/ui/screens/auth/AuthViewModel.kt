@@ -10,12 +10,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-enum class AuthMode { LOGIN, REGISTER }
-enum class RegisterStep { CREDENTIALS, SCRIPT }
+enum class AuthStage { WELCOME, LOGIN, SCRIPT, CREDENTIALS }
 
 data class AuthFormState(
-    val mode: AuthMode = AuthMode.LOGIN,
-    val step: RegisterStep = RegisterStep.CREDENTIALS,
+    val stage: AuthStage = AuthStage.WELCOME,
     val email: String = "",
     val password: String = "",
     val displayName: String = "",
@@ -28,24 +26,24 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _state = MutableStateFlow(AuthFormState())
     val state: StateFlow<AuthFormState> = _state.asStateFlow()
 
-    fun setMode(mode: AuthMode) = _state.update { it.copy(mode = mode, step = RegisterStep.CREDENTIALS, error = null) }
+    fun goToLogin() = _state.update { it.copy(stage = AuthStage.LOGIN, error = null) }
+    fun goToRegister() = _state.update { it.copy(stage = AuthStage.SCRIPT, error = null) }
+    fun backToWelcome() = _state.update { it.copy(stage = AuthStage.WELCOME, error = null) }
+    fun backToScript() = _state.update { it.copy(stage = AuthStage.SCRIPT, error = null) }
+
     fun updateEmail(value: String) = _state.update { it.copy(email = value, error = null) }
     fun updatePassword(value: String) = _state.update { it.copy(password = value, error = null) }
     fun updateDisplayName(value: String) = _state.update { it.copy(displayName = value, error = null) }
     fun updateScriptPreference(value: String) = _state.update { it.copy(scriptPreference = value) }
-    fun backToCredentials() = _state.update { it.copy(step = RegisterStep.CREDENTIALS) }
 
-    fun proceedToScriptStep() {
-        val s = _state.value
-        if (s.email.isBlank() || s.password.length < 8 || s.displayName.isBlank()) {
-            _state.update { it.copy(error = "Заполните email, имя и пароль (минимум 8 символов)") }
-            return
-        }
-        _state.update { it.copy(step = RegisterStep.SCRIPT, error = null) }
-    }
+    fun proceedToCredentials() = _state.update { it.copy(stage = AuthStage.CREDENTIALS, error = null) }
 
     fun submitLogin() {
         val s = _state.value
+        if (s.email.isBlank() || s.password.isBlank()) {
+            _state.update { it.copy(error = "Унесите имејл и лозинку.") }
+            return
+        }
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             authRepository.login(s.email, s.password)
@@ -56,6 +54,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun submitRegister() {
         val s = _state.value
+        if (s.displayName.isBlank() || s.email.isBlank() || s.password.length < 8) {
+            _state.update { it.copy(error = "Попуните име, имејл и лозинку (најмање 8 знакова).") }
+            return
+        }
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             authRepository.register(s.email, s.password, s.displayName, s.scriptPreference)
@@ -65,9 +67,9 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     }
 
     private fun mapError(t: Throwable): String = when {
-        t is HttpException && t.code() == 401 -> "Неверный email или пароль"
-        t is HttpException && t.code() == 409 -> "Такой email уже зарегистрирован"
-        t is HttpException -> "Ошибка сервера (${t.code()})"
-        else -> "Не удалось подключиться. Проверьте соединение."
+        t is HttpException && t.code() == 401 -> "Погрешан имејл или лозинка."
+        t is HttpException && t.code() == 409 -> "Овај имејл је већ регистрован."
+        t is HttpException -> "Грешка на серверу (${t.code()})."
+        else -> "Веза није успела. Проверите интернет."
     }
 }

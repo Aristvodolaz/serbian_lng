@@ -46,7 +46,7 @@ class VocabularyViewModel(
                     queue = words
                     if (words.isEmpty()) _state.value = FlashcardsUiState.Empty else showCurrent()
                 }
-                .onFailure { _state.value = FlashcardsUiState.Error("Не удалось загрузить карточки") }
+                .onFailure { _state.value = FlashcardsUiState.Error("Није успело учитавање картица.") }
         }
     }
 

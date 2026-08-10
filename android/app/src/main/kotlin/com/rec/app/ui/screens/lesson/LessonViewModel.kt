@@ -55,13 +55,13 @@ class LessonViewModel(private val contentRepository: ContentRepository) : ViewMo
                     index = 0
                     correctCount = 0
                     if (exercises.isEmpty()) {
-                        _state.value = LessonUiState.Error("В этом уроке пока нет упражнений")
+                        _state.value = LessonUiState.Error("Ова лекција још нема вежби.")
                     } else {
                         showCurrentExercise()
                     }
                 }
                 .onFailure {
-                    _state.value = LessonUiState.Error("Не удалось загрузить урок")
+                    _state.value = LessonUiState.Error("Није успело учитавање лекције.")
                 }
         }
     }
@@ -131,7 +131,7 @@ class LessonViewModel(private val contentRepository: ContentRepository) : ViewMo
                     )
                 }
                 .onFailure {
-                    _state.value = LessonUiState.Error("Не удалось сохранить результат урока")
+                    _state.value = LessonUiState.Error("Није успело чување резултата лекције.")
                 }
         }
     }

@@ -64,7 +64,7 @@ private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonVi
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             IconButton(onClick = onClose) {
-                Icon(Icons.Filled.Close, contentDescription = "Закрыть", tint = RecTheme.colors.inkSoft)
+                Icon(Icons.Filled.Close, contentDescription = "Затвори", tint = RecTheme.colors.inkSoft)
             }
             RecProgressBar(
                 progress = state.exerciseNumber.toFloat() / state.totalExercises,

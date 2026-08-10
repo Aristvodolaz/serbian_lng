@@ -52,7 +52,7 @@ class HomeViewModel(
             val path = pathResult.getOrNull()
             val user = userResult.getOrNull()
             if (path == null || user == null) {
-                _state.value = HomeUiState.Error("Не удалось загрузить путь уроков")
+                _state.value = HomeUiState.Error("Није успело учитавање пута лекција.")
                 return@launch
             }
 

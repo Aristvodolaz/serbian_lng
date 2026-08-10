@@ -45,7 +45,7 @@ class ProfileViewModel(
             val badges = badgesRepository.getMyBadges().getOrNull()
 
             if (me == null || stats == null || week == null) {
-                _state.value = ProfileUiState.Error("Не удалось загрузить профиль")
+                _state.value = ProfileUiState.Error("Није успело учитавање профила.")
                 return@launch
             }
 
