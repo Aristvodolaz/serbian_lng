@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -75,17 +77,27 @@ fun AuthScreen(viewModel: AuthViewModel) {
 @Composable
 private fun WelcomeStep(viewModel: AuthViewModel) {
     val colors = RecTheme.colors
-    Column(
+    // Background bleeds full-screen behind the system bars (edge-to-edge is
+    // on — see MainActivity.enableEdgeToEdge); only the *content* column is
+    // pushed clear of them, via real measured inset padding rather than a
+    // guessed fixed dp value that only happens to clear this one device.
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     colors = listOf(colors.indigoSoft, colors.indigo, Color(0xFF101728)),
                 ),
-            )
-            .padding(top = 72.dp, bottom = 40.dp, start = 28.dp, end = 28.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            ),
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(top = 32.dp, bottom = 24.dp, start = 28.dp, end = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
         Text(
             "УЧИТЕ СРПСКИ · РЕЧ ПО РЕЧ",
             style = MaterialTheme.typography.labelMedium,
@@ -141,6 +153,7 @@ private fun WelcomeStep(viewModel: AuthViewModel) {
             borderColor = colors.cream.copy(alpha = 0.4f),
             contentColor = colors.cream,
         )
+        }
     }
 }
 
@@ -150,6 +163,8 @@ private fun LoginStep(state: AuthFormState, viewModel: AuthViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
     ) {
@@ -218,7 +233,13 @@ private fun LoginStep(state: AuthFormState, viewModel: AuthViewModel) {
 @Composable
 private fun ScriptStep(state: AuthFormState, viewModel: AuthViewModel) {
     val colors = RecTheme.colors
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(24.dp),
+    ) {
         IconButton(onClick = viewModel::backToWelcome) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад", tint = colors.ink)
         }
@@ -277,6 +298,8 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
     ) {
