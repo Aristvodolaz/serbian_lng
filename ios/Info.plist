@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Xcode merges its generated keys (bundle name, version, scene manifest…)
+	     into this file, so only the ones it cannot generate live here. -->
+	<key>RecAPIBaseURL</key>
+	<string>http://localhost:3000</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- The dev backend runs over plain HTTP on localhost. This exception
+		     covers loopback and *.local only; a LAN IP or a real deployment needs
+		     HTTPS (or its own NSExceptionDomains entry). -->
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Апликација се повезује на локални REČ сервер ради лекција и напретка.</string>
+</dict>
+</plist>
