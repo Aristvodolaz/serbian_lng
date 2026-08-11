@@ -19,10 +19,12 @@ android {
 
     buildTypes {
         debug {
-            // localhost + `adb reverse tcp:3000 tcp:3000` works for both the
-            // emulator and a real device over USB (unlike 10.0.2.2, which is
-            // an emulator-only loopback alias and unreachable from a real phone).
-            buildConfigField("String", "BASE_URL", "\"http://localhost:3000/\"")
+            // Live dev server — plain HTTP (no TLS set up yet), reachable
+            // directly over WiFi/mobile data, no adb reverse/USB needed.
+            // Debug's cleartext allowance (src/debug/AndroidManifest.xml)
+            // covers this. Swap back to "http://localhost:3000/" + `adb
+            // reverse tcp:3000 tcp:3000` for local backend development.
+            buildConfigField("String", "BASE_URL", "\"http://159.194.226.2:3000/\"")
         }
         release {
             isMinifyEnabled = false
