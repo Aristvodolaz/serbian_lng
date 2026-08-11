@@ -1,0 +1,10 @@
+# Генерируется пайплайном
+content/build/
+
+# Черновая озвучка голосом hr_HR, в релиз не идёт
+content/audio/
+
+__pycache__/
+*.pyc
+
+.DS_Store
