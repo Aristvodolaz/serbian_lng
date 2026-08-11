@@ -45,6 +45,8 @@
     <string name="auth_error_server">Server error (%1$d).</string>
     <string name="auth_error_network">Connection failed. Check your internet.</string>
 
+    <string name="home_progress_format">%1$d of %2$d lessons</string>
+    <string name="home_locked_hint">Finish the previous lesson first.</string>
     <string name="home_error_load">Couldn\'t load the lesson path.</string>
 
     <string name="lesson_prompt_label">Translate the sentence</string>

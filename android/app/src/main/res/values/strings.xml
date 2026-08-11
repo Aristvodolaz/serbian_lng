@@ -70,6 +70,8 @@
     <string name="auth_error_network">Веза није успела. Проверите интернет.</string>
 
     <!-- Home -->
+    <string name="home_progress_format">%1$d од %2$d лекција</string>
+    <string name="home_locked_hint">Прво заврши претходну лекцију.</string>
     <string name="home_error_load">Није успело учитавање пута лекција.</string>
 
     <!-- Lesson -->

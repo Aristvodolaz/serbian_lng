@@ -1,5 +1,6 @@
 package com.rec.app.ui.screens.home
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -32,18 +33,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rec.app.R
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.components.LessonPathStatus
+import com.rec.app.ui.components.PathConnector
 import com.rec.app.ui.components.PathNode
 import com.rec.app.ui.components.StreakPill
 import com.rec.app.ui.components.XpPill
 import com.rec.app.ui.theme.RecTheme
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit, onProfileClick: () -> Unit) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) { viewModel.load() }
@@ -54,13 +62,17 @@ fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit) {
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is HomeUiState.Error -> ErrorContent(s.message.asString(), onRetry = viewModel::load)
-            is HomeUiState.Success -> HomeContent(s, onLessonClick)
+            is HomeUiState.Success -> HomeContent(s, onLessonClick, onProfileClick)
         }
     }
 }
 
 @Composable
-private fun HomeContent(state: HomeUiState.Success, onLessonClick: (String) -> Unit) {
+private fun HomeContent(state: HomeUiState.Success, onLessonClick: (String) -> Unit, onProfileClick: () -> Unit) {
+    val colors = RecTheme.colors
+    val context = LocalContext.current
+    val lockedHint = stringResource(R.string.home_locked_hint)
+
     // The path is the first thing anyone sees after logging in — a soft
     // settle-in reads as considered, a hard pop reads as a layout glitch.
     var visible by remember { mutableStateOf(false) }
@@ -70,61 +82,88 @@ private fun HomeContent(state: HomeUiState.Success, onLessonClick: (String) -> U
         visible = visible,
         enter = fadeIn(tween(360)) + slideInVertically(tween(360)) { it / 12 },
     ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            StreakPill(days = state.streakDays)
-            XpPill(xp = state.xp)
-            Box(
-                modifier = Modifier
-                    .size(34.dp)
-                    .background(RecTheme.colors.indigo, CircleShape),
-            )
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(28.dp),
-        ) {
-            items(state.units) { unit ->
-                Column {
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        Text(unit.titleCyrillic, style = MaterialTheme.typography.titleLarge, color = RecTheme.colors.ink)
-                        Text(
-                            "  ${unit.titleLatin}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontStyle = FontStyle.Italic,
-                            color = RecTheme.colors.oxblood,
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    StreakPill(days = state.streakDays, modifier = Modifier.clickable(onClick = onProfileClick))
+                    XpPill(xp = state.xp, modifier = Modifier.clickable(onClick = onProfileClick))
+                }
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.sweepGradient(listOf(colors.ochre, colors.oxblood, colors.indigo, colors.ochre)),
+                            CircleShape,
                         )
-                    }
-                    Spacer(Modifier.height(4.dp))
-                    unit.lessons.forEachIndexed { index, lesson ->
-                        val align = when (index % 3) {
-                            0 -> Alignment.Start
-                            1 -> Alignment.CenterHorizontally
-                            else -> Alignment.End
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(top = if (index == 0) 12.dp else 20.dp),
-                            horizontalAlignment = align,
+                        .clickable(onClick = onProfileClick),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        state.displayName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colors.cream,
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+                Text(stringResource(R.string.nav_home), style = MaterialTheme.typography.displayMedium, color = colors.ink)
+                Text(
+                    stringResource(R.string.home_progress_format, state.completedLessons, state.totalLessons),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.inkSoft,
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(28.dp),
+            ) {
+                items(state.units) { unit ->
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Top,
                         ) {
+                            Column {
+                                Text(unit.titleCyrillic, style = MaterialTheme.typography.titleLarge, color = colors.ink)
+                                Text(
+                                    unit.titleLatin,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontStyle = FontStyle.Italic,
+                                    color = colors.oxblood,
+                                )
+                            }
+                            Text(
+                                unit.titleTranslation,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = colors.inkSoft,
+                                textAlign = TextAlign.End,
+                            )
+                        }
+                        Spacer(Modifier.height(16.dp))
+
+                        unit.lessons.forEachIndexed { index, lesson ->
+                            if (index > 0) PathConnector()
                             PathNode(
-                                label = lesson.title,
+                                title = lesson.title,
+                                titleLatin = lesson.titleLatin,
+                                meta = "${lesson.titleTranslation} · ${lesson.xpReward} XP",
                                 status = lesson.status,
-                                modifier = Modifier
-                                    .clickable(enabled = lesson.status != LessonPathStatus.LOCKED) {
-                                        onLessonClick(lesson.id)
-                                    },
+                                onClick = { onLessonClick(lesson.id) },
+                                onLockedTap = { Toast.makeText(context, lockedHint, Toast.LENGTH_SHORT).show() },
                             )
                         }
                     }
                 }
             }
         }
-    }
     }
 }
