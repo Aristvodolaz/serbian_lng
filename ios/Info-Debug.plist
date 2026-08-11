@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Debug-only Info.plist. Keeps the ATS holes out of release builds, the
+	     way Android keeps `usesCleartextTraffic` in src/debug/AndroidManifest.xml. -->
+	<key>RecAPIBaseURL</key>
+	<string>$(REC_API_BASE_URL)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- Covers loopback and *.local, i.e. a backend started from the repo's
+		     README on the same machine. -->
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+		<!-- The shared dev server has no TLS yet, and it is a public IP, so
+		     NSAllowsLocalNetworking does not reach it. Delete this entry once
+		     the backend is served over HTTPS. -->
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>159.194.226.2</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Апликација се повезује на локални REČ сервер ради лекција и напретка.</string>
+</dict>
+</plist>

@@ -8,15 +8,23 @@ enum ScriptPreference: String, Codable, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
+    /// Falls back to the backend's own default rather than failing every
+    /// response that carries a user object.
+    init(from decoder: any Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = ScriptPreference(rawValue: raw) ?? .both
+    }
+
     /// Labels come straight from the script-picker screen of the design.
     var title: String {
         switch self {
-        case .cyrillic: "Ћирилица"
-        case .latin: "Latinica"
-        case .both: "Оба писма"
+        case .cyrillic: String(localized: "Ћирилица")
+        case .latin: String(localized: "Latinica")
+        case .both: String(localized: "Оба писма")
         }
     }
 
+    /// Deliberately not localised: it is a specimen of the script being chosen.
     var sample: String {
         switch self {
         case .cyrillic: "Здраво, како си?"
@@ -61,7 +69,8 @@ extension UserProfile {
 /// `UserStatsResponseDto`
 struct UserStats: Codable, Equatable, Sendable {
     let wordsLearned: Int
-    let accuracy: Double
+    /// Whole percent, 0–100 — the backend already rounds it.
+    let accuracy: Int
     let lessonsCompleted: Int
     let weeksActive: Int
     let xp: Int
@@ -77,11 +86,13 @@ struct DayActivity: Codable, Identifiable, Equatable, Sendable {
 
     var id: String { date }
 
-    /// Single-letter Serbian weekday initials, as on the profile screen.
+    /// Single-letter weekday initials for the profile strip. Localised as one
+    /// space-separated run so a translator sees the whole week at once and can
+    /// keep Mon–Sun order — the same shape as Android's `weekday_letters` array.
     var initial: String {
-        let initials = ["П", "У", "С", "Ч", "П", "С", "Н"]
+        let initials = String(localized: "П У С Ч П С Н").split(separator: " ")
         let index = weekday - 1
-        return initials.indices.contains(index) ? initials[index] : "?"
+        return initials.indices.contains(index) ? String(initials[index]) : "?"
     }
 }
 

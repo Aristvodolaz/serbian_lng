@@ -21,7 +21,7 @@ final class FlashcardsViewModel {
     var total: Int { queue.count }
 
     var positionLabel: String {
-        "\(min(index + 1, max(total, 1))) / \(total) речи"
+        String(localized: "\(min(index + 1, max(total, 1))) / \(total) речи")
     }
 
     var isFinished: Bool { !queue.isEmpty && index >= queue.count }
@@ -40,7 +40,7 @@ final class FlashcardsViewModel {
         errorMessage = nil
 
         do {
-            state = .loaded(try await api.reviewQueue(limit: 20))
+            state = .loaded(try await api.reviewQueue(limit: 15))
         } catch {
             state = .failed(error.learnerFacingMessage)
         }

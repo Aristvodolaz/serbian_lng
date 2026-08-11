@@ -38,8 +38,8 @@ struct ErrorStateView: View {
 }
 
 struct EmptyStateView: View {
-    var title: String
-    var message: String
+    var title: LocalizedStringKey
+    var message: LocalizedStringKey
 
     var body: some View {
         VStack(spacing: Metrics.tight) {

@@ -13,19 +13,19 @@ enum APIError: Error, LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            "Неисправна адреса сервера."
+            String(localized: "Неисправна адреса сервера.")
         case .offline:
-            "Нема интернет везе."
+            String(localized: "Нема интернет везе.")
         case .timedOut:
-            "Сервер не одговара."
+            String(localized: "Сервер не одговара.")
         case .transport(let message):
             message
         case .unauthorized:
-            "Сесија је истекла. Пријавите се поново."
+            String(localized: "Сесија је истекла. Пријавите се поново.")
         case .server(_, let message):
             message
         case .decoding:
-            "Неочекиван одговор сервера."
+            String(localized: "Неочекиван одговор сервера.")
         }
     }
 
@@ -58,12 +58,12 @@ enum APIError: Error, LocalizedError, Equatable {
 
     private static func defaultMessage(for status: Int) -> String {
         switch status {
-        case 400: "Подаци нису исправни."
-        case 403: "Немате приступ."
-        case 404: "Није нађено."
-        case 409: "Тај налог већ постоји."
-        case 500...599: "Грешка на серверу. Пробајте касније."
-        default: "Захтев није успео (\(status))."
+        case 400: String(localized: "Подаци нису исправни.")
+        case 403: String(localized: "Немате приступ.")
+        case 404: String(localized: "Није нађено.")
+        case 409: String(localized: "Тај налог већ постоји.")
+        case 500...599: String(localized: "Грешка на серверу. Пробајте касније.")
+        default: String(localized: "Захтев није успео (\(status)).")
         }
     }
 
@@ -74,7 +74,7 @@ enum APIError: Error, LocalizedError, Equatable {
         case .timedOut:
             .timedOut
         case .cannotConnectToHost, .cannotFindHost:
-            .transport("Сервер није доступан на \(AppConfiguration.baseURL.absoluteString).")
+            .transport(String(localized: "Сервер није доступан на \(AppConfiguration.baseURL.absoluteString)."))
         default:
             .transport(error.localizedDescription)
         }

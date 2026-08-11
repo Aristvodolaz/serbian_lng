@@ -65,7 +65,7 @@ struct ServerAddressField: View {
     private func save() {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let url = URL(string: trimmed), url.scheme != nil, url.host != nil else {
-            errorMessage = "Адреса није исправна."
+            errorMessage = String(localized: "Адреса није исправна.")
             return
         }
         session.serverURL = url

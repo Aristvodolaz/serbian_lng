@@ -49,7 +49,7 @@ struct PathScreen: View {
     private func trail(for path: LearningPath) -> some View {
         ScrollView {
             VStack(spacing: 0) {
-                SectionHeader(cyrillic: "Кораци", latin: "Path")
+                SectionHeader(title: "Кораци")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, Metrics.tight)
 
@@ -277,9 +277,9 @@ private struct Diamond: Shape {
 private extension LessonStatus {
     var accessibilityDescription: String {
         switch self {
-        case .done: "завршено"
-        case .current: "тренутна лекција"
-        case .locked: "закључано"
+        case .done: String(localized: "завршено")
+        case .current: String(localized: "тренутна лекција")
+        case .locked: String(localized: "закључано")
         }
     }
 }

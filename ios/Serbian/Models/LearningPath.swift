@@ -6,6 +6,14 @@ enum LessonStatus: String, Codable, Sendable {
     case current
     case locked
 
+    /// A status this build doesn't know is treated as locked rather than
+    /// failing the whole `/units` response — the same fallback Android's
+    /// `HomeViewModel` applies.
+    init(from decoder: any Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = LessonStatus(rawValue: raw) ?? .locked
+    }
+
     var isOpen: Bool { self != .locked }
 }
 
@@ -59,12 +67,11 @@ enum ExerciseType: String, Codable, Sendable {
         self = ExerciseType(rawValue: raw) ?? .unknown
     }
 
-    /// The instruction shown above the prompt.
-    var instruction: String {
-        switch self {
-        case .translateChoice, .unknown: "Преведите реченицу"
-        }
-    }
+    /// `translate_choice` is the only type the backend defines, and the only one
+    /// this app has a screen for. Should the backend grow another type, older
+    /// builds decode it as `.unknown` and skip it instead of forcing it through
+    /// the multiple-choice UI, where the prompt would make no sense.
+    var isSupported: Bool { self == .translateChoice }
 }
 
 /// `ExerciseChoicePublicDto` — deliberately has no `isCorrect`; the backend only
@@ -92,8 +99,13 @@ struct LessonDetail: Codable, Identifiable, Equatable, Sendable {
     let xpReward: Int
     let exercises: [Exercise]
 
-    var orderedExercises: [Exercise] {
-        exercises.sorted { $0.order < $1.order }
+    /// In path order, and limited to the types this build can present — the
+    /// score reported back to `/complete` must count only what the learner was
+    /// actually asked.
+    var playableExercises: [Exercise] {
+        exercises
+            .filter { $0.type.isSupported }
+            .sorted { $0.order < $1.order }
     }
 }
 

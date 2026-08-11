@@ -39,6 +39,14 @@ sealed interface LessonUiState {
     ) : LessonUiState
 }
 
+/**
+ * The only exercise type the backend defines, and the only one this screen has
+ * a UI for. Anything else is skipped rather than forced through the
+ * multiple-choice layout, where the prompt would not make sense — and it stays
+ * out of the score reported to `/complete`.
+ */
+private const val SUPPORTED_EXERCISE_TYPE = "translate_choice"
+
 class LessonViewModel(private val contentRepository: ContentRepository) : ViewModel() {
     private val _state = MutableStateFlow<LessonUiState>(LessonUiState.Loading)
     val state: StateFlow<LessonUiState> = _state.asStateFlow()
@@ -55,6 +63,8 @@ class LessonViewModel(private val contentRepository: ContentRepository) : ViewMo
             contentRepository.getLesson(lessonId)
                 .onSuccess { lesson ->
                     exercises = lesson.exercises
+                        .filter { it.type == SUPPORTED_EXERCISE_TYPE }
+                        .sortedBy { it.order }
                     index = 0
                     correctCount = 0
                     if (exercises.isEmpty()) {

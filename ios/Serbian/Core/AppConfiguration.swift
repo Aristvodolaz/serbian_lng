@@ -3,8 +3,10 @@ import Foundation
 /// Where the REČ API lives.
 ///
 /// Resolution order: a value the learner typed into the developer settings, then
-/// the `RecAPIBaseURL` Info.plist key (set per build configuration), then the
-/// local dev server the backend's README starts on port 3000.
+/// the `RecAPIBaseURL` Info.plist key — fed by the `REC_API_BASE_URL` build
+/// setting, so Debug points at the shared dev server and Release at production,
+/// mirroring Android's `BASE_URL` buildConfigField. The localhost fallback only
+/// kicks in when the substitution produced nothing usable.
 enum AppConfiguration {
     static let fallbackBaseURL = URL(string: "http://localhost:3000")!
 

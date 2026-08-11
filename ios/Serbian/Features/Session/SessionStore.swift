@@ -111,7 +111,7 @@ final class SessionStore {
     }
 
     var displayName: String {
-        user?.displayName ?? "Ученик"
+        user?.displayName ?? String(localized: "Ученик")
     }
 
     private func handleAuthenticationLost() {

@@ -24,12 +24,18 @@ final class LessonViewModel {
         self.lesson = lesson
     }
 
-    private var exercises: [Exercise] {
-        state.value?.orderedExercises ?? []
+    var exercises: [Exercise] {
+        state.value?.playableExercises ?? []
     }
 
     var currentExercise: Exercise? {
         exercises.indices.contains(exerciseIndex) ? exercises[exerciseIndex] : nil
+    }
+
+    /// Nothing has been answered yet, so closing loses nothing and asking would
+    /// only be in the way.
+    var canLeaveWithoutConfirming: Bool {
+        exerciseIndex == 0 && selectedChoiceID == nil && result == nil
     }
 
     var progress: Double {
@@ -43,8 +49,8 @@ final class LessonViewModel {
     var isLastExercise: Bool { exerciseIndex >= exercises.count - 1 }
 
     var primaryActionTitle: String {
-        if !hasAnswered { return "Провери" }
-        return isLastExercise ? "Заврши" : "Настави"
+        if !hasAnswered { return String(localized: "Провери") }
+        return isLastExercise ? String(localized: "Заврши") : String(localized: "Настави")
     }
 
     // MARK: - Loading

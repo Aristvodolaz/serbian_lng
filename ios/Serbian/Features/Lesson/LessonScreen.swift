@@ -7,6 +7,7 @@ struct LessonScreen: View {
     @Environment(SessionStore.self) private var session
     @Environment(\.dismiss) private var dismiss
     @State private var model: LessonViewModel
+    @State private var isConfirmingExit = false
 
     init(lesson: LessonSummary, onFinish: @escaping () -> Void) {
         self.lesson = lesson
@@ -46,7 +47,7 @@ struct LessonScreen: View {
                 LessonCompletionView(
                     completion: completion,
                     correctCount: model.correctCount,
-                    totalCount: model.state.value?.exercises.count ?? 0
+                    totalCount: model.exercises.count
                 ) {
                     onFinish()
                     dismiss()
@@ -55,12 +56,32 @@ struct LessonScreen: View {
             }
         }
         .animation(.easeOut(duration: 0.25), value: model.completion)
+        // A wrong answer should feel different from a right one, not just look it.
+        .sensoryFeedback(trigger: model.result) { _, answer in
+            guard let answer else { return nil }
+            return answer.correct ? .success : .error
+        }
+        .sensoryFeedback(.success, trigger: model.completion != nil)
+        .confirmationDialog(
+            "Прекинути лекцију?",
+            isPresented: $isConfirmingExit,
+            titleVisibility: .visible
+        ) {
+            Button("Прекини", role: .destructive) { dismiss() }
+            Button("Настави лекцију", role: .cancel) {}
+        } message: {
+            Text("Напредак у овој лекцији неће бити сачуван.")
+        }
     }
 
     private var topBar: some View {
         HStack(spacing: Metrics.regular) {
             Button {
-                dismiss()
+                if model.canLeaveWithoutConfirming {
+                    dismiss()
+                } else {
+                    isConfirmingExit = true
+                }
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 15, weight: .bold))
@@ -76,7 +97,7 @@ struct LessonScreen: View {
     private func exerciseBody(_ exercise: Exercise) -> some View {
         VStack(alignment: .leading, spacing: Metrics.loose) {
             VStack(alignment: .leading, spacing: 4) {
-                EyebrowLabel(text: exercise.type.instruction)
+                EyebrowLabel(text: "Преведите реченицу")
                 prompt(for: exercise)
             }
 
@@ -98,7 +119,9 @@ struct LessonScreen: View {
 
             if let result = model.result {
                 InlineMessage(
-                    text: result.correct ? "Тачно!" : "Још једном — тачан одговор је означен.",
+                    text: result.correct
+                        ? String(localized: "Тачно!")
+                        : String(localized: "Још једном — тачан одговор је означен."),
                     tone: result.correct ? .success : .error
                 )
             }

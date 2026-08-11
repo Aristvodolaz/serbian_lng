@@ -82,7 +82,7 @@ struct ProfileScreen: View {
             spacing: Metrics.tight
         ) {
             StatCard(value: "\(stats.wordsLearned)", label: "речи")
-            StatCard(value: "\(Int(stats.accuracy.rounded()))%", label: "тачност")
+            StatCard(value: "\(stats.accuracy)%", label: "тачност")
             StatCard(value: "\(stats.lessonsCompleted)", label: "лекција")
             StatCard(value: "\(stats.weeksActive)", label: "недеље")
         }
@@ -104,7 +104,9 @@ struct ProfileScreen: View {
                             )
                     }
                     .frame(maxWidth: .infinity)
-                    .accessibilityLabel("\(day.date): \(day.active ? "активан дан" : "без активности")")
+                    .accessibilityLabel(
+                        "\(day.date): \(day.active ? String(localized: "активан дан") : String(localized: "без активности"))"
+                    )
                 }
             }
         }
@@ -126,7 +128,7 @@ struct ProfileScreen: View {
                     .frame(maxWidth: .infinity)
                     .opacity(isEarned ? 1 : 0.45)
                     .accessibilityElement(children: .combine)
-                    .accessibilityValue(isEarned ? "освојено" : "није освојено")
+                    .accessibilityValue(isEarned ? String(localized: "освојено") : String(localized: "није освојено"))
                 }
             }
         }
@@ -262,7 +264,7 @@ struct SettingsSheet: View {
             if scriptPreference != session.scriptPreference {
                 try await session.updateScriptPreference(scriptPreference)
             }
-            savedMessage = "Сачувано."
+            savedMessage = String(localized: "Сачувано.")
         } catch {
             errorMessage = error.learnerFacingMessage
         }

@@ -190,14 +190,15 @@ struct RecCard<Content: View>: View {
 
 struct StatCard: View {
     var value: String
-    var label: String
+    var label: LocalizedStringKey
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
                 .font(.recMono)
                 .foregroundStyle(Palette.ink)
-            Text(label.uppercased())
+            Text(label)
+                .textCase(.uppercase)
                 .font(.recEyebrow)
                 .tracking(0.6)
                 .foregroundStyle(Palette.inkSoft)
@@ -272,8 +273,8 @@ struct DualScriptText: View {
 
 /// A labelled input container: 44pt tall, 14pt corners, hairline border.
 struct FormField<Content: View>: View {
-    var label: String
-    var footnote: String?
+    var label: LocalizedStringKey
+    var footnote: LocalizedStringKey?
     @ViewBuilder var content: Content
 
     var body: some View {
@@ -341,28 +342,21 @@ struct InlineMessage: View {
 // MARK: - Layout helpers
 
 struct SectionHeader: View {
-    var cyrillic: String
-    var latin: String
+    var title: LocalizedStringKey
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text(cyrillic)
-                .font(.recDisplaySmall)
-                .foregroundStyle(Palette.ink)
-            Text("/ \(latin)")
-                .font(.recCaption)
-                .italic()
-                .foregroundStyle(Palette.oxblood)
-        }
-        .accessibilityElement(children: .combine)
+        Text(title)
+            .font(.recDisplaySmall)
+            .foregroundStyle(Palette.ink)
     }
 }
 
 struct EyebrowLabel: View {
-    var text: String
+    var text: LocalizedStringKey
 
     var body: some View {
-        Text(text.uppercased())
+        Text(text)
+            .textCase(.uppercase)
             .font(.recEyebrow)
             .tracking(1)
             .foregroundStyle(Palette.inkSoft)
