@@ -2,6 +2,7 @@ package com.rec.app.ui.screens.vocabulary
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,12 +29,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rec.app.R
 import com.rec.app.ui.common.asString
+import com.rec.app.ui.common.rememberSerbianSpeaker
 import com.rec.app.ui.components.RecGhostButton
 import com.rec.app.ui.components.RecPrimaryButton
 import com.rec.app.ui.theme.RecTheme
@@ -41,6 +44,7 @@ import com.rec.app.ui.theme.RecTheme
 @Composable
 fun VocabularyScreen(viewModel: VocabularyViewModel) {
     val state by viewModel.state.collectAsState()
+    val speak = rememberSerbianSpeaker()
     LaunchedEffect(Unit) { viewModel.load() }
 
     Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
@@ -52,7 +56,7 @@ fun VocabularyScreen(viewModel: VocabularyViewModel) {
                 Text(s.message.asString(), color = RecTheme.colors.oxblood)
             }
             is FlashcardsUiState.Empty -> EmptyContent()
-            is FlashcardsUiState.Reviewing -> ReviewingContent(s, viewModel)
+            is FlashcardsUiState.Reviewing -> ReviewingContent(s, viewModel, onSpeak = speak)
             is FlashcardsUiState.Done -> DoneContent(s, onRestart = viewModel::load)
         }
     }
@@ -69,7 +73,7 @@ private fun EmptyContent() {
 }
 
 @Composable
-private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: VocabularyViewModel) {
+private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: VocabularyViewModel, onSpeak: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         Text(
             stringResource(R.string.vocab_progress_format, state.index, state.total),
@@ -96,7 +100,11 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
 
                 Spacer(Modifier.height(10.dp))
                 Box(
-                    modifier = Modifier.size(38.dp).background(RecTheme.colors.indigo, CircleShape),
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(CircleShape)
+                        .background(RecTheme.colors.indigo, CircleShape)
+                        .clickable { onSpeak(state.card.latin) },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.cd_pronounce), tint = RecTheme.colors.cream, modifier = Modifier.size(18.dp))
