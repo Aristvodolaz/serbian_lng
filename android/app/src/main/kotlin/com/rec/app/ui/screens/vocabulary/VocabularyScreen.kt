@@ -1,5 +1,12 @@
 package com.rec.app.ui.screens.vocabulary
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.rec.app.R
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.common.rememberSerbianSpeaker
+import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.components.RecGhostButton
 import com.rec.app.ui.components.RecPrimaryButton
 import com.rec.app.ui.theme.RecTheme
@@ -52,9 +60,7 @@ fun VocabularyScreen(viewModel: VocabularyViewModel) {
             is FlashcardsUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
-            is FlashcardsUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message.asString(), color = RecTheme.colors.oxblood)
-            }
+            is FlashcardsUiState.Error -> ErrorContent(s.message.asString(), onRetry = viewModel::load)
             is FlashcardsUiState.Empty -> EmptyContent()
             is FlashcardsUiState.Reviewing -> ReviewingContent(s, viewModel, onSpeak = speak)
             is FlashcardsUiState.Done -> DoneContent(s, onRestart = viewModel::load)
@@ -90,39 +96,50 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
             color = RecTheme.colors.surface2,
             border = BorderStroke(1.5.dp, RecTheme.colors.thread.copy(alpha = 0.5f)),
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(state.card.cyrillic, style = MaterialTheme.typography.displayLarge, color = RecTheme.colors.ink)
-                Text(state.card.latin, style = MaterialTheme.typography.titleMedium, fontStyle = FontStyle.Italic, color = RecTheme.colors.oxblood)
-
-                Spacer(Modifier.height(10.dp))
-                Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(CircleShape)
-                        .background(RecTheme.colors.indigo, CircleShape)
-                        .clickable { onSpeak(state.card.latin) },
-                    contentAlignment = Alignment.Center,
+            // Keyed on wordId, not the whole state, so only an actual card
+            // change slides — isSubmitting flipping true/false stays static.
+            AnimatedContent(
+                targetState = state.card,
+                transitionSpec = {
+                    (slideInHorizontally(tween(260)) { it / 3 } + fadeIn(tween(260))) togetherWith
+                        (slideOutHorizontally(tween(200)) { -it / 3 } + fadeOut(tween(160)))
+                },
+                label = "flashcard",
+            ) { card ->
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.cd_pronounce), tint = RecTheme.colors.cream, modifier = Modifier.size(18.dp))
-                }
+                    Text(card.cyrillic, style = MaterialTheme.typography.displayLarge, color = RecTheme.colors.ink)
+                    Text(card.latin, style = MaterialTheme.typography.titleMedium, fontStyle = FontStyle.Italic, color = RecTheme.colors.oxblood)
 
-                Spacer(Modifier.height(14.dp))
-                Text(state.card.translation, style = MaterialTheme.typography.bodyLarge, color = RecTheme.colors.inkSoft)
+                    Spacer(Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(RecTheme.colors.indigo, CircleShape)
+                            .clickable { onSpeak(card.latin) },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.cd_pronounce), tint = RecTheme.colors.cream, modifier = Modifier.size(18.dp))
+                    }
 
-                if (state.card.exampleCyrillic != null) {
                     Spacer(Modifier.height(14.dp))
-                    Text(
-                        stringResource(R.string.example_quote_format, state.card.exampleCyrillic ?: ""),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = RecTheme.colors.inkSoft,
-                        textAlign = TextAlign.Center,
-                    )
-                    state.card.exampleTranslation?.let {
-                        Text(it, style = MaterialTheme.typography.bodySmall, color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
+                    Text(card.translation, style = MaterialTheme.typography.bodyLarge, color = RecTheme.colors.inkSoft)
+
+                    if (card.exampleCyrillic != null) {
+                        Spacer(Modifier.height(14.dp))
+                        Text(
+                            stringResource(R.string.example_quote_format, card.exampleCyrillic ?: ""),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = RecTheme.colors.inkSoft,
+                            textAlign = TextAlign.Center,
+                        )
+                        card.exampleTranslation?.let {
+                            Text(it, style = MaterialTheme.typography.bodySmall, color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
+                        }
                     }
                 }
             }

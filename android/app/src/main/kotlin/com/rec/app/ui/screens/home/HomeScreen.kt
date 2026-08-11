@@ -1,5 +1,9 @@
 package com.rec.app.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,11 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.rec.app.ui.common.asString
+import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.components.LessonPathStatus
 import com.rec.app.ui.components.PathNode
 import com.rec.app.ui.components.StreakPill
@@ -45,9 +53,7 @@ fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit) {
             is HomeUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
-            is HomeUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message.asString(), color = RecTheme.colors.oxblood)
-            }
+            is HomeUiState.Error -> ErrorContent(s.message.asString(), onRetry = viewModel::load)
             is HomeUiState.Success -> HomeContent(s, onLessonClick)
         }
     }
@@ -55,6 +61,15 @@ fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit) {
 
 @Composable
 private fun HomeContent(state: HomeUiState.Success, onLessonClick: (String) -> Unit) {
+    // The path is the first thing anyone sees after logging in — a soft
+    // settle-in reads as considered, a hard pop reads as a layout glitch.
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { visible = true }
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(tween(360)) + slideInVertically(tween(360)) { it / 12 },
+    ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(20.dp),
@@ -110,5 +125,6 @@ private fun HomeContent(state: HomeUiState.Success, onLessonClick: (String) -> U
                 }
             }
         }
+    }
     }
 }

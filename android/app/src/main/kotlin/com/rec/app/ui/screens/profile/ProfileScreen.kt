@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.rec.app.R
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.BadgeDiamond
+import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.components.StatCard
 import com.rec.app.ui.components.StreakPill
 import com.rec.app.ui.theme.RecTheme
@@ -49,9 +50,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onLoggedOut: () -> Unit) {
             is ProfileUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
                 androidx.compose.material3.CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
-            is ProfileUiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(s.message.asString(), color = RecTheme.colors.oxblood)
-            }
+            is ProfileUiState.Error -> ErrorContent(s.message.asString(), onRetry = viewModel::load)
             is ProfileUiState.Success -> ProfileContent(s, onLogout = { viewModel.logout(); onLoggedOut() })
         }
     }

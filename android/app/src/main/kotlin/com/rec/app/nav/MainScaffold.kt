@@ -1,5 +1,10 @@
 package com.rec.app.nav
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Person
@@ -76,6 +81,12 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
             navController = navController,
             startDestination = Routes.HOME,
             modifier = Modifier.padding(padding),
+            // Crossfade by default — plain jumps between bottom-tab
+            // destinations read as a glitch, not a "top-level switch".
+            enterTransition = { fadeIn(tween(200)) },
+            exitTransition = { fadeOut(tween(150)) },
+            popEnterTransition = { fadeIn(tween(200)) },
+            popExitTransition = { fadeOut(tween(150)) },
         ) {
             composable(Routes.HOME) {
                 val vm: HomeViewModel = viewModel(
@@ -97,7 +108,14 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
                 )
                 ProfileScreen(viewModel = vm, onLoggedOut = onLoggedOut)
             }
-            composable(Routes.LESSON) { entry ->
+            composable(
+                Routes.LESSON,
+                // A lesson is a focused session pushed on top of the path,
+                // not another top-level tab — slides up like a sheet instead
+                // of crossfading, so it reads as "entering", not "switching".
+                enterTransition = { slideInVertically(tween(260)) { it / 4 } + fadeIn(tween(260)) },
+                popExitTransition = { slideOutVertically(tween(220)) { it / 4 } + fadeOut(tween(220)) },
+            ) { entry ->
                 val lessonId = entry.arguments?.getString("lessonId") ?: return@composable
                 val vm: LessonViewModel = viewModel(
                     factory = ViewModelFactory { LessonViewModel(container.contentRepository) },
