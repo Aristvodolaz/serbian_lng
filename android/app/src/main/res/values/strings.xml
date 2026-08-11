@@ -9,6 +9,7 @@
     <!-- Shared -->
     <string name="cd_back">Назад</string>
     <string name="cd_close">Затвори</string>
+    <string name="action_retry">Покушај поново</string>
 
     <!-- Auth — brand block, fixed across locales: this is the app's own
          name/tagline, not UI chrome, so it is intentionally NOT overridden
@@ -82,6 +83,10 @@
     <string name="lesson_error_no_exercises">Ова лекција још нема вежби.</string>
     <string name="lesson_error_load">Није успело учитавање лекције.</string>
     <string name="lesson_error_save">Није успело чување резултата лекције.</string>
+    <string name="lesson_exit_title">Прекинути лекцију?</string>
+    <string name="lesson_exit_message">Ваш напредак у овој лекцији неће бити сачуван.</string>
+    <string name="lesson_exit_confirm">Прекини</string>
+    <string name="lesson_exit_cancel">Настави лекцију</string>
 
     <!-- Vocabulary -->
     <string name="vocab_empty_title">Све речи су прегледане</string>

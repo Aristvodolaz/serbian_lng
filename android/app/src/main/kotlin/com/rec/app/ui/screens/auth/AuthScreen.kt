@@ -1,6 +1,13 @@
 package com.rec.app.ui.screens.auth
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,8 +38,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,14 +79,38 @@ fun AuthScreen(viewModel: AuthViewModel) {
 
     RecTheme(darkTheme = true) {
         Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
-            when (state.stage) {
-                AuthStage.WELCOME -> WelcomeStep(viewModel)
-                AuthStage.LOGIN -> LoginStep(state, viewModel)
-                AuthStage.SCRIPT -> ScriptStep(state, viewModel)
-                AuthStage.CREDENTIALS -> CredentialsStep(state, viewModel)
+            AnimatedContent(
+                targetState = state.stage,
+                transitionSpec = {
+                    // WELCOME(0) -> LOGIN/SCRIPT(1) -> CREDENTIALS(2): slide
+                    // left when moving deeper into onboarding, right when
+                    // backing out — direction communicates progress, a flat
+                    // crossfade wouldn't.
+                    val forward = targetState.depth() >= initialState.depth()
+                    val enter = slideInHorizontally(tween(260)) { w -> if (forward) w / 3 else -w / 3 } +
+                        fadeIn(tween(260))
+                    val exit = slideOutHorizontally(tween(220)) { w -> if (forward) -w / 3 else w / 3 } +
+                        fadeOut(tween(180))
+                    enter togetherWith exit
+                },
+                label = "auth-stage",
+            ) { stage ->
+                when (stage) {
+                    AuthStage.WELCOME -> WelcomeStep(viewModel)
+                    AuthStage.LOGIN -> LoginStep(state, viewModel)
+                    AuthStage.SCRIPT -> ScriptStep(state, viewModel)
+                    AuthStage.CREDENTIALS -> CredentialsStep(state, viewModel)
+                }
             }
         }
     }
+}
+
+private fun AuthStage.depth(): Int = when (this) {
+    AuthStage.WELCOME -> 0
+    AuthStage.LOGIN -> 1
+    AuthStage.SCRIPT -> 1
+    AuthStage.CREDENTIALS -> 2
 }
 
 @Composable
@@ -194,12 +228,15 @@ private fun LoginStep(state: AuthFormState, viewModel: AuthViewModel) {
 
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             val fc = fieldColors(colors)
+            val focusManager = LocalFocusManager.current
             RecTextField(
                 label = stringResource(R.string.field_email),
                 value = state.email,
                 onValueChange = viewModel::updateEmail,
                 placeholder = stringResource(R.string.field_email_placeholder),
                 keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next,
+                onImeAction = { focusManager.moveFocus(FocusDirection.Down) },
                 fieldColor = fc.field,
                 labelColor = fc.label,
                 textColor = fc.text,
@@ -211,6 +248,8 @@ private fun LoginStep(state: AuthFormState, viewModel: AuthViewModel) {
                 onValueChange = viewModel::updatePassword,
                 isPassword = true,
                 keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+                onImeAction = { focusManager.clearFocus() },
                 fieldColor = fc.field,
                 labelColor = fc.label,
                 textColor = fc.text,
@@ -336,11 +375,14 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
         Spacer(Modifier.height(24.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             val fc = fieldColors(colors)
+            val focusManager = LocalFocusManager.current
             RecTextField(
                 label = stringResource(R.string.field_name),
                 value = state.displayName,
                 onValueChange = viewModel::updateDisplayName,
                 placeholder = stringResource(R.string.field_name_placeholder),
+                imeAction = ImeAction.Next,
+                onImeAction = { focusManager.moveFocus(FocusDirection.Down) },
                 fieldColor = fc.field,
                 labelColor = fc.label,
                 textColor = fc.text,
@@ -352,6 +394,8 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
                 onValueChange = viewModel::updateEmail,
                 placeholder = stringResource(R.string.field_email_placeholder),
                 keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next,
+                onImeAction = { focusManager.moveFocus(FocusDirection.Down) },
                 fieldColor = fc.field,
                 labelColor = fc.label,
                 textColor = fc.text,
@@ -363,6 +407,8 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
                 onValueChange = viewModel::updatePassword,
                 isPassword = true,
                 keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+                onImeAction = { focusManager.clearFocus() },
                 helperText = stringResource(R.string.field_password_helper),
                 fieldColor = fc.field,
                 labelColor = fc.label,

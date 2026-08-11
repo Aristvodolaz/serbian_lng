@@ -8,6 +8,7 @@
 
     <string name="cd_back">Back</string>
     <string name="cd_close">Close</string>
+    <string name="action_retry">Try again</string>
 
     <string name="auth_dual_script_explainer">Both scripts stand side by side — Cyrillic and Latin are learned together, not separately.</string>
     <string name="auth_get_started">Get started</string>
@@ -56,6 +57,10 @@
     <string name="lesson_error_no_exercises">This lesson has no exercises yet.</string>
     <string name="lesson_error_load">Couldn\'t load the lesson.</string>
     <string name="lesson_error_save">Couldn\'t save the lesson result.</string>
+    <string name="lesson_exit_title">Exit this lesson?</string>
+    <string name="lesson_exit_message">Your progress in this lesson won\'t be saved.</string>
+    <string name="lesson_exit_confirm">Exit</string>
+    <string name="lesson_exit_cancel">Keep going</string>
 
     <string name="vocab_empty_title">All words reviewed</string>
     <string name="vocab_empty_subtitle">Come back later for new words to review.</string>

@@ -8,6 +8,7 @@
 
     <string name="cd_back">Назад</string>
     <string name="cd_close">Закрыть</string>
+    <string name="action_retry">Повторить</string>
 
     <string name="auth_dual_script_explainer">Оба алфавита идут рядом — кириллица и латиница изучаются вместе, а не по отдельности.</string>
     <string name="auth_get_started">Начать</string>
@@ -55,6 +56,10 @@
     <string name="lesson_error_no_exercises">В этом уроке пока нет упражнений.</string>
     <string name="lesson_error_load">Не удалось загрузить урок.</string>
     <string name="lesson_error_save">Не удалось сохранить результат урока.</string>
+    <string name="lesson_exit_title">Прервать урок?</string>
+    <string name="lesson_exit_message">Прогресс в этом уроке не сохранится.</string>
+    <string name="lesson_exit_confirm">Прервать</string>
+    <string name="lesson_exit_cancel">Продолжить урок</string>
 
     <string name="vocab_empty_title">Все слова просмотрены</string>
     <string name="vocab_empty_subtitle">Возвращайтесь позже за новыми словами для повторения.</string>
