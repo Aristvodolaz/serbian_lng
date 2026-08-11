@@ -1,0 +1,48 @@
+id,lesson,lemma,translation_ru,pos,gender,aspect,forms,notes
+zdravo,1.1,zdravo,привет;здравствуйте,interj,,,,Нейтральное приветствие в любое время суток
+dobar_dan,1.1,dobar dan,добрый день,phrase,,,,
+dobro_jutro,1.1,dobro jutro,доброе утро,phrase,,,,
+dobro_vece,1.1,dobro veče,добрый вечер,phrase,,,,
+dovidjenja,1.1,doviđenja,до свидания,interj,,,,
+cao,1.1,ćao,чао;привет;пока,interj,,,,"Только с теми, с кем на «ты»"
+hvala,1.1,hvala,спасибо,interj,,,,
+molim,1.1,molim,пожалуйста;прошу,interj,,,,Также «что?» при переспросе
+da,1.1,da,да,particle,,,,
+ne,1.1,ne,нет;не,particle,,,,
+ja,1.2,ja,я,pron,,,,
+ti,1.2,ti,ты,pron,,,,
+on,1.2,on,он,pron,,,,
+ona,1.2,ona,она,pron,,,,
+biti,1.2,biti,быть,verb,,impf,sam;si;je;smo;ste;su;nisam;nisi;nije,В настоящем времени безударный и стоит на втором месте
+zvati_se,1.2,zvati se,зваться;называться,verb,,impf,zovem;zoveš;zove;zovemo;zovete;zovu,Возвратный: zovem se Ana
+kako,1.2,kako,как,adv,,,,
+ime,1.2,ime,имя,noun,n,,imena,
+ko,1.2,ko,кто,pron,,,,В хорватском tko — не использовать
+to,1.2,to,это;то,pron,,,,
+moj,1.2,moj,мой,pron,,,moje;moja,
+drago_mi_je,1.2,drago mi je,приятно познакомиться,phrase,,,,
+a,1.2,a,а,conj,,,,"Противопоставление: Ja sam Ana, a ti?"
+ana,1.2,Ana,Ана,name,f,,ani,Женское имя
+marko,1.2,Marko,Марко,name,m,,marka,Мужское имя
+dobro,1.3,dobro,хорошо,adv,,,,
+lose,1.3,loše,плохо,adv,,,,
+odlicno,1.3,odlično,отлично,adv,,,,
+odakle,1.3,odakle,откуда,adv,,,,
+gde,1.3,gde,где,adv,,,,"Экавица: gde, не gdje"
+iz,1.3,iz,из,prep,,,,Требует родительного падежа
+u,1.3,u,в,prep,,,,
+ziveti,1.3,živeti,жить,verb,,impf,živim;živiš;živi;živimo;živite;žive,"Экавица: živeti, не živjeti"
+rusija,1.3,Rusija,Россия,noun,f,,rusije,
+srbija,1.3,Srbija,Сербия,noun,f,,srbije,
+beograd,1.3,Beograd,Белград,noun,m,,beograda;beogradu,
+moskva,1.3,Moskva,Москва,noun,f,,moskve;moskvi,
+govoriti,1.4,govoriti,говорить,verb,,impf,govorim;govoriš;govori;govorimo;govorite;govore,
+razumeti,1.4,razumeti,понимать,verb,,impf,razumem;razumeš;razume;razumemo;razumete;razumeju,"Экавица: razumeti, не razumjeti"
+srpski,1.4,srpski,сербский,adj,,,,Как наречие: govorim srpski
+ruski,1.4,ruski,русский,adj,,,,
+malo,1.4,malo,немного;мало,adv,,,,
+izvinite,1.4,izvinite,извините,phrase,,,,
+jezik,1.4,jezik,язык,noun,m,,jezika,
+li,1.4,li,ли,particle,,,,Ставится после глагола и образует вопрос
+lep,1.4,lep,красивый,adj,,,lepa;lepo,"Экавица: lep, не lijep"
+i,1.4,i,и,conj,,,,
