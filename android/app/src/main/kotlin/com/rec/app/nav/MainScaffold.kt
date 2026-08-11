@@ -92,7 +92,17 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
                 val vm: HomeViewModel = viewModel(
                     factory = ViewModelFactory { HomeViewModel(container.contentRepository, container.userRepository) },
                 )
-                HomeScreen(viewModel = vm, onLessonClick = { navController.navigate(Routes.lesson(it)) })
+                HomeScreen(
+                    viewModel = vm,
+                    onLessonClick = { navController.navigate(Routes.lesson(it)) },
+                    onProfileClick = {
+                        navController.navigate(Routes.PROFILE) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
             }
             composable(Routes.VOCABULARY) {
                 val vm: VocabularyViewModel = viewModel(

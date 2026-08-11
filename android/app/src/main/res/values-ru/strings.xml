@@ -44,6 +44,8 @@
     <string name="auth_error_server">Ошибка сервера (%1$d).</string>
     <string name="auth_error_network">Не удалось подключиться. Проверьте интернет.</string>
 
+    <string name="home_progress_format">%1$d из %2$d уроков</string>
+    <string name="home_locked_hint">Сначала закончи предыдущий урок.</string>
     <string name="home_error_load">Не удалось загрузить путь уроков.</string>
 
     <string name="lesson_prompt_label">Переведите предложение</string>

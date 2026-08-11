@@ -18,6 +18,8 @@ data class LessonUi(
     val id: String,
     val title: String,
     val titleLatin: String,
+    val titleTranslation: String,
+    val xpReward: Int,
     val status: LessonPathStatus,
 )
 
@@ -25,13 +27,21 @@ data class UnitUi(
     val id: String,
     val titleCyrillic: String,
     val titleLatin: String,
+    val titleTranslation: String,
     val lessons: List<LessonUi>,
 )
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState
     data class Error(val message: UiText) : HomeUiState
-    data class Success(val units: List<UnitUi>, val xp: Int, val streakDays: Int) : HomeUiState
+    data class Success(
+        val units: List<UnitUi>,
+        val xp: Int,
+        val streakDays: Int,
+        val displayName: String,
+        val completedLessons: Int,
+        val totalLessons: Int,
+    ) : HomeUiState
 }
 
 class HomeViewModel(
@@ -59,10 +69,16 @@ class HomeViewModel(
                 return@launch
             }
 
+            val units = path.units.map { it.toUi() }
+            val allLessons = units.flatMap { it.lessons }
+
             _state.value = HomeUiState.Success(
-                units = path.units.map { it.toUi() },
+                units = units,
                 xp = user.xp,
                 streakDays = user.streakDays,
+                displayName = user.displayName,
+                completedLessons = allLessons.count { it.status == LessonPathStatus.DONE },
+                totalLessons = allLessons.size,
             )
         }
     }
@@ -72,11 +88,14 @@ private fun UnitPathDto.toUi() = UnitUi(
     id = id,
     titleCyrillic = titleCyrillic,
     titleLatin = titleLatin,
+    titleTranslation = titleTranslation,
     lessons = lessons.map {
         LessonUi(
             id = it.id,
             title = it.title,
             titleLatin = it.titleLatin,
+            titleTranslation = it.titleTranslation,
+            xpReward = it.xpReward,
             status = when (it.status) {
                 "done" -> LessonPathStatus.DONE
                 "current" -> LessonPathStatus.CURRENT

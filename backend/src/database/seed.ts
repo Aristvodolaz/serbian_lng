@@ -134,6 +134,62 @@ const UNITS: UnitSeed[] = [
           },
         ],
       },
+      {
+        // The other half of the alphabet problem: letters that are Latin
+        // lookalikes but sound completely different (С looks like C but
+        // says S, Р looks like P but says R...) — arguably harder than the
+        // digraphs above, since the shape actively lies to you.
+        title: 'Лажни пријатељи',
+        titleLatin: 'Lažni prijatelji',
+        titleTranslation: 'False friends',
+        exercises: [
+          {
+            promptCyrillic: 'Пас',
+            promptLatin: 'Pas',
+            choices: [
+              { text: 'dog', isCorrect: true },
+              { text: 'cat', isCorrect: false },
+              { text: 'bird', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Рука',
+            promptLatin: 'Ruka',
+            choices: [
+              { text: 'hand / arm', isCorrect: true },
+              { text: 'leg', isCorrect: false },
+              { text: 'head', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Нос',
+            promptLatin: 'Nos',
+            choices: [
+              { text: 'nose', isCorrect: true },
+              { text: 'mouth', isCorrect: false },
+              { text: 'ear', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Уста',
+            promptLatin: 'Usta',
+            choices: [
+              { text: 'mouth', isCorrect: true },
+              { text: 'nose', isCorrect: false },
+              { text: 'eye', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Хлад',
+            promptLatin: 'Hlad',
+            choices: [
+              { text: 'coolness / shade', isCorrect: true },
+              { text: 'heat', isCorrect: false },
+              { text: 'wind', isCorrect: false },
+            ],
+          },
+        ],
+      },
     ],
     words: [
       { cyrillic: 'ђак', latin: 'đak', translation: 'pupil / student', exampleCyrillic: 'Ђак учи лекцију.', exampleTranslation: 'The pupil studies the lesson.' },
@@ -144,6 +200,11 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'чај', latin: 'čaj', translation: 'tea', exampleCyrillic: 'Пијем топли чај.', exampleTranslation: "I'm drinking hot tea." },
       { cyrillic: 'џем', latin: 'džem', translation: 'jam', exampleCyrillic: 'Мажем џем на хлеб.', exampleTranslation: 'I spread jam on bread.' },
       { cyrillic: 'шума', latin: 'šuma', translation: 'forest', exampleCyrillic: 'Шетамо кроз шуму.', exampleTranslation: "We're walking through the forest." },
+      { cyrillic: 'пас', latin: 'pas', translation: 'dog', exampleCyrillic: 'Пас трчи у парку.', exampleTranslation: 'The dog runs in the park.' },
+      { cyrillic: 'рука', latin: 'ruka', translation: 'hand / arm', exampleCyrillic: 'Опери руке пре јела.', exampleTranslation: 'Wash your hands before eating.' },
+      { cyrillic: 'нос', latin: 'nos', translation: 'nose', exampleCyrillic: 'Има мали нос.', exampleTranslation: 'He has a small nose.' },
+      { cyrillic: 'уста', latin: 'usta', translation: 'mouth', exampleCyrillic: 'Отвори уста, молим те.', exampleTranslation: 'Open your mouth, please.' },
+      { cyrillic: 'хлад', latin: 'hlad', translation: 'coolness / shade', exampleCyrillic: 'Седимо у хладу дрвета.', exampleTranslation: 'We sit in the shade of the tree.' },
     ],
   },
   {
@@ -219,6 +280,40 @@ const UNITS: UnitSeed[] = [
           },
         ],
       },
+      {
+        title: 'Представљање',
+        titleLatin: 'Predstavljanje',
+        titleTranslation: 'Introductions',
+        exercises: [
+          {
+            promptCyrillic: 'Ја сам Милица.',
+            promptLatin: 'Ja sam Milica.',
+            choices: [
+              { text: 'I am Milica.', isCorrect: true },
+              { text: 'I have Milica.', isCorrect: false },
+              { text: 'I like Milica.', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Драго ми је.',
+            promptLatin: 'Drago mi je.',
+            choices: [
+              { text: 'Nice to meet you.', isCorrect: true },
+              { text: 'Thank you very much.', isCorrect: false },
+              { text: 'See you soon.', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Одакле си?',
+            promptLatin: 'Odakle si?',
+            choices: [
+              { text: 'Where are you from?', isCorrect: true },
+              { text: 'How old are you?', isCorrect: false },
+              { text: 'What do you do?', isCorrect: false },
+            ],
+          },
+        ],
+      },
     ],
     words: [
       { cyrillic: 'хвала', latin: 'hvala', translation: 'thank you', exampleCyrillic: 'Хвала на помоћи.', exampleTranslation: 'Thanks for the help.' },
@@ -227,6 +322,9 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'довиђења', latin: 'doviđenja', translation: 'goodbye', exampleCyrillic: 'Довиђења, видимо се сутра.', exampleTranslation: 'Goodbye, see you tomorrow.' },
       { cyrillic: 'изволите', latin: 'izvolite', translation: 'here you go / please', exampleCyrillic: 'Изволите, седите.', exampleTranslation: 'Here you go, have a seat.' },
       { cyrillic: 'пријатно', latin: 'prijatno', translation: 'have a nice time', exampleCyrillic: 'Пријатно вече!', exampleTranslation: 'Have a nice evening!' },
+      { cyrillic: 'име', latin: 'ime', translation: 'name', exampleCyrillic: 'Како ти је име?', exampleTranslation: 'What is your name?' },
+      { cyrillic: 'одакле', latin: 'odakle', translation: 'from where', exampleCyrillic: 'Одакле си ти?', exampleTranslation: 'Where are you from?' },
+      { cyrillic: 'пријатељ', latin: 'prijatelj', translation: 'friend', exampleCyrillic: 'Он је мој пријатељ.', exampleTranslation: 'He is my friend.' },
     ],
   },
   {
@@ -302,6 +400,40 @@ const UNITS: UnitSeed[] = [
           },
         ],
       },
+      {
+        title: 'Кућа',
+        titleLatin: 'Kuća',
+        titleTranslation: 'Home',
+        exercises: [
+          {
+            promptCyrillic: 'Кућа',
+            promptLatin: 'Kuća',
+            choices: [
+              { text: 'house', isCorrect: true },
+              { text: 'apartment', isCorrect: false },
+              { text: 'yard', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Соба',
+            promptLatin: 'Soba',
+            choices: [
+              { text: 'room', isCorrect: true },
+              { text: 'kitchen', isCorrect: false },
+              { text: 'bathroom', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Врата',
+            promptLatin: 'Vrata',
+            choices: [
+              { text: 'door', isCorrect: true },
+              { text: 'window', isCorrect: false },
+              { text: 'wall', isCorrect: false },
+            ],
+          },
+        ],
+      },
     ],
     words: [
       { cyrillic: 'мајка', latin: 'majka', translation: 'mother', exampleCyrillic: 'Моја мајка кува ручак.', exampleTranslation: 'My mother is cooking lunch.' },
@@ -310,6 +442,9 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'брат', latin: 'brat', translation: 'brother', exampleCyrillic: 'Мој брат игра фудбал.', exampleTranslation: 'My brother plays football.' },
       { cyrillic: 'деда', latin: 'deda', translation: 'grandfather', exampleCyrillic: 'Деда прича приче.', exampleTranslation: 'Grandfather tells stories.' },
       { cyrillic: 'баба', latin: 'baba', translation: 'grandmother', exampleCyrillic: 'Баба пече колаче.', exampleTranslation: 'Grandmother bakes cookies.' },
+      { cyrillic: 'кућа', latin: 'kuća', translation: 'house', exampleCyrillic: 'Наша кућа је велика.', exampleTranslation: 'Our house is big.' },
+      { cyrillic: 'соба', latin: 'soba', translation: 'room', exampleCyrillic: 'Моја соба је чиста.', exampleTranslation: 'My room is clean.' },
+      { cyrillic: 'врата', latin: 'vrata', translation: 'door', exampleCyrillic: 'Затвори врата, молим те.', exampleTranslation: 'Close the door, please.' },
     ],
   },
   {
@@ -385,6 +520,40 @@ const UNITS: UnitSeed[] = [
           },
         ],
       },
+      {
+        title: 'У ресторану',
+        titleLatin: 'U restoranu',
+        titleTranslation: 'At the restaurant',
+        exercises: [
+          {
+            promptCyrillic: 'Рачун, молим.',
+            promptLatin: 'Račun, molim.',
+            choices: [
+              { text: 'The bill, please.', isCorrect: true },
+              { text: 'The menu, please.', isCorrect: false },
+              { text: 'Water, please.', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Укусно!',
+            promptLatin: 'Ukusno!',
+            choices: [
+              { text: 'Delicious!', isCorrect: true },
+              { text: 'Disgusting!', isCorrect: false },
+              { text: 'Spicy!', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Со',
+            promptLatin: 'So',
+            choices: [
+              { text: 'salt', isCorrect: true },
+              { text: 'sugar', isCorrect: false },
+              { text: 'pepper', isCorrect: false },
+            ],
+          },
+        ],
+      },
     ],
     words: [
       { cyrillic: 'хлеб', latin: 'hleb', translation: 'bread', exampleCyrillic: 'Купио сам свеж хлеб.', exampleTranslation: 'I bought fresh bread.' },
@@ -393,6 +562,9 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'јабука', latin: 'jabuka', translation: 'apple', exampleCyrillic: 'Једем јабуку сваки дан.', exampleTranslation: 'I eat an apple every day.' },
       { cyrillic: 'месо', latin: 'meso', translation: 'meat', exampleCyrillic: 'Волим печено месо.', exampleTranslation: 'I like roasted meat.' },
       { cyrillic: 'кафа', latin: 'kafa', translation: 'coffee', exampleCyrillic: 'Пијем кафу ујутру.', exampleTranslation: 'I drink coffee in the morning.' },
+      { cyrillic: 'рачун', latin: 'račun', translation: 'bill', exampleCyrillic: 'Молим вас, рачун.', exampleTranslation: 'The bill, please.' },
+      { cyrillic: 'укусно', latin: 'ukusno', translation: 'delicious', exampleCyrillic: 'Ово је веома укусно.', exampleTranslation: 'This is very delicious.' },
+      { cyrillic: 'со', latin: 'so', translation: 'salt', exampleCyrillic: 'Додај мало соли.', exampleTranslation: 'Add a bit of salt.' },
     ],
   },
   {
@@ -468,6 +640,40 @@ const UNITS: UnitSeed[] = [
           },
         ],
       },
+      {
+        title: 'Време и датуми',
+        titleLatin: 'Vreme i datumi',
+        titleTranslation: 'Time and dates',
+        exercises: [
+          {
+            promptCyrillic: 'Данас',
+            promptLatin: 'Danas',
+            choices: [
+              { text: 'today', isCorrect: true },
+              { text: 'tomorrow', isCorrect: false },
+              { text: 'yesterday', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Сутра',
+            promptLatin: 'Sutra',
+            choices: [
+              { text: 'tomorrow', isCorrect: true },
+              { text: 'today', isCorrect: false },
+              { text: 'yesterday', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Сат',
+            promptLatin: 'Sat',
+            choices: [
+              { text: 'hour / clock', isCorrect: true },
+              { text: 'minute', isCorrect: false },
+              { text: 'day', isCorrect: false },
+            ],
+          },
+        ],
+      },
     ],
     words: [
       { cyrillic: 'један', latin: 'jedan', translation: 'one', exampleCyrillic: 'Имам један брат.', exampleTranslation: 'I have one brother.' },
@@ -476,6 +682,9 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'шест', latin: 'šest', translation: 'six', exampleCyrillic: 'Имам шест књига.', exampleTranslation: 'I have six books.' },
       { cyrillic: 'десет', latin: 'deset', translation: 'ten', exampleCyrillic: 'Десет прстију на рукама.', exampleTranslation: 'Ten fingers on the hands.' },
       { cyrillic: 'сто', latin: 'sto', translation: 'hundred', exampleCyrillic: 'Сто динара.', exampleTranslation: 'A hundred dinars.' },
+      { cyrillic: 'данас', latin: 'danas', translation: 'today', exampleCyrillic: 'Данас је леп дан.', exampleTranslation: 'Today is a nice day.' },
+      { cyrillic: 'сутра', latin: 'sutra', translation: 'tomorrow', exampleCyrillic: 'Видимо се сутра.', exampleTranslation: 'See you tomorrow.' },
+      { cyrillic: 'сат', latin: 'sat', translation: 'hour / clock', exampleCyrillic: 'Колико је сати?', exampleTranslation: 'What time is it?' },
     ],
   },
   {
@@ -551,6 +760,40 @@ const UNITS: UnitSeed[] = [
           },
         ],
       },
+      {
+        title: 'На граници',
+        titleLatin: 'Na granici',
+        titleTranslation: 'At the border',
+        exercises: [
+          {
+            promptCyrillic: 'Виза',
+            promptLatin: 'Viza',
+            choices: [
+              { text: 'visa', isCorrect: true },
+              { text: 'ticket', isCorrect: false },
+              { text: 'passport', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Кофер',
+            promptLatin: 'Kofer',
+            choices: [
+              { text: 'suitcase', isCorrect: true },
+              { text: 'bag', isCorrect: false },
+              { text: 'backpack', isCorrect: false },
+            ],
+          },
+          {
+            promptCyrillic: 'Излаз',
+            promptLatin: 'Izlaz',
+            choices: [
+              { text: 'exit', isCorrect: true },
+              { text: 'entrance', isCorrect: false },
+              { text: 'gate', isCorrect: false },
+            ],
+          },
+        ],
+      },
     ],
     words: [
       { cyrillic: 'станица', latin: 'stanica', translation: 'station', exampleCyrillic: 'Станица је близу.', exampleTranslation: 'The station is close.' },
@@ -559,6 +802,9 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'хотел', latin: 'hotel', translation: 'hotel', exampleCyrillic: 'Резервисао сам хотел.', exampleTranslation: 'I booked a hotel.' },
       { cyrillic: 'карта', latin: 'karta', translation: 'ticket', exampleCyrillic: 'Купио сам карту за воз.', exampleTranslation: 'I bought a train ticket.' },
       { cyrillic: 'пасош', latin: 'pasoš', translation: 'passport', exampleCyrillic: 'Понесите пасош.', exampleTranslation: 'Bring your passport.' },
+      { cyrillic: 'виза', latin: 'viza', translation: 'visa', exampleCyrillic: 'Треба ми виза за путовање.', exampleTranslation: 'I need a visa to travel.' },
+      { cyrillic: 'кофер', latin: 'kofer', translation: 'suitcase', exampleCyrillic: 'Спаковао сам кофер.', exampleTranslation: 'I packed my suitcase.' },
+      { cyrillic: 'излаз', latin: 'izlaz', translation: 'exit', exampleCyrillic: 'Излаз је лево.', exampleTranslation: 'The exit is on the left.' },
     ],
   },
 ];
