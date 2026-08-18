@@ -804,7 +804,23 @@ const UNITS: UnitSeed[] = [
       { cyrillic: 'пасош', latin: 'pasoš', translation: 'passport', exampleCyrillic: 'Понесите пасош.', exampleTranslation: 'Bring your passport.' },
       { cyrillic: 'виза', latin: 'viza', translation: 'visa', exampleCyrillic: 'Треба ми виза за путовање.', exampleTranslation: 'I need a visa to travel.' },
       { cyrillic: 'кофер', latin: 'kofer', translation: 'suitcase', exampleCyrillic: 'Спаковао сам кофер.', exampleTranslation: 'I packed my suitcase.' },
-                  choices: [
+      { cyrillic: 'излаз', latin: 'izlaz', translation: 'exit', exampleCyrillic: 'Излаз је лево.', exampleTranslation: 'The exit is on the left.' },
+    ],
+  },
+  {
+    titleCyrillic: 'Људи',
+    titleLatin: 'Ljudi',
+    titleTranslation: 'Люди',
+    lessons: [
+      {
+        title: 'Придеви',
+        titleLatin: 'Pridevi',
+        titleTranslation: 'Прилагательные',
+        exercises: [
+          {
+            promptCyrillic: 'Он је стар.',
+            promptLatin: 'On je star.',
+            choices: [
               { text: 'Он старый.', isCorrect: true },
               { text: 'Он молодой.', isCorrect: false },
               { text: 'Он новый.', isCorrect: false },
@@ -949,13 +965,6 @@ const UNITS: UnitSeed[] = [
               { text: 'Мой дом большой.', isCorrect: false },
             ],
           },
-            promptLatin: 'Kolač',
-            choices: [
-              { text: 'пирожное; торт', isCorrect: true },
-              { text: 'хлеб', isCorrect: false },
-              { text: 'сыр', isCorrect: false },
-            ],
-          },
         ],
       },
       {
@@ -1036,7 +1045,7 @@ const UNITS: UnitSeed[] = [
             ],
           },
           {
-            promptCyrillic: 'Не свиєа ми се.',
+            promptCyrillic: 'Не свиђа ми се.',
             promptLatin: 'Ne sviđa mi se.',
             choices: [
               { text: 'Мне это не нравится.', isCorrect: true },
@@ -1056,6 +1065,22 @@ const UNITS: UnitSeed[] = [
         ],
       },
     ],
+    words: [],
+  },
+  {
+    titleCyrillic: 'Време',
+    titleLatin: 'Vreme',
+    titleTranslation: 'Время',
+    lessons: [
+      {
+        title: 'Годишња доба',
+        titleLatin: 'Godišnja doba',
+        titleTranslation: 'Времена года',
+        exercises: [
+          {
+            promptCyrillic: 'Зима',
+            promptLatin: 'Zima',
+            choices: [
               { text: 'зима', isCorrect: true },
               { text: 'лето', isCorrect: false },
               { text: 'осень', isCorrect: false },
