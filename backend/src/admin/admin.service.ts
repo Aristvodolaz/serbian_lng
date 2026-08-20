@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Like, Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../users/enums/user-role.enum';
 import { UserLessonProgress } from '../content/entities/user-lesson-progress.entity';
@@ -73,11 +73,20 @@ export class AdminService {
     const dayOfWeek = startOfWeek.getDay();
     const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     startOfWeek.setDate(startOfWeek.getDate() - diff);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(endOfWeek.getDate() + 7);
+
+    const activeUsersThisWeek = await this.userRepo
+      .createQueryBuilder('user')
+      .where("user.lastActivityDate >= :start AND user.lastActivityDate < :end", {
+        start: startOfWeek.toISOString().slice(0, 10),
+        end: endOfWeek.toISOString().slice(0, 10),
+      })
+      .getCount();
 
     const [
       totalUsers,
       activeUsersToday,
-      activeUsersThisWeek,
       newUsersThisWeek,
       totalLessonsCompleted,
       lessonsCompletedToday,
@@ -88,7 +97,6 @@ export class AdminService {
     ] = await Promise.all([
       this.userRepo.count(),
       this.userRepo.count({ where: { lastActivityDate: startOfDay.toISOString().slice(0, 10) } }),
-      this.userRepo.count({ where: { lastActivityDate: Like(`${startOfWeek.toISOString().slice(0, 10)}%`) } }),
       this.userRepo.count({ where: { createdAt: Between(startOfWeek, now) } }),
       this.lessonProgressRepo.count(),
       this.lessonProgressRepo.count({
