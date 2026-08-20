@@ -1,7 +1,7 @@
 import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { EditLessonForm, CreateExerciseForm, EditExerciseForm, DeleteButton } from '@/components/forms/admin-forms';
+import { EditLessonForm, CreateExerciseForm, EditExerciseForm, DeleteButton, EditChoiceForm, AddChoiceForm } from '@/components/forms/admin-forms';
 
 interface Lesson {
   id: string;
@@ -72,20 +72,19 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
               </div>
               <DeleteButton url={`/admin/exercises/${exercise.id}`} label="Delete" />
             </div>
-            <div className="space-y-2">
-              {exercise.choices.map((choice) => (
-                <div
-                  key={choice.id}
-                  className={`px-3 py-2 rounded-lg text-sm ${
-                    choice.isCorrect
-                      ? 'bg-green-50 text-green-800 border border-green-200'
-                      : 'bg-gray-50 text-gray-700 border border-gray-200'
-                  }`}
-                >
-                  {choice.text} {choice.isCorrect && '✓'}
-                </div>
-              ))}
+            <div className="space-y-1 mb-2">
+              {exercise.choices
+                .sort((a, b) => a.order - b.order)
+                .map((choice) => (
+                  <EditChoiceForm
+                    key={choice.id}
+                    choice={choice}
+                    exerciseId={exercise.id}
+                    totalChoices={exercise.choices.length}
+                  />
+                ))}
             </div>
+            <AddChoiceForm exerciseId={exercise.id} nextOrder={exercise.choices.length + 1} />
             <EditExerciseForm exercise={exercise} />
           </div>
         ))}

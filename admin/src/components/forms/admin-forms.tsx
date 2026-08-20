@@ -364,3 +364,150 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
     </form>
   );
 }
+
+// ── Edit Choice Form ──────────────────────────────────────────
+
+export function EditChoiceForm({
+  choice,
+  exerciseId,
+  totalChoices,
+}: {
+  choice: { id: string; text: string; isCorrect: boolean; order: number };
+  exerciseId: string;
+  totalChoices: number;
+}) {
+  const [editing, setEditing] = useState(false);
+
+  const updateChoice = async (data: { text?: string; isCorrect?: boolean; order?: number }) => {
+    await adminFetch(`/admin/exercise-choices/${choice.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+    window.location.reload();
+  };
+
+  const toggleCorrect = async () => {
+    await updateChoice({ isCorrect: !choice.isCorrect });
+  };
+
+  const moveChoice = async (direction: 'up' | 'down') => {
+    const newOrder = direction === 'up' ? choice.order - 1 : choice.order + 1;
+    await updateChoice({ order: newOrder });
+  };
+
+  const deleteChoice = async () => {
+    if (!confirm('Delete this answer?')) return;
+    await adminFetch(`/admin/exercise-choices/${choice.id}`, { method: 'DELETE' });
+    window.location.reload();
+  };
+
+  if (editing) {
+    return (
+      <div className="flex items-center gap-2">
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            await updateChoice({ text: formData.get('text') as string });
+            setEditing(false);
+          }}
+          className="flex items-center gap-2 flex-1"
+        >
+          <input
+            name="text"
+            defaultValue={choice.text}
+            className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
+            autoFocus
+          />
+          <button type="submit" className="px-2 py-1 bg-green-600 text-white rounded text-xs">
+            Save
+          </button>
+          <button type="button" onClick={() => setEditing(false)} className="px-2 py-1 bg-gray-400 text-white rounded text-xs">
+            Cancel
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <input
+        value={choice.text}
+        onClick={() => setEditing(true)}
+        readOnly
+        className={`px-3 py-2 rounded-lg text-sm flex-1 cursor-pointer border ${
+          choice.isCorrect
+            ? 'bg-green-50 text-green-800 border-green-200'
+            : 'bg-gray-50 text-gray-700 border-gray-200'
+        }`}
+        title="Click to edit"
+      />
+      <label className="flex items-center gap-1 text-xs cursor-pointer">
+        <input
+          type="checkbox"
+          checked={choice.isCorrect}
+          onChange={toggleCorrect}
+          className="rounded"
+        />
+        Correct
+      </label>
+      <button
+        onClick={() => moveChoice('up')}
+        disabled={choice.order === 1}
+        className="px-1 py-1 text-gray-500 hover:text-gray-800 disabled:opacity-30 text-sm"
+        title="Move up"
+      >
+        ↑
+      </button>
+      <button
+        onClick={() => moveChoice('down')}
+        disabled={choice.order === totalChoices}
+        className="px-1 py-1 text-gray-500 hover:text-gray-800 disabled:opacity-30 text-sm"
+        title="Move down"
+      >
+        ↓
+      </button>
+      <button
+        onClick={deleteChoice}
+        className="text-red-500 hover:text-red-700 text-xs"
+        title="Delete"
+      >
+        ✕
+      </button>
+    </div>
+  );
+}
+
+// ── Add Choice Form ───────────────────────────────────────────
+
+export function AddChoiceForm({ exerciseId, nextOrder }: { exerciseId: string; nextOrder: number }) {
+  return (
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await adminFetch(`/admin/exercises/${exerciseId}/choices`, {
+          method: 'POST',
+          body: JSON.stringify({
+            text: formData.get('text'),
+            isCorrect: false,
+            order: nextOrder,
+          }),
+        });
+        window.location.reload();
+      }}
+      className="flex gap-2 mt-2"
+    >
+      <input
+        name="text"
+        placeholder="New answer..."
+        required
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
+      />
+      <button type="submit" className="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs font-medium">
+        Add
+      </button>
+    </form>
+  );
+}
