@@ -19,7 +19,7 @@ function getRefreshToken(): string | undefined {
 }
 
 function setCookies(access_token: string, refresh_token: string) {
-  document.cookie = `admin_access_token=${access_token}; Path=/; Max-Age=2592000; SameSite=Lax`;
+  document.cookie = `admin_access_token=${access_token}; Path=/; Max-Age=900; SameSite=Lax`;
   document.cookie = `admin_refresh_token=${refresh_token}; Path=/; Max-Age=2592000; SameSite=Lax`;
 }
 

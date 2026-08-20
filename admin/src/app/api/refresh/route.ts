@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     const response = NextResponse.redirect(new URL(returnTo, request.url));
     response.cookies.set('admin_access_token', data.accessToken, {
       path: '/',
-      maxAge: 2592000,
+      maxAge: 900,
       sameSite: 'lax',
     });
     response.cookies.set('admin_refresh_token', data.refreshToken, {
