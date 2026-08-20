@@ -1,11 +1,8 @@
-# Reverse proxy + automatic HTTPS (Let's Encrypt) for API and Admin Panel.
-# Replace the domains below with your actual domains.
-# Caddy auto-provisions and renews Let's Encrypt certs.
+# Reverse proxy + automatic HTTPS (Let's Encrypt) for the API.
+# Copy to /etc/caddy/Caddyfile on the server, replace the domain, then:
+#   sudo systemctl reload caddy
+# (or run Caddy itself in Docker on the same network as the "app" service).
 
 api.example.com {
-    reverse_proxy app:3000
-}
-
-admin.example.com {
-    reverse_proxy admin:3001
+	reverse_proxy localhost:3000
 }

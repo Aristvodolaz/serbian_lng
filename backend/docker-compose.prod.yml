@@ -48,33 +48,17 @@ services:
       context: ../admin
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-https://api.example.com}
+        NEXT_PUBLIC_BACKEND_URL: http://159.194.226.2:3000
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      BACKEND_URL: http://app:3000
-      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-https://api.example.com}
+      BACKEND_URL: http://159.194.226.2:3000
+      NEXT_PUBLIC_BACKEND_URL: http://159.194.226.2:3000
     depends_on:
       app:
         condition: service_healthy
     ports:
       - "${ADMIN_PORT:-3001}:3001"
 
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - app
-      - admin
-
 volumes:
   pgdata:
-  caddy_data:
-  caddy_config:
