@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import * as bcrypt from 'bcryptjs';
 import { NestFactory } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../app.module';
@@ -8,6 +9,8 @@ import { Exercise, ExerciseType } from '../content/entities/exercise.entity';
 import { ExerciseChoice } from '../content/entities/exercise-choice.entity';
 import { Word } from '../vocabulary/entities/word.entity';
 import { Badge } from '../badges/entities/badge.entity';
+import { User } from '../users/entities/user.entity';
+import { UserRole } from '../users/enums/user-role.enum';
 
 interface ChoiceSeed {
   text: string;
@@ -1273,6 +1276,29 @@ async function seed() {
     }
   }
   console.log(`Badges: +${badgesCreated} new.`);
+
+  // Seed admin user
+  const userRepo = dataSource.getRepository(User);
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@rec.local';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin-password-change-me';
+
+  let adminUser = await userRepo.findOne({ where: { email: adminEmail } });
+  if (!adminUser) {
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
+    adminUser = userRepo.create({
+      email: adminEmail,
+      passwordHash,
+      displayName: 'Administrator',
+      role: UserRole.ADMIN,
+      banned: false,
+    });
+    await userRepo.save(adminUser);
+    console.log(`Admin user created: ${adminEmail}`);
+  } else if (adminUser.role !== UserRole.ADMIN) {
+    adminUser.role = UserRole.ADMIN;
+    await userRepo.save(adminUser);
+    console.log(`Existing user ${adminEmail} promoted to admin`);
+  }
 
   await app.close();
   console.log('Done.');

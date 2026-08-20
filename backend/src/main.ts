@@ -53,6 +53,7 @@ async function bootstrap() {
     .addTag('lessons', 'Lesson detail, exercises, completion')
     .addTag('vocabulary', 'Flashcard review queue and spaced repetition')
     .addTag('badges', 'Achievement catalog and earned badges')
+    .addTag('admin', 'Admin panel operations (requires admin role)')
     .addTag('health', 'Liveness check')
     .build();
 

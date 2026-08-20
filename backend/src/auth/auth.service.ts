@@ -43,6 +43,10 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(dto.password, user.passwordHash);
     if (!passwordMatches) throw new UnauthorizedException('Invalid email or password');
 
+    if (user.banned) {
+      throw new UnauthorizedException('Account suspended');
+    }
+
     return this.buildAuthResponse(user);
   }
 
@@ -63,7 +67,7 @@ export class AuthService {
   }
 
   private buildAuthResponse(user: User): AuthResponseDto {
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role: user.role };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_SECRET ?? 'change-me-access-secret',

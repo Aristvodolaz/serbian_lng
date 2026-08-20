@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ContentModule } from './content/content.module';
 import { VocabularyModule } from './vocabulary/vocabulary.module';
 import { BadgesModule } from './badges/badges.module';
+import { AdminModule } from './admin/admin.module';
 import { HealthController } from './health.controller';
 
 @Module({
@@ -21,6 +22,7 @@ import { HealthController } from './health.controller';
     ContentModule,
     VocabularyModule,
     BadgesModule,
+    AdminModule,
   ],
   controllers: [HealthController],
 })

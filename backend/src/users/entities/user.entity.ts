@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ScriptPreference } from '../enums/script-preference.enum';
+import { UserRole } from '../enums/user-role.enum';
 
 @Entity('users')
 export class User {
@@ -27,6 +28,13 @@ export class User {
   })
   scriptPreference: ScriptPreference;
 
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
+
   @Column({ default: 0 })
   xp: number;
 
@@ -37,6 +45,9 @@ export class User {
   // decide whether today continues, restarts, or already counted the streak.
   @Column({ type: 'date', nullable: true })
   lastActivityDate: string | null;
+
+  @Column({ default: false })
+  banned: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
