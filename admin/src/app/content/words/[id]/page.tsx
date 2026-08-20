@@ -3,11 +3,21 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { EditWordForm } from '@/components/forms/admin-forms';
 
+interface Word {
+  id: string;
+  cyrillic: string;
+  latin: string;
+  translation: string;
+  exampleCyrillic: string | null;
+  exampleTranslation: string | null;
+  audioUrl: string | null;
+}
+
 export default async function WordDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  let word;
+  let word: Word;
   try {
-    word = await fetchAdmin(`/admin/words/${id}`, { redirectOnError: false });
+    word = await fetchAdmin<Word>(`/admin/words/${id}`, { redirectOnError: false });
   } catch {
     notFound();
   }
