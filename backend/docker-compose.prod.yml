@@ -48,12 +48,12 @@ services:
       context: ../admin
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BACKEND_URL: http://app:3000
+        NEXT_PUBLIC_BACKEND_URL: http://159.194.226.2:3000
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      BACKEND_URL: http://app:3000
-      NEXT_PUBLIC_BACKEND_URL: http://app:3000
+      BACKEND_URL: http://159.194.226.2:3000
+      NEXT_PUBLIC_BACKEND_URL: http://159.194.226.2:3000
     depends_on:
       app:
         condition: service_healthy
