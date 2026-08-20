@@ -21,10 +21,17 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await res.json();
-    const returnTo = request.nextUrl.searchParams.get('returnTo') || '/';
+    let returnTo = request.nextUrl.searchParams.get('returnTo') || '/';
+
+    // returnTo might be a full URL or just a path — extract the pathname
+    try {
+      returnTo = new URL(returnTo).pathname;
+    } catch {
+      // Not a full URL, use as-is
+    }
 
     if (!returnTo.startsWith('/')) {
-      return NextResponse.redirect(new URL('/', request.url));
+      returnTo = '/';
     }
 
     const response = NextResponse.redirect(new URL(returnTo, request.url));
