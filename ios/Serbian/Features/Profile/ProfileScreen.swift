@@ -146,6 +146,7 @@ struct SettingsSheet: View {
     @State private var isSaving = false
     @State private var errorMessage: String?
     @State private var savedMessage: String?
+    @State private var showingDocument: LegalDocument?
 
     var body: some View {
         NavigationStack {
@@ -231,6 +232,27 @@ struct SettingsSheet: View {
                         .font(.recCaption)
                         .foregroundStyle(Palette.inkSoft)
                         .frame(maxWidth: .infinity, alignment: .center)
+
+                    Divider().overlay(Palette.line)
+
+                    Button { showingDocument = .privacyPolicy } label: {
+                        HStack {
+                            Text("Политика конфиденциальности")
+                                .font(.recCallout)
+                                .foregroundStyle(Palette.ink)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.recCaption)
+                                .foregroundStyle(Palette.inkSoft)
+                        }
+                        .padding(.horizontal, 14)
+                        .frame(minHeight: 56, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Palette.surface)
+                        )
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal, Metrics.screenPadding)
                 .padding(.vertical, Metrics.regular)
@@ -247,6 +269,9 @@ struct SettingsSheet: View {
         .onAppear {
             displayName = session.displayName
             scriptPreference = session.scriptPreference
+        }
+        .sheet(item: $showingDocument) { document in
+            LegalDocumentView(fileName: document.rawValue, title: document.title)
         }
     }
 

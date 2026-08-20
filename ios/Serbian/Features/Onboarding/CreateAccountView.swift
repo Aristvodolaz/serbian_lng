@@ -1,5 +1,19 @@
 import SwiftUI
 
+enum LegalDocument: String, Identifiable {
+    case privacyPolicy = "privacy-policy-pdn"
+    case termsOfUse = "terms-of-use"
+
+    var title: String {
+        switch self {
+        case .privacyPolicy: return "Политика конфиденциальности"
+        case .termsOfUse: return "Пользовательское соглашение"
+        }
+    }
+
+    var id: String { rawValue }
+}
+
 struct CreateAccountView: View {
     let scriptPreference: ScriptPreference
 
@@ -10,6 +24,7 @@ struct CreateAccountView: View {
     @State private var password = ""
     @State private var errorMessage: String?
     @State private var isSubmitting = false
+    @State private var showingDocument: LegalDocument?
 
     /// Mirrors `RegisterDto`: e-mail plus at least eight characters.
     private var canSubmit: Bool {
@@ -72,6 +87,8 @@ struct CreateAccountView: View {
                 }
                 .buttonStyle(.recPrimary)
                 .disabled(!canSubmit)
+
+                privacyHint
             }
             .padding(.horizontal, Metrics.screenPadding)
             .padding(.top, Metrics.regular)
@@ -81,6 +98,25 @@ struct CreateAccountView: View {
         .groundBackground()
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $showingDocument) { document in
+            LegalDocumentView(fileName: document.rawValue, title: document.title)
+        }
+    }
+
+    private var privacyHint: some View {
+        HStack(spacing: 2) {
+            Text("Нажимая продолжить, вы принимаете ")
+                .font(.recFootnote)
+                .foregroundStyle(Palette.inkSoft)
+            Button { showingDocument = .privacyPolicy } label: {
+                Text("политику конфиденциальности")
+                    .font(.recFootnote)
+                    .foregroundStyle(Palette.indigo)
+            }
+            .buttonStyle(.plain)
+        }
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity)
     }
 
     private var selectedScriptSummary: some View {

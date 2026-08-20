@@ -1,6 +1,7 @@
 import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { EditUnitForm, CreateLessonForm } from '@/components/forms/admin-forms';
 
 interface Unit {
   id: string;
@@ -56,7 +57,6 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
         </div>
       </div>
 
-      {/* Lessons */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Lessons</h2>
         <CreateLessonForm unitId={unit.id} />
@@ -100,80 +100,5 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
         </table>
       </div>
     </div>
-  );
-}
-
-function EditUnitForm({ unit }: { unit: Unit }) {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('admin_access_token='))
-          ?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}/admin/units/${unit.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            titleCyrillic: formData.get('titleCyrillic'),
-            titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2"
-    >
-      <input name="titleCyrillic" defaultValue={unit.titleCyrillic} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleLatin" defaultValue={unit.titleLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleTranslation" defaultValue={unit.titleTranslation} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
-        Save
-      </button>
-    </form>
-  );
-}
-
-function CreateLessonForm({ unitId }: { unitId: string }) {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('admin_access_token='))
-          ?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}/admin/lessons`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            unitId,
-            title: formData.get('title'),
-            titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2"
-    >
-      <input name="title" placeholder="Cyrillic" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleLatin" placeholder="Latin" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleTranslation" placeholder="Translation" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
-        Add Lesson
-      </button>
-    </form>
   );
 }

@@ -1,4 +1,6 @@
 import { fetchAdmin } from '@/lib/api';
+import { CreateBadgeForm } from '@/components/forms/create-badge-form';
+import { EditBadgeForm, DeleteBadgeButton } from '@/components/forms/admin-forms';
 
 interface Badge {
   id: string;
@@ -28,24 +30,7 @@ export default async function BadgesPage() {
               </div>
               <div className="flex gap-2">
                 <EditBadgeForm badge={badge} />
-                <button
-                  onClick={async () => {
-                    if (!confirm('Delete this badge?')) return;
-                    const token = document.cookie
-                      .split('; ')
-                      .find((row) => row.startsWith('admin_access_token='))
-                      ?.split('=')[1];
-                    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-                    await fetch(`${BACKEND_URL}/admin/badges/${badge.id}`, {
-                      method: 'DELETE',
-                      headers: { Authorization: `Bearer ${token}` },
-                    });
-                    window.location.reload();
-                  }}
-                  className="text-red-600 hover:text-red-800 text-sm"
-                >
-                  Delete
-                </button>
+                <DeleteBadgeButton badgeId={badge.id} />
               </div>
             </div>
             <p className="text-sm text-gray-600">{badge.description}</p>
@@ -59,80 +44,5 @@ export default async function BadgesPage() {
         ))}
       </div>
     </div>
-  );
-}
-
-function CreateBadgeForm() {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('admin_access_token='))
-          ?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}/admin/badges`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            code: formData.get('code'),
-            titleCyrillic: formData.get('titleCyrillic'),
-            titleLatin: formData.get('titleLatin'),
-            description: formData.get('description'),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2"
-    >
-      <input name="code" placeholder="Code" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleCyrillic" placeholder="Cyrillic" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleLatin" placeholder="Latin" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="description" placeholder="Description" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
-        Add Badge
-      </button>
-    </form>
-  );
-}
-
-function EditBadgeForm({ badge }: { badge: Badge }) {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('admin_access_token='))
-          ?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}/admin/badges/${badge.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            titleCyrillic: formData.get('titleCyrillic'),
-            titleLatin: formData.get('titleLatin'),
-            description: formData.get('description'),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-1"
-    >
-      <input name="titleCyrillic" defaultValue={badge.titleCyrillic} className="px-2 py-1 border border-gray-200 rounded text-xs w-20" />
-      <input name="titleLatin" defaultValue={badge.titleLatin} className="px-2 py-1 border border-gray-200 rounded text-xs w-20" />
-      <button type="submit" className="px-2 py-1 bg-gray-600 text-white rounded text-xs">
-        Save
-      </button>
-    </form>
   );
 }

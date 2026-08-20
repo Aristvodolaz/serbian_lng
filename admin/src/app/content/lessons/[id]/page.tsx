@@ -1,6 +1,7 @@
 import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { EditLessonForm, CreateExerciseForm, EditExerciseForm, DeleteButton } from '@/components/forms/admin-forms';
 
 interface Lesson {
   id: string;
@@ -56,7 +57,6 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
         <EditLessonForm lesson={lesson} />
       </div>
 
-      {/* Exercises */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Exercises ({lesson.exercises?.length || 0})</h2>
         <CreateExerciseForm lessonId={lesson.id} />
@@ -94,129 +94,5 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
         )}
       </div>
     </div>
-  );
-}
-
-function EditLessonForm({ lesson }: { lesson: Lesson }) {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie.split('; ').find((row) => row.startsWith('admin_access_token='))?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}/admin/lessons/${lesson.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({
-            title: formData.get('title'),
-            titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
-            xpReward: parseInt(formData.get('xpReward') as string),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2"
-    >
-      <input name="title" defaultValue={lesson.title} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleLatin" defaultValue={lesson.titleLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleTranslation" defaultValue={lesson.titleTranslation} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="xpReward" type="number" defaultValue={lesson.xpReward} className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-20" />
-      <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
-        Save
-      </button>
-    </form>
-  );
-}
-
-function CreateExerciseForm({ lessonId }: { lessonId: string }) {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie.split('; ').find((row) => row.startsWith('admin_access_token='))?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-
-        const choicesStr = formData.get('choices') as string;
-        const choices = choicesStr.split('\n').filter(Boolean).map((line, i) => {
-          const [isCorrect, ...textParts] = line.trim().split(' ');
-          return {
-            text: textParts.join(' '),
-            isCorrect: isCorrect === '✓',
-            order: i + 1,
-          };
-        });
-
-        await fetch(`${BACKEND_URL}/admin/lessons/${lessonId}/exercises`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({
-            promptCyrillic: formData.get('promptCyrillic'),
-            promptLatin: formData.get('promptLatin'),
-            choices,
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2 flex-wrap"
-    >
-      <input name="promptCyrillic" placeholder="Cyrillic" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptLatin" placeholder="Latin" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <textarea name="choices" placeholder="✓ correct answer&#10;wrong answer 1&#10;wrong answer 2" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm h-20" />
-      <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
-        Add Exercise
-      </button>
-    </form>
-  );
-}
-
-function EditExerciseForm({ exercise }: { exercise: Exercise }) {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const token = document.cookie.split('; ').find((row) => row.startsWith('admin_access_token='))?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}/admin/exercises/${exercise.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({
-            promptCyrillic: formData.get('promptCyrillic'),
-            promptLatin: formData.get('promptLatin'),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2 mt-3"
-    >
-      <input name="promptCyrillic" defaultValue={exercise.promptCyrillic} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptLatin" defaultValue={exercise.promptLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <button type="submit" className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium">
-        Save
-      </button>
-    </form>
-  );
-}
-
-function DeleteButton({ url, label }: { url: string; label: string }) {
-  return (
-    <button
-      onClick={async () => {
-        if (!confirm('Are you sure?')) return;
-        const token = document.cookie.split('; ').find((row) => row.startsWith('admin_access_token='))?.split('=')[1];
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-        await fetch(`${BACKEND_URL}${url}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        window.location.reload();
-      }}
-      className="text-red-600 hover:text-red-800 text-sm"
-    >
-      {label}
-    </button>
   );
 }
