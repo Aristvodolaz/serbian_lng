@@ -32,7 +32,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       // Set cookies
-      document.cookie = `admin_access_token=${data.accessToken}; Path=/; Max-Age=900; SameSite=Lax`;
+      document.cookie = `admin_access_token=${data.accessToken}; Path=/; Max-Age=2592000; SameSite=Lax`;
       document.cookie = `admin_refresh_token=${data.refreshToken}; Path=/; Max-Age=2592000; SameSite=Lax`;
 
       // Check if user is admin

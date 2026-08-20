@@ -25,7 +25,7 @@ export async function fetchAdmin<T>(
 
   if (res.status === 401 && redirectOnError) {
     const { redirect } = await import('next/navigation');
-    redirect('/login');
+    redirect('/api/refresh');
   }
 
   if (!res.ok) {
