@@ -19,10 +19,10 @@ export class Word {
   @Column()
   latin: string;
 
-  @Column()
+  @Column({ type: 'text' })
   translationRu: string;
 
-  @Column()
+  @Column({ type: 'text' })
   translationEn: string;
 
   @Column({ type: 'text', nullable: true })
