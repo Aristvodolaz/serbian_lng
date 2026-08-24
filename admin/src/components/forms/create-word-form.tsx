@@ -21,7 +21,8 @@ export function CreateWordForm() {
           body: JSON.stringify({
             cyrillic: formData.get('cyrillic'),
             latin: formData.get('latin'),
-            translation: formData.get('translation'),
+            translationRu: formData.get('translationRu'),
+            translationEn: formData.get('translationEn'),
           }),
         });
         window.location.reload();
@@ -41,8 +42,14 @@ export function CreateWordForm() {
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
       />
       <input
-        name="translation"
-        placeholder="Translation"
+        name="translationRu"
+        placeholder="Translation RU"
+        required
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+      />
+      <input
+        name="translationEn"
+        placeholder="Translation EN"
         required
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
       />

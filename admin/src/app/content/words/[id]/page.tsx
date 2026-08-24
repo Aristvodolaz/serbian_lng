@@ -7,7 +7,8 @@ interface Word {
   id: string;
   cyrillic: string;
   latin: string;
-  translation: string;
+  translationRu: string;
+  translationEn: string;
   exampleCyrillic: string | null;
   exampleTranslation: string | null;
   audioUrl: string | null;

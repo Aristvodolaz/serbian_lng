@@ -7,7 +7,8 @@ interface Word {
   id: string;
   cyrillic: string;
   latin: string;
-  translation: string;
+  translationRu: string;
+  translationEn: string;
 }
 
 interface PaginatedWords {
@@ -53,7 +54,8 @@ export default async function WordsPage({
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Cyrillic</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Latin</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation RU</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
@@ -62,7 +64,8 @@ export default async function WordsPage({
               <tr key={word.id} className="border-b border-gray-100 hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{word.cyrillic}</td>
                 <td className="px-4 py-3 text-gray-600">{word.latin}</td>
-                <td className="px-4 py-3 text-gray-600">{word.translation}</td>
+                <td className="px-4 py-3 text-gray-600">{word.translationRu}</td>
+                <td className="px-4 py-3 text-gray-600">{word.translationEn}</td>
                 <td className="px-4 py-3">
                   <Link href={`/content/words/${word.id}`} className="text-indigo-600 hover:underline">
                     Edit

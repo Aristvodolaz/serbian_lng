@@ -23,15 +23,16 @@ export function UploadWordsCsv() {
     // Skip header row
     const dataLines = lines.slice(1);
     const words = dataLines.map((line, i) => {
-      const [cyrillic, latin, translation, exampleCyrillic, exampleTranslation, audioUrl] =
+      const [cyrillic, latin, translationRu, translationEn, exampleCyrillic, exampleTranslation, audioUrl] =
         line.split(',').map((c) => c.trim());
-      if (!cyrillic || !latin || !translation) {
-        throw new Error(`Row ${i + 2}: cyrillic, latin, and translation are required`);
+      if (!cyrillic || !latin || !translationRu || !translationEn) {
+        throw new Error(`Row ${i + 2}: cyrillic, latin, translationRu, and translationEn are required`);
       }
       return {
         cyrillic,
         latin,
-        translation,
+        translationRu,
+        translationEn,
         exampleCyrillic: exampleCyrillic || undefined,
         exampleTranslation: exampleTranslation || undefined,
         audioUrl: audioUrl || undefined,

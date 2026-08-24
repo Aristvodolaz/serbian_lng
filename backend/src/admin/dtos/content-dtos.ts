@@ -250,7 +250,8 @@ export class WordAdminResponseDto {
   @ApiProperty({ nullable: true }) unitId: string | null;
   @ApiProperty() cyrillic: string;
   @ApiProperty() latin: string;
-  @ApiProperty() translation: string;
+  @ApiProperty() translationRu: string;
+  @ApiProperty() translationEn: string;
   @ApiProperty({ nullable: true }) exampleCyrillic: string | null;
   @ApiProperty({ nullable: true }) exampleTranslation: string | null;
   @ApiProperty({ nullable: true }) audioUrl: string | null;
@@ -274,7 +275,12 @@ export class CreateWordDto {
   @ApiProperty()
   @IsString()
   @MinLength(1)
-  translation: string;
+  translationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  translationEn: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -313,7 +319,13 @@ export class UpdateWordDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
-  translation?: string;
+  translationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  translationEn?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

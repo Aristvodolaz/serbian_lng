@@ -300,7 +300,7 @@ export function EditExerciseForm({ exercise }: { exercise: { id: string; promptC
 
 // ── Edit Word Form ───────────────────────────────────────────
 
-export function EditWordForm({ word }: { word: { id: string; cyrillic: string; latin: string; translation: string; exampleCyrillic: string | null; exampleTranslation: string | null; audioUrl: string | null } }) {
+export function EditWordForm({ word }: { word: { id: string; cyrillic: string; latin: string; translationRu: string; translationEn: string; exampleCyrillic: string | null; exampleTranslation: string | null; audioUrl: string | null } }) {
   return (
     <form
       onSubmit={async (e) => {
@@ -311,7 +311,8 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
           body: JSON.stringify({
             cyrillic: formData.get('cyrillic'),
             latin: formData.get('latin'),
-            translation: formData.get('translation'),
+            translationRu: formData.get('translationRu'),
+            translationEn: formData.get('translationEn'),
             exampleCyrillic: formData.get('exampleCyrillic') || null,
             exampleTranslation: formData.get('exampleTranslation') || null,
             audioUrl: formData.get('audioUrl') || null,
@@ -330,8 +331,12 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
         <input name="latin" defaultValue={word.latin} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Translation</label>
-        <input name="translation" defaultValue={word.translation} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+        <label className="block text-sm font-medium text-gray-700 mb-1">Translation RU</label>
+        <input name="translationRu" defaultValue={word.translationRu} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Translation EN</label>
+        <input name="translationEn" defaultValue={word.translationEn} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Example (Cyrillic)</label>

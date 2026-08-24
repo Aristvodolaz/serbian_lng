@@ -20,7 +20,10 @@ export class Word {
   latin: string;
 
   @Column()
-  translation: string;
+  translationRu: string;
+
+  @Column()
+  translationEn: string;
 
   @Column({ type: 'text', nullable: true })
   exampleCyrillic: string | null;
