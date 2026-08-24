@@ -1,6 +1,7 @@
 import { fetchAdmin } from '@/lib/api';
 import Link from 'next/link';
 import { CreateWordForm } from '@/components/forms/create-word-form';
+import { UploadWordsCsv } from '@/components/forms/upload-words-csv';
 
 interface Word {
   id: string;
@@ -41,6 +42,7 @@ export default async function WordsPage({
           <span className="text-sm text-gray-500">
             {words.total} total, page {words.page}/{words.totalPages}
           </span>
+          <UploadWordsCsv />
           <CreateWordForm />
         </div>
       </div>

@@ -476,6 +476,22 @@ export class AdminService {
     return this.mapWord(word);
   }
 
+  async bulkCreateWords(words: CreateWordDto[]): Promise<{ created: number }> {
+    const entities = words.map((dto) =>
+      this.wordRepo.create({
+        unitId: dto.unitId ?? null,
+        cyrillic: dto.cyrillic,
+        latin: dto.latin,
+        translation: dto.translation,
+        exampleCyrillic: dto.exampleCyrillic ?? null,
+        exampleTranslation: dto.exampleTranslation ?? null,
+        audioUrl: dto.audioUrl ?? null,
+      }),
+    );
+    await this.wordRepo.save(entities);
+    return { created: entities.length };
+  }
+
   async getWord(wordId: string): Promise<WordAdminResponseDto> {
     const word = await this.wordRepo.findOne({ where: { id: wordId } });
     if (!word) throw new NotFoundException('Word not found');

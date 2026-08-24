@@ -238,6 +238,11 @@ export class AdminController {
     return this.adminService.createWord(dto);
   }
 
+  @Post('words/bulk')
+  bulkCreateWords(@Body() dto: { words: CreateWordDto[] }): Promise<{ created: number }> {
+    return this.adminService.bulkCreateWords(dto.words);
+  }
+
   @Get('words/:id')
   @ApiOkResponse({ type: WordAdminResponseDto })
   getWord(
