@@ -73,7 +73,9 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
             </div>
             <div>
               <dt className="text-gray-500">Language</dt>
-              <dd>{user.languagePreference}</dd>
+              <dd>
+                {user.languagePreference === 'ru' ? 'Русский' : user.languagePreference === 'en' ? 'English' : user.languagePreference}
+              </dd>
             </div>
             <div>
               <dt className="text-gray-500">XP</dt>

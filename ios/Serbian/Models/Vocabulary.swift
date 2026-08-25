@@ -31,13 +31,19 @@ struct ReviewWord: Codable, Identifiable, Equatable, Sendable {
     let wordId: String
     let cyrillic: String
     let latin: String
-    let translation: String
+    let translationRu: String
+    let translationEn: String
     let exampleCyrillic: String?
     let exampleTranslation: String?
     let audioUrl: String?
     let status: WordStatus
 
     var id: String { wordId }
+
+    /// The translation matching the learner's preferred language.
+    var translation(for language: LanguagePreference) -> String {
+        language == .en ? translationEn : translationRu
+    }
 
     var audioURL: URL? {
         guard let audioUrl, !audioUrl.isEmpty else { return nil }

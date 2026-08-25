@@ -51,6 +51,7 @@ struct FlashcardsScreen: View {
                 word: word,
                 isRevealed: model.isRevealed,
                 scriptPreference: session.scriptPreference,
+                languagePreference: session.languagePreference,
                 onSpeak: { SpeechService.shared.pronounce(word) },
                 onFlip: {
                     withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
@@ -128,6 +129,7 @@ private struct FlashcardView: View {
     var word: ReviewWord
     var isRevealed: Bool
     var scriptPreference: ScriptPreference
+    var languagePreference: LanguagePreference
     var onSpeak: () -> Void
     var onFlip: () -> Void
 
@@ -166,7 +168,7 @@ private struct FlashcardView: View {
                 .accessibilityLabel("Изговори реч")
 
                 if isRevealed {
-                    Text(word.translation)
+                    Text(word.translation(for: languagePreference))
                         .font(.recCalloutStrong)
                         .foregroundStyle(Palette.inkSoft)
                         .padding(.top, 10)

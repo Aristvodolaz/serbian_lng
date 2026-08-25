@@ -58,7 +58,13 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-gray-600">{user.email}</td>
-                <td className="px-4 py-3 text-gray-600">{user.languagePreference}</td>
+                <td className="px-4 py-3">
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    user.languagePreference === 'ru' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
+                  }`}>
+                    {user.languagePreference === 'ru' ? 'Русский' : user.languagePreference === 'en' ? 'English' : user.languagePreference}
+                  </span>
+                </td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
