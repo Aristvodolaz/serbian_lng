@@ -22,7 +22,8 @@ struct LessonSummary: Codable, Identifiable, Equatable, Sendable {
     let id: String
     let title: String
     let titleLatin: String
-    let titleTranslation: String
+    let titleTranslationRu: String
+    let titleTranslationEn: String
     let order: Int
     let xpReward: Int
     let status: LessonStatus
@@ -33,7 +34,8 @@ struct PathUnit: Codable, Identifiable, Equatable, Sendable {
     let id: String
     let titleCyrillic: String
     let titleLatin: String
-    let titleTranslation: String
+    let titleTranslationRu: String
+    let titleTranslationEn: String
     let order: Int
     let lessons: [LessonSummary]
 }
@@ -79,6 +81,7 @@ enum ExerciseType: String, Codable, Sendable {
 struct ExerciseChoice: Codable, Identifiable, Equatable, Sendable {
     let id: String
     let text: String
+    let textRu: String
 }
 
 /// `ExercisePublicDto`
@@ -87,6 +90,8 @@ struct Exercise: Codable, Identifiable, Equatable, Sendable {
     let type: ExerciseType
     let promptCyrillic: String
     let promptLatin: String
+    let promptTranslationRu: String
+    let promptTranslationEn: String
     let order: Int
     let choices: [ExerciseChoice]
 }
@@ -96,6 +101,8 @@ struct LessonDetail: Codable, Identifiable, Equatable, Sendable {
     let id: String
     let title: String
     let titleLatin: String
+    let titleTranslationRu: String
+    let titleTranslationEn: String
     let xpReward: Int
     let exercises: [Exercise]
 
@@ -132,4 +139,37 @@ struct CompleteLessonRequest: Encodable, Sendable {
 /// `AnswerExerciseDto`
 struct AnswerExerciseRequest: Encodable, Sendable {
     let choiceId: String
+}
+
+// MARK: - Translation helpers
+
+extension LessonSummary {
+    func titleTranslation(matching language: LanguagePreference) -> String {
+        language == .en ? titleTranslationEn : titleTranslationRu
+    }
+}
+
+extension PathUnit {
+    func titleTranslation(matching language: LanguagePreference) -> String {
+        language == .en ? titleTranslationEn : titleTranslationRu
+    }
+}
+
+extension LessonDetail {
+    func titleTranslation(matching language: LanguagePreference) -> String {
+        language == .en ? titleTranslationEn : titleTranslationRu
+    }
+}
+
+extension Exercise {
+    func promptTranslation(matching language: LanguagePreference) -> String {
+        language == .en ? promptTranslationEn : promptTranslationRu
+    }
+}
+
+extension ExerciseChoice {
+    func displayText(matching language: LanguagePreference) -> String {
+        // text is Serbian (primary), textRu is Russian translation of the meaning
+        language == .ru ? textRu : text
+    }
 }

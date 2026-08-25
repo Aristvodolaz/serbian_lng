@@ -63,7 +63,8 @@ struct PathScreen: View {
                     UnitTrailSection(
                         unit: unit,
                         startIndex: startIndex(of: unitIndex, in: path),
-                        scriptPreference: session.scriptPreference
+                        scriptPreference: session.scriptPreference,
+                        languagePreference: session.languagePreference
                     ) { lesson in
                         model.activeLesson = lesson
                     }
@@ -114,6 +115,7 @@ private struct UnitTrailSection: View {
     var unit: PathUnit
     var startIndex: Int
     var scriptPreference: ScriptPreference
+    var languagePreference: LanguagePreference
     var onSelect: (LessonSummary) -> Void
 
     private var lessons: [LessonSummary] {
@@ -133,7 +135,7 @@ private struct UnitTrailSection: View {
                     secondaryFont: .recCaption
                 )
                 Spacer()
-                Text(unit.titleTranslation)
+                Text(unit.titleTranslation(matching: languagePreference))
                     .font(.recCaption)
                     .foregroundStyle(Palette.inkSoft)
             }
@@ -144,6 +146,7 @@ private struct UnitTrailSection: View {
                 PathNodeRow(
                     lesson: lesson,
                     scriptPreference: scriptPreference,
+                    languagePreference: languagePreference,
                     xOffset: Self.xOffset(for: index),
                     onSelect: onSelect
                 )
@@ -170,6 +173,7 @@ private struct UnitTrailSection: View {
 private struct PathNodeRow: View {
     var lesson: LessonSummary
     var scriptPreference: ScriptPreference
+    var languagePreference: LanguagePreference
     var xOffset: CGFloat
     var onSelect: (LessonSummary) -> Void
 
@@ -189,7 +193,7 @@ private struct PathNodeRow: View {
                             .italic()
                             .foregroundStyle(Palette.oxblood)
                     }
-                    Text("\(lesson.titleTranslation) · \(lesson.xpReward) XP")
+                    Text("\(lesson.titleTranslation(matching: languagePreference)) · \(lesson.xpReward) XP")
                         .font(.recCaption)
                         .foregroundStyle(Palette.inkSoft)
                 }

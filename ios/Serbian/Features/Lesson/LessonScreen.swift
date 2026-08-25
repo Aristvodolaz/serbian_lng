@@ -104,7 +104,7 @@ struct LessonScreen: View {
             VStack(spacing: 9) {
                 ForEach(exercise.choices) { choice in
                     ChoiceRow(
-                        text: choice.text,
+                        text: choice.displayText(matching: session.languagePreference),
                         feedback: model.feedback(for: choice)
                     ) {
                         model.select(choice.id)
