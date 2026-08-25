@@ -406,7 +406,7 @@ export function EditChoiceForm({
 }) {
   const [editing, setEditing] = useState(false);
 
-  const updateChoice = async (data: { text?: string; isCorrect?: boolean; order?: number }) => {
+  const updateChoice = async (data: { text?: string; textRu?: string; isCorrect?: boolean; order?: number }) => {
     await adminFetch(`/admin/exercise-choices/${choice.id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
