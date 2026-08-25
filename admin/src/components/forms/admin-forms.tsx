@@ -477,7 +477,7 @@ export function EditChoiceForm({
         title="Click to edit"
       >
         <span>{choice.text}</span>
-        {choice.textRu && <span className="text-gray-400 mx-1">|</span><span className="text-gray-500">{choice.textRu}</span>}
+        {choice.textRu && <><span className="text-gray-400 mx-1">|</span><span className="text-gray-500">{choice.textRu}</span></>}
       </div>
       <label className="flex items-center gap-1 text-xs cursor-pointer">
         <input
