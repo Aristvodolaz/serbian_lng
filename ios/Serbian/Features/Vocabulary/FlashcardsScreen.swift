@@ -168,7 +168,7 @@ private struct FlashcardView: View {
                 .accessibilityLabel("Изговори реч")
 
                 if isRevealed {
-                    Text(word.translation(for: languagePreference))
+                    Text(word.translation(matching: languagePreference))
                         .font(.recCalloutStrong)
                         .foregroundStyle(Palette.inkSoft)
                         .padding(.top, 10)

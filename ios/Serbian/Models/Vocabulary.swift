@@ -40,14 +40,16 @@ struct ReviewWord: Codable, Identifiable, Equatable, Sendable {
 
     var id: String { wordId }
 
-    /// The translation matching the learner's preferred language.
-    var translation(for language: LanguagePreference) -> String {
-        language == .en ? translationEn : translationRu
-    }
-
     var audioURL: URL? {
         guard let audioUrl, !audioUrl.isEmpty else { return nil }
         return URL(string: audioUrl)
+    }
+}
+
+extension ReviewWord {
+    /// The translation matching the learner's preferred language.
+    func translation(matching language: LanguagePreference) -> String {
+        language == .en ? translationEn : translationRu
     }
 }
 
