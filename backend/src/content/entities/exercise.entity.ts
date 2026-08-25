@@ -34,10 +34,10 @@ export class Exercise {
   @Column()
   promptLatin: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   promptTranslationRu: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   promptTranslationEn: string;
 
   @Column()

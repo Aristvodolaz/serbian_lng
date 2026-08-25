@@ -12,10 +12,10 @@ export class Unit {
   @Column()
   titleLatin: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   titleTranslationRu: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   titleTranslationEn: string;
 
   @Column()

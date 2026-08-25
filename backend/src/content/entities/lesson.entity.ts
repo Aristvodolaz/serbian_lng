@@ -27,10 +27,10 @@ export class Lesson {
   @Column()
   titleLatin: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   titleTranslationRu: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   titleTranslationEn: string;
 
   // Global order across the whole path — determines which lesson is

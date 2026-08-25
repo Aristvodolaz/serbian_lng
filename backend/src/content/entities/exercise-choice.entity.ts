@@ -16,7 +16,7 @@ export class ExerciseChoice {
   @Column()
   text: string;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   textRu: string;
 
   // Never serialize this to the client before an answer is submitted —
