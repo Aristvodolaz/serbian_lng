@@ -6,6 +6,7 @@ import {
 } from 'typeorm';
 import { ScriptPreference } from '../enums/script-preference.enum';
 import { UserRole } from '../enums/user-role.enum';
+import { LanguagePreference } from '../enums/language-preference.enum';
 
 @Entity('users')
 export class User {
@@ -27,6 +28,13 @@ export class User {
     default: ScriptPreference.BOTH,
   })
   scriptPreference: ScriptPreference;
+
+  @Column({
+    type: 'enum',
+    enum: LanguagePreference,
+    default: LanguagePreference.RU,
+  })
+  languagePreference: LanguagePreference;
 
   @Column({
     type: 'enum',

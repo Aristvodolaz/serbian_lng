@@ -649,6 +649,7 @@ export class AdminService {
       email: u.email,
       displayName: u.displayName,
       scriptPreference: u.scriptPreference,
+      languagePreference: u.languagePreference,
       role: u.role,
       banned: u.banned,
       xp: u.xp,

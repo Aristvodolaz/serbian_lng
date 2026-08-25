@@ -143,6 +143,7 @@ struct SettingsSheet: View {
 
     @State private var displayName = ""
     @State private var scriptPreference: ScriptPreference = .both
+    @State private var languagePreference: LanguagePreference = .ru
     @State private var isSaving = false
     @State private var errorMessage: String?
     @State private var savedMessage: String?
@@ -190,6 +191,42 @@ struct SettingsSheet: View {
                                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                                         .strokeBorder(
                                             scriptPreference == preference ? Palette.indigo : Palette.line,
+                                            lineWidth: 1.5
+                                        )
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: Metrics.tight) {
+                        EyebrowLabel(text: "Язык переводов")
+                        ForEach(LanguagePreference.allCases) { preference in
+                            Button {
+                                languagePreference = preference
+                            } label: {
+                                HStack {
+                                    Text(preference.title)
+                                        .font(.recCalloutStrong)
+                                        .foregroundStyle(Palette.ink)
+                                    Spacer()
+                                    Image(systemName: languagePreference == preference
+                                          ? "largecircle.fill.circle"
+                                          : "circle")
+                                        .foregroundStyle(
+                                            languagePreference == preference ? Palette.indigo : Palette.line
+                                        )
+                                }
+                                .padding(.horizontal, 14)
+                                .frame(minHeight: 56)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .fill(Palette.surface)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .strokeBorder(
+                                            languagePreference == preference ? Palette.indigo : Palette.line,
                                             lineWidth: 1.5
                                         )
                                 )
@@ -269,6 +306,7 @@ struct SettingsSheet: View {
         .onAppear {
             displayName = session.displayName
             scriptPreference = session.scriptPreference
+            languagePreference = session.languagePreference
         }
         .sheet(item: $showingDocument) { document in
             LegalDocumentView(fileName: document.rawValue, title: document.title)
@@ -288,6 +326,9 @@ struct SettingsSheet: View {
             }
             if scriptPreference != session.scriptPreference {
                 try await session.updateScriptPreference(scriptPreference)
+            }
+            if languagePreference != session.languagePreference {
+                try await session.updateLanguagePreference(languagePreference)
             }
             savedMessage = String(localized: "Сачувано.")
         } catch {

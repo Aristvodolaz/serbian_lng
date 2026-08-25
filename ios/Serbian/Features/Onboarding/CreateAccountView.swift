@@ -22,6 +22,7 @@ struct CreateAccountView: View {
     @State private var displayName = ""
     @State private var email = ""
     @State private var password = ""
+    @State private var languagePreference: LanguagePreference = .ru
     @State private var errorMessage: String?
     @State private var isSubmitting = false
     @State private var showingDocument: LegalDocument?
@@ -75,6 +76,7 @@ struct CreateAccountView: View {
                 }
 
                 selectedScriptSummary
+                languagePreferenceSection
 
                 Button {
                     Task { await submit() }
@@ -119,6 +121,44 @@ struct CreateAccountView: View {
         .frame(maxWidth: .infinity)
     }
 
+    private var languagePreferenceSection: some View {
+        VStack(alignment: .leading, spacing: Metrics.tight) {
+            EyebrowLabel(text: "Язык переводов")
+            ForEach(LanguagePreference.allCases) { preference in
+                Button {
+                    languagePreference = preference
+                } label: {
+                    HStack {
+                        Text(preference.title)
+                            .font(.recCalloutStrong)
+                            .foregroundStyle(Palette.ink)
+                        Spacer()
+                        Image(systemName: languagePreference == preference
+                              ? "largecircle.fill.circle"
+                              : "circle")
+                            .foregroundStyle(
+                                languagePreference == preference ? Palette.indigo : Palette.line
+                            )
+                    }
+                    .padding(.horizontal, 14)
+                    .frame(minHeight: 56)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Palette.surface)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .strokeBorder(
+                                languagePreference == preference ? Palette.indigo : Palette.line,
+                                lineWidth: 1.5
+                            )
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
     private var selectedScriptSummary: some View {
         HStack(spacing: Metrics.tight) {
             Image(systemName: "textformat.abc")
@@ -154,7 +194,8 @@ struct CreateAccountView: View {
                 email: email.trimmingCharacters(in: .whitespaces).lowercased(),
                 password: password,
                 displayName: displayName.trimmingCharacters(in: .whitespaces),
-                scriptPreference: scriptPreference
+                scriptPreference: scriptPreference,
+                languagePreference: languagePreference
             )
         } catch {
             errorMessage = error.learnerFacingMessage

@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ScriptPreference } from '../../users/enums/script-preference.enum';
+import { LanguagePreference } from '../../users/enums/language-preference.enum';
 import { UserRole } from '../../users/enums/user-role.enum';
 
 export class AdminUserListResponseDto {
@@ -7,6 +8,7 @@ export class AdminUserListResponseDto {
   @ApiProperty() email: string;
   @ApiProperty() displayName: string;
   @ApiProperty({ enum: ScriptPreference }) scriptPreference: ScriptPreference;
+  @ApiProperty({ enum: LanguagePreference }) languagePreference: LanguagePreference;
   @ApiProperty({ enum: UserRole }) role: UserRole;
   @ApiProperty() banned: boolean;
   @ApiProperty() xp: number;

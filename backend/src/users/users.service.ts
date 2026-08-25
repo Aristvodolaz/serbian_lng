@@ -32,6 +32,7 @@ export class UsersService {
     const user = await this.findByIdOrThrow(id);
     if (dto.displayName !== undefined) user.displayName = dto.displayName;
     if (dto.scriptPreference !== undefined) user.scriptPreference = dto.scriptPreference;
+    if (dto.languagePreference !== undefined) user.languagePreference = dto.languagePreference;
     return this.userRepository.save(user);
   }
 

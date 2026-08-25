@@ -34,12 +34,33 @@ enum ScriptPreference: String, Codable, CaseIterable, Identifiable, Sendable {
     }
 }
 
+/// `users/enums/language-preference.enum.ts`
+enum LanguagePreference: String, Codable, CaseIterable, Identifiable, Sendable {
+    case ru
+    case en
+
+    var id: String { rawValue }
+
+    init(from decoder: any Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = LanguagePreference(rawValue: raw) ?? .ru
+    }
+
+    var title: String {
+        switch self {
+        case .ru: String(localized: "Русский")
+        case .en: String(localized: "English")
+        }
+    }
+}
+
 /// `UserResponseDto`
 struct UserProfile: Codable, Identifiable, Equatable, Sendable {
     let id: String
     let email: String
     let displayName: String
     let scriptPreference: ScriptPreference
+    let languagePreference: LanguagePreference
     let xp: Int
     let streakDays: Int
     /// Calendar day (`yyyy-MM-dd`), not a timestamp — kept as sent.
@@ -51,13 +72,15 @@ extension UserProfile {
     func updating(
         xp: Int? = nil,
         streakDays: Int? = nil,
-        scriptPreference: ScriptPreference? = nil
+        scriptPreference: ScriptPreference? = nil,
+        languagePreference: LanguagePreference? = nil
     ) -> UserProfile {
         UserProfile(
             id: id,
             email: email,
             displayName: displayName,
             scriptPreference: scriptPreference ?? self.scriptPreference,
+            languagePreference: languagePreference ?? self.languagePreference,
             xp: xp ?? self.xp,
             streakDays: streakDays ?? self.streakDays,
             lastActivityDate: lastActivityDate,

@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
 import { ScriptPreference } from '../../users/enums/script-preference.enum';
+import { LanguagePreference } from '../../users/enums/language-preference.enum';
 
 export class RegisterDto {
   @ApiProperty({ example: 'milica@example.com' })
@@ -21,4 +22,9 @@ export class RegisterDto {
   @IsOptional()
   @IsEnum(ScriptPreference)
   scriptPreference?: ScriptPreference;
+
+  @ApiPropertyOptional({ enum: LanguagePreference, default: LanguagePreference.RU })
+  @IsOptional()
+  @IsEnum(LanguagePreference)
+  languagePreference?: LanguagePreference;
 }

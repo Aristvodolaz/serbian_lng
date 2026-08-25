@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { ScriptPreference } from '../users/enums/script-preference.enum';
+import { LanguagePreference } from '../users/enums/language-preference.enum';
 import { UserResponseDto } from '../users/dto/user-response.dto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -30,6 +31,7 @@ export class AuthService {
       passwordHash,
       displayName: dto.displayName,
       scriptPreference: dto.scriptPreference ?? ScriptPreference.BOTH,
+      languagePreference: dto.languagePreference ?? LanguagePreference.RU,
     });
     await this.userRepository.save(user);
 

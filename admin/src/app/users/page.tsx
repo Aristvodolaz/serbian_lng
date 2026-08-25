@@ -9,6 +9,7 @@ interface User {
   banned: boolean;
   xp: number;
   streakDays: number;
+  languagePreference: string;
   createdAt: string;
 }
 
@@ -40,6 +41,7 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Name</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Email</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Language</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Role</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">XP</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Streak</th>
@@ -56,6 +58,7 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-gray-600">{user.email}</td>
+                <td className="px-4 py-3 text-gray-600">{user.languagePreference}</td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'

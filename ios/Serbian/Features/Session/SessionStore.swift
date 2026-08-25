@@ -59,13 +59,15 @@ final class SessionStore {
         email: String,
         password: String,
         displayName: String,
-        scriptPreference: ScriptPreference
+        scriptPreference: ScriptPreference,
+        languagePreference: LanguagePreference
     ) async throws {
         let response = try await api.register(
             email: email,
             password: password,
             displayName: displayName,
-            scriptPreference: scriptPreference
+            scriptPreference: scriptPreference,
+            languagePreference: languagePreference
         )
         user = response.user
         phase = .signedIn
@@ -96,6 +98,10 @@ final class SessionStore {
         user = try await api.updateProfile(scriptPreference: preference)
     }
 
+    func updateLanguagePreference(_ preference: LanguagePreference) async throws {
+        user = try await api.updateProfile(languagePreference: preference)
+    }
+
     func updateDisplayName(_ name: String) async throws {
         user = try await api.updateProfile(displayName: name)
     }
@@ -108,6 +114,10 @@ final class SessionStore {
 
     var scriptPreference: ScriptPreference {
         user?.scriptPreference ?? .both
+    }
+
+    var languagePreference: LanguagePreference {
+        user?.languagePreference ?? .ru
     }
 
     var displayName: String {

@@ -11,6 +11,7 @@ interface UserDetail {
   banned: boolean;
   xp: number;
   streakDays: number;
+  languagePreference: string;
   lessonsCompleted: number;
   wordsLearned: number;
   badgesEarned: number;
@@ -69,6 +70,10 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                   <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Active</span>
                 )}
               </dd>
+            </div>
+            <div>
+              <dt className="text-gray-500">Language</dt>
+              <dd>{user.languagePreference}</dd>
             </div>
             <div>
               <dt className="text-gray-500">XP</dt>

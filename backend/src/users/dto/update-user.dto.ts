@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
 import { ScriptPreference } from '../enums/script-preference.enum';
+import { LanguagePreference } from '../enums/language-preference.enum';
 
 export class UpdateUserDto {
   @ApiPropertyOptional({ example: 'Милица' })
@@ -13,4 +14,9 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(ScriptPreference)
   scriptPreference?: ScriptPreference;
+
+  @ApiPropertyOptional({ enum: LanguagePreference })
+  @IsOptional()
+  @IsEnum(LanguagePreference)
+  languagePreference?: LanguagePreference;
 }

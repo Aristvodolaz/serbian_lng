@@ -27,7 +27,8 @@ final class RecAPI {
         email: String,
         password: String,
         displayName: String,
-        scriptPreference: ScriptPreference
+        scriptPreference: ScriptPreference,
+        languagePreference: LanguagePreference
     ) async throws -> AuthResponse {
         let request = try APIRequest.post(
             "auth/register",
@@ -35,7 +36,8 @@ final class RecAPI {
                 email: email,
                 password: password,
                 displayName: displayName,
-                scriptPreference: scriptPreference
+                scriptPreference: scriptPreference,
+                languagePreference: languagePreference
             ),
             authenticated: false
         )
@@ -67,11 +69,16 @@ final class RecAPI {
 
     func updateProfile(
         displayName: String? = nil,
-        scriptPreference: ScriptPreference? = nil
+        scriptPreference: ScriptPreference? = nil,
+        languagePreference: LanguagePreference? = nil
     ) async throws -> UserProfile {
         let request = try APIRequest.patch(
             "users/me",
-            body: UpdateProfileRequest(displayName: displayName, scriptPreference: scriptPreference)
+            body: UpdateProfileRequest(
+                displayName: displayName,
+                scriptPreference: scriptPreference,
+                languagePreference: languagePreference
+            )
         )
         return try await client.send(request, as: UserProfile.self)
     }
@@ -139,5 +146,17 @@ final class RecAPI {
 
     func earnedBadges() async throws -> [EarnedBadge] {
         try await client.send(.get("badges/me"), as: [EarnedBadge].self)
+    }
+
+    // MARK: - tts
+
+    func speak(_ text: String) async throws -> Data {
+        try await client.send(
+            .get(
+                "tts/speak",
+                query: [URLQueryItem(name: "text", value: text)],
+                authenticated: false
+            )
+        )
     }
 }

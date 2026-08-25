@@ -23,6 +23,7 @@ struct RegisterRequest: Encodable, Sendable {
     let password: String
     let displayName: String
     let scriptPreference: ScriptPreference
+    let languagePreference: LanguagePreference
 }
 
 /// `LoginDto`
@@ -40,4 +41,5 @@ struct RefreshRequest: Encodable, Sendable {
 struct UpdateProfileRequest: Encodable, Sendable {
     var displayName: String?
     var scriptPreference: ScriptPreference?
+    var languagePreference: LanguagePreference?
 }
