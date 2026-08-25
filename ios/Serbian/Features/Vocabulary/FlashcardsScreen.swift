@@ -178,7 +178,7 @@ private struct FlashcardView: View {
                             Text("„\(example)“")
                                 .font(.recCaption)
                                 .foregroundStyle(Palette.inkSoft)
-                            if let translation = word.exampleTranslation {
+                            if let translation = word.exampleTranslation(matching: languagePreference) {
                                 Text(translation)
                                     .font(.recCaption)
                                     .foregroundStyle(Palette.inkSoft)

@@ -110,7 +110,8 @@ function toDto(word: Word, status: WordProgressStatus): ReviewWordResponseDto {
     translationRu: word.translationRu,
     translationEn: word.translationEn,
     exampleCyrillic: word.exampleCyrillic,
-    exampleTranslation: word.exampleTranslation,
+    exampleTranslationRu: word.exampleTranslationRu,
+    exampleTranslationEn: word.exampleTranslationEn,
     audioUrl: word.audioUrl,
     status,
   };

@@ -54,6 +54,7 @@ async function bootstrap() {
     .addTag('vocabulary', 'Flashcard review queue and spaced repetition')
     .addTag('badges', 'Achievement catalog and earned badges')
     .addTag('admin', 'Admin panel operations (requires admin role)')
+    .addTag('tts', 'Serbian text-to-speech synthesis')
     .addTag('health', 'Liveness check')
     .build();
 

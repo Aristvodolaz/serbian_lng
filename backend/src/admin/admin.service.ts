@@ -470,7 +470,8 @@ export class AdminService {
       translationRu: dto.translationRu,
       translationEn: dto.translationEn,
       exampleCyrillic: dto.exampleCyrillic ?? null,
-      exampleTranslation: dto.exampleTranslation ?? null,
+      exampleTranslationRu: dto.exampleTranslationRu ?? null,
+      exampleTranslationEn: dto.exampleTranslationEn ?? null,
       audioUrl: dto.audioUrl ?? null,
     });
     await this.wordRepo.save(word);
@@ -486,7 +487,8 @@ export class AdminService {
         translationRu: dto.translationRu,
         translationEn: dto.translationEn,
         exampleCyrillic: dto.exampleCyrillic ?? null,
-        exampleTranslation: dto.exampleTranslation ?? null,
+        exampleTranslationRu: dto.exampleTranslationRu ?? null,
+        exampleTranslationEn: dto.exampleTranslationEn ?? null,
         audioUrl: dto.audioUrl ?? null,
       }),
     );
@@ -727,7 +729,8 @@ export class AdminService {
       translationRu: w.translationRu,
       translationEn: w.translationEn,
       exampleCyrillic: w.exampleCyrillic,
-      exampleTranslation: w.exampleTranslation,
+      exampleTranslationRu: w.exampleTranslationRu,
+      exampleTranslationEn: w.exampleTranslationEn,
       audioUrl: w.audioUrl,
     };
   }

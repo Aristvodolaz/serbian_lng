@@ -253,7 +253,8 @@ export class WordAdminResponseDto {
   @ApiProperty() translationRu: string;
   @ApiProperty() translationEn: string;
   @ApiProperty({ nullable: true }) exampleCyrillic: string | null;
-  @ApiProperty({ nullable: true }) exampleTranslation: string | null;
+  @ApiProperty({ nullable: true }) exampleTranslationRu: string | null;
+  @ApiProperty({ nullable: true }) exampleTranslationEn: string | null;
   @ApiProperty({ nullable: true }) audioUrl: string | null;
 }
 
@@ -290,7 +291,12 @@ export class CreateWordDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  exampleTranslation?: string;
+  exampleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  exampleTranslationEn?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -335,7 +341,12 @@ export class UpdateWordDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  exampleTranslation?: string | null;
+  exampleTranslationRu?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  exampleTranslationEn?: string | null;
 
   @ApiPropertyOptional()
   @IsOptional()

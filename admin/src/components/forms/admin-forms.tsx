@@ -300,7 +300,7 @@ export function EditExerciseForm({ exercise }: { exercise: { id: string; promptC
 
 // ── Edit Word Form ───────────────────────────────────────────
 
-export function EditWordForm({ word }: { word: { id: string; cyrillic: string; latin: string; translationRu: string; translationEn: string; exampleCyrillic: string | null; exampleTranslation: string | null; audioUrl: string | null } }) {
+export function EditWordForm({ word }: { word: { id: string; cyrillic: string; latin: string; translationRu: string; translationEn: string; exampleCyrillic: string | null; exampleTranslationRu: string | null; exampleTranslationEn: string | null; audioUrl: string | null } }) {
   return (
     <form
       onSubmit={async (e) => {
@@ -314,7 +314,8 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
             translationRu: formData.get('translationRu'),
             translationEn: formData.get('translationEn'),
             exampleCyrillic: formData.get('exampleCyrillic') || null,
-            exampleTranslation: formData.get('exampleTranslation') || null,
+            exampleTranslationRu: formData.get('exampleTranslationRu') || null,
+            exampleTranslationEn: formData.get('exampleTranslationEn') || null,
             audioUrl: formData.get('audioUrl') || null,
           }),
         });
@@ -343,8 +344,12 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
         <input name="exampleCyrillic" defaultValue={word.exampleCyrillic || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Example (Translation)</label>
-        <input name="exampleTranslation" defaultValue={word.exampleTranslation || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+        <label className="block text-sm font-medium text-gray-700 mb-1">Example Translation RU</label>
+        <input name="exampleTranslationRu" defaultValue={word.exampleTranslationRu || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Example Translation EN</label>
+        <input name="exampleTranslationEn" defaultValue={word.exampleTranslationEn || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Audio URL</label>
