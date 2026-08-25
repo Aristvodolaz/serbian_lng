@@ -8,7 +8,6 @@ import { ContentModule } from './content/content.module';
 import { VocabularyModule } from './vocabulary/vocabulary.module';
 import { BadgesModule } from './badges/badges.module';
 import { AdminModule } from './admin/admin.module';
-import { TtsModule } from './tts/tts.module';
 import { HealthController } from './health.controller';
 
 @Module({
@@ -24,7 +23,6 @@ import { HealthController } from './health.controller';
     VocabularyModule,
     BadgesModule,
     AdminModule,
-    TtsModule,
   ],
   controllers: [HealthController],
 })
