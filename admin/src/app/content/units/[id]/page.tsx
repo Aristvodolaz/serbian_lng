@@ -7,7 +7,8 @@ interface Unit {
   id: string;
   titleCyrillic: string;
   titleLatin: string;
-  titleTranslation: string;
+  titleTranslationRu: string;
+  titleTranslationEn: string;
   order: number;
   lessons?: Lesson[];
 }
@@ -16,7 +17,8 @@ interface Lesson {
   id: string;
   title: string;
   titleLatin: string;
-  titleTranslation: string;
+  titleTranslationRu: string;
+  titleTranslationEn: string;
   order: number;
   xpReward: number;
 }
@@ -44,8 +46,12 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
       <div className="bg-white p-6 rounded-xl border border-gray-200 mb-6">
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <dt className="text-gray-500">Translation</dt>
-            <dd className="font-medium">{unit.titleTranslation}</dd>
+            <dt className="text-gray-500">Translation RU</dt>
+            <dd className="font-medium">{unit.titleTranslationRu}</dd>
+          </div>
+          <div>
+            <dt className="text-gray-500">Translation EN</dt>
+            <dd className="font-medium">{unit.titleTranslationEn}</dd>
           </div>
           <div>
             <dt className="text-gray-500">Order</dt>
@@ -69,7 +75,8 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
               <th className="text-left px-4 py-3 font-medium text-gray-500">Order</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Cyrillic</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Latin</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation RU</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">XP</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
             </tr>
@@ -80,7 +87,8 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                 <td className="px-4 py-3">{lesson.order}</td>
                 <td className="px-4 py-3 font-medium">{lesson.title}</td>
                 <td className="px-4 py-3 text-gray-600">{lesson.titleLatin}</td>
-                <td className="px-4 py-3 text-gray-600">{lesson.titleTranslation}</td>
+                <td className="px-4 py-3 text-gray-600">{lesson.titleTranslationRu}</td>
+                <td className="px-4 py-3 text-gray-600">{lesson.titleTranslationEn}</td>
                 <td className="px-4 py-3">{lesson.xpReward}</td>
                 <td className="px-4 py-3">
                   <Link href={`/content/lessons/${lesson.id}`} className="text-indigo-600 hover:underline">
@@ -91,7 +99,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
             ))}
             {!unit.lessons?.length && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                   No lessons yet
                 </td>
               </tr>

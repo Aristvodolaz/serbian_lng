@@ -11,6 +11,7 @@ import { ExerciseType } from '../../content/entities/exercise.entity';
 export class ExerciseChoiceAdminResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() text: string;
+  @ApiProperty() textRu: string;
   @ApiProperty() isCorrect: boolean;
   @ApiProperty() order: number;
 }
@@ -20,6 +21,11 @@ export class CreateExerciseChoiceDto {
   @IsString()
   @MinLength(1)
   text: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  textRu: string;
 
   @ApiProperty()
   @IsBoolean()
@@ -42,6 +48,12 @@ export class UpdateExerciseChoiceDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  @MinLength(1)
+  textRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsBoolean()
   isCorrect?: boolean;
 
@@ -59,6 +71,8 @@ export class ExerciseAdminResponseDto {
   @ApiProperty({ enum: ExerciseType }) type: ExerciseType;
   @ApiProperty() promptCyrillic: string;
   @ApiProperty() promptLatin: string;
+  @ApiProperty() promptTranslationRu: string;
+  @ApiProperty() promptTranslationEn: string;
   @ApiProperty() order: number;
   @ApiProperty({ type: [ExerciseChoiceAdminResponseDto] }) choices: ExerciseChoiceAdminResponseDto[];
 }
@@ -77,6 +91,16 @@ export class CreateExerciseDto {
   @IsString()
   @MinLength(1)
   promptLatin: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptTranslationEn: string;
 
   @ApiProperty()
   @IsArray()
@@ -103,6 +127,18 @@ export class UpdateExerciseDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  @MinLength(1)
+  promptTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  promptTranslationEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsArray()
   choices?: CreateExerciseChoiceDto[];
 
@@ -120,7 +156,8 @@ export class LessonAdminResponseDto {
   @ApiProperty() unitId: string;
   @ApiProperty() title: string;
   @ApiProperty() titleLatin: string;
-  @ApiProperty() titleTranslation: string;
+  @ApiProperty() titleTranslationRu: string;
+  @ApiProperty() titleTranslationEn: string;
   @ApiProperty() order: number;
   @ApiProperty() xpReward: number;
   @ApiProperty({ type: [ExerciseAdminResponseDto], required: false })
@@ -145,7 +182,12 @@ export class CreateLessonDto {
   @ApiProperty()
   @IsString()
   @MinLength(1)
-  titleTranslation: string;
+  titleTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleTranslationEn: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -172,7 +214,13 @@ export class UpdateLessonDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
-  titleTranslation?: string;
+  titleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  titleTranslationEn?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -194,7 +242,8 @@ export class UnitAdminResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() titleCyrillic: string;
   @ApiProperty() titleLatin: string;
-  @ApiProperty() titleTranslation: string;
+  @ApiProperty() titleTranslationRu: string;
+  @ApiProperty() titleTranslationEn: string;
   @ApiProperty() order: number;
   @ApiProperty({ type: [LessonAdminResponseDto], required: false })
   lessons?: LessonAdminResponseDto[];
@@ -214,7 +263,12 @@ export class CreateUnitDto {
   @ApiProperty()
   @IsString()
   @MinLength(1)
-  titleTranslation: string;
+  titleTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleTranslationEn: string;
 }
 
 export class UpdateUnitDto {
@@ -234,7 +288,13 @@ export class UpdateUnitDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
-  titleTranslation?: string;
+  titleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  titleTranslationEn?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

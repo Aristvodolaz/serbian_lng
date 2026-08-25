@@ -283,7 +283,8 @@ export class AdminService {
       unitId: dto.unitId,
       title: dto.title,
       titleLatin: dto.titleLatin,
-      titleTranslation: dto.titleTranslation,
+      titleTranslationRu: dto.titleTranslationRu,
+      titleTranslationEn: dto.titleTranslationEn,
       order: (maxOrder?.order ?? 0) + 1,
       xpReward: dto.xpReward ?? 10,
     });
@@ -338,12 +339,15 @@ export class AdminService {
       type: dto.type ?? ExerciseType.TRANSLATE_CHOICE,
       promptCyrillic: dto.promptCyrillic,
       promptLatin: dto.promptLatin,
+      promptTranslationRu: dto.promptTranslationRu,
+      promptTranslationEn: dto.promptTranslationEn,
       order: (maxOrder?.order ?? 0) + 1,
     });
 
     if (dto.choices?.length) {
       exercise.choices = dto.choices.map((c, i) => ({
         text: c.text,
+        textRu: c.textRu,
         isCorrect: c.isCorrect,
         order: c.order ?? i + 1,
       }) as ExerciseChoice);
@@ -370,6 +374,8 @@ export class AdminService {
     if (dto.type !== undefined) exercise.type = dto.type;
     if (dto.promptCyrillic !== undefined) exercise.promptCyrillic = dto.promptCyrillic;
     if (dto.promptLatin !== undefined) exercise.promptLatin = dto.promptLatin;
+    if (dto.promptTranslationRu !== undefined) exercise.promptTranslationRu = dto.promptTranslationRu;
+    if (dto.promptTranslationEn !== undefined) exercise.promptTranslationEn = dto.promptTranslationEn;
     if (dto.order !== undefined) exercise.order = dto.order;
 
     if (dto.choices !== undefined) {
@@ -377,6 +383,7 @@ export class AdminService {
       exercise.choices = dto.choices.map((c, i) => ({
         exerciseId: exercise.id,
         text: c.text,
+        textRu: c.textRu,
         isCorrect: c.isCorrect,
         order: c.order ?? i + 1,
       }) as ExerciseChoice);
@@ -415,6 +422,7 @@ export class AdminService {
     const choice = this.choiceRepo.create({
       exerciseId,
       text: dto.text,
+      textRu: dto.textRu,
       isCorrect: dto.isCorrect,
       order: dto.order ?? (maxOrder?.order ?? 0) + 1,
     });
@@ -666,7 +674,8 @@ export class AdminService {
       id: u.id,
       titleCyrillic: u.titleCyrillic,
       titleLatin: u.titleLatin,
-      titleTranslation: u.titleTranslation,
+      titleTranslationRu: u.titleTranslationRu,
+      titleTranslationEn: u.titleTranslationEn,
       order: u.order,
     };
   }
@@ -684,7 +693,8 @@ export class AdminService {
       unitId: l.unitId,
       title: l.title,
       titleLatin: l.titleLatin,
-      titleTranslation: l.titleTranslation,
+      titleTranslationRu: l.titleTranslationRu,
+      titleTranslationEn: l.titleTranslationEn,
       order: l.order,
       xpReward: l.xpReward,
     };
@@ -706,6 +716,8 @@ export class AdminService {
       type: e.type,
       promptCyrillic: e.promptCyrillic,
       promptLatin: e.promptLatin,
+      promptTranslationRu: e.promptTranslationRu,
+      promptTranslationEn: e.promptTranslationEn,
       order: e.order,
       choices: (e.choices || []).map((c) => this.mapChoice(c)),
     };
@@ -715,6 +727,7 @@ export class AdminService {
     return {
       id: c.id,
       text: c.text,
+      textRu: c.textRu,
       isCorrect: c.isCorrect,
       order: c.order,
     };

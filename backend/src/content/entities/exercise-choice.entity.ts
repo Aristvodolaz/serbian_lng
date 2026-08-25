@@ -16,6 +16,9 @@ export class ExerciseChoice {
   @Column()
   text: string;
 
+  @Column()
+  textRu: string;
+
   // Never serialize this to the client before an answer is submitted —
   // see ExercisePublicDto, which deliberately omits it.
   @Column({ default: false })

@@ -13,7 +13,10 @@ export class Unit {
   titleLatin: string;
 
   @Column()
-  titleTranslation: string;
+  titleTranslationRu: string;
+
+  @Column()
+  titleTranslationEn: string;
 
   @Column()
   order: number;

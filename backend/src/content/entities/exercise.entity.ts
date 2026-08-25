@@ -35,6 +35,12 @@ export class Exercise {
   promptLatin: string;
 
   @Column()
+  promptTranslationRu: string;
+
+  @Column()
+  promptTranslationEn: string;
+
+  @Column()
   order: number;
 
   @OneToMany(() => ExerciseChoice, (choice) => choice.exercise, { cascade: true, eager: true })

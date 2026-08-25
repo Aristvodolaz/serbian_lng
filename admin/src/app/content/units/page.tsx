@@ -6,7 +6,8 @@ interface Unit {
   id: string;
   titleCyrillic: string;
   titleLatin: string;
-  titleTranslation: string;
+  titleTranslationRu: string;
+  titleTranslationEn: string;
   order: number;
 }
 
@@ -37,7 +38,8 @@ export default async function UnitsPage({ searchParams }: { searchParams: Promis
               <th className="text-left px-4 py-3 font-medium text-gray-500">Order</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Cyrillic</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Latin</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation RU</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
@@ -47,7 +49,8 @@ export default async function UnitsPage({ searchParams }: { searchParams: Promis
                 <td className="px-4 py-3">{unit.order}</td>
                 <td className="px-4 py-3 font-medium">{unit.titleCyrillic}</td>
                 <td className="px-4 py-3 text-gray-600">{unit.titleLatin}</td>
-                <td className="px-4 py-3 text-gray-600">{unit.titleTranslation}</td>
+                <td className="px-4 py-3 text-gray-600">{unit.titleTranslationRu}</td>
+                <td className="px-4 py-3 text-gray-600">{unit.titleTranslationEn}</td>
                 <td className="px-4 py-3">
                   <Link href={`/content/units/${unit.id}`} className="text-indigo-600 hover:underline">
                     View

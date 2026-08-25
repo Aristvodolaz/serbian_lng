@@ -49,7 +49,8 @@ export class ContentService {
       id: unit.id,
       titleCyrillic: unit.titleCyrillic,
       titleLatin: unit.titleLatin,
-      titleTranslation: unit.titleTranslation,
+      titleTranslationRu: unit.titleTranslationRu,
+      titleTranslationEn: unit.titleTranslationEn,
       order: unit.order,
       lessons: unit.lessons
         .slice()
@@ -58,7 +59,8 @@ export class ContentService {
           id: lesson.id,
           title: lesson.title,
           titleLatin: lesson.titleLatin,
-          titleTranslation: lesson.titleTranslation,
+          titleTranslationRu: lesson.titleTranslationRu,
+          titleTranslationEn: lesson.titleTranslationEn,
           order: lesson.order,
           xpReward: lesson.xpReward,
           status: completedLessonIds.has(lesson.id)
@@ -84,6 +86,8 @@ export class ContentService {
       id: lesson.id,
       title: lesson.title,
       titleLatin: lesson.titleLatin,
+      titleTranslationRu: lesson.titleTranslationRu,
+      titleTranslationEn: lesson.titleTranslationEn,
       xpReward: lesson.xpReward,
       exercises: lesson.exercises
         .slice()
@@ -93,11 +97,13 @@ export class ContentService {
           type: exercise.type,
           promptCyrillic: exercise.promptCyrillic,
           promptLatin: exercise.promptLatin,
+          promptTranslationRu: exercise.promptTranslationRu,
+          promptTranslationEn: exercise.promptTranslationEn,
           order: exercise.order,
           choices: exercise.choices
             .slice()
             .sort((a, b) => a.order - b.order)
-            .map((choice) => ({ id: choice.id, text: choice.text })),
+            .map((choice) => ({ id: choice.id, text: choice.text, textRu: choice.textRu })),
         })),
     };
   }

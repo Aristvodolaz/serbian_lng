@@ -28,7 +28,10 @@ export class Lesson {
   titleLatin: string;
 
   @Column()
-  titleTranslation: string;
+  titleTranslationRu: string;
+
+  @Column()
+  titleTranslationEn: string;
 
   // Global order across the whole path — determines which lesson is
   // "current" for a user (first one after their last completed lesson).

@@ -21,12 +21,13 @@ export function CreateUnitForm() {
           body: JSON.stringify({
             titleCyrillic: formData.get('titleCyrillic'),
             titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
+            titleTranslationRu: formData.get('titleTranslationRu'),
+            titleTranslationEn: formData.get('titleTranslationEn'),
           }),
         });
         window.location.reload();
       }}
-      className="flex gap-2"
+      className="flex gap-2 flex-wrap"
     >
       <input
         name="titleCyrillic"
@@ -41,8 +42,14 @@ export function CreateUnitForm() {
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
       />
       <input
-        name="titleTranslation"
-        placeholder="Translation"
+        name="titleTranslationRu"
+        placeholder="Translation RU"
+        required
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+      />
+      <input
+        name="titleTranslationEn"
+        placeholder="Translation EN"
         required
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
       />

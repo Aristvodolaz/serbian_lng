@@ -140,7 +140,7 @@ export function EditBadgeForm({ badge }: { badge: { id: string; titleCyrillic: s
 
 // ── Edit Unit Form ───────────────────────────────────────────
 
-export function EditUnitForm({ unit }: { unit: { id: string; titleCyrillic: string; titleLatin: string; titleTranslation: string } }) {
+export function EditUnitForm({ unit }: { unit: { id: string; titleCyrillic: string; titleLatin: string; titleTranslationRu: string; titleTranslationEn: string } }) {
   return (
     <form
       onSubmit={async (e) => {
@@ -151,16 +151,18 @@ export function EditUnitForm({ unit }: { unit: { id: string; titleCyrillic: stri
           body: JSON.stringify({
             titleCyrillic: formData.get('titleCyrillic'),
             titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
+            titleTranslationRu: formData.get('titleTranslationRu'),
+            titleTranslationEn: formData.get('titleTranslationEn'),
           }),
         });
         window.location.reload();
       }}
-      className="flex gap-2"
+      className="flex gap-2 flex-wrap"
     >
       <input name="titleCyrillic" defaultValue={unit.titleCyrillic} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="titleLatin" defaultValue={unit.titleLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleTranslation" defaultValue={unit.titleTranslation} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="titleTranslationRu" defaultValue={unit.titleTranslationRu} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="titleTranslationEn" defaultValue={unit.titleTranslationEn} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
         Save
       </button>
@@ -182,16 +184,18 @@ export function CreateLessonForm({ unitId }: { unitId: string }) {
             unitId,
             title: formData.get('title'),
             titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
+            titleTranslationRu: formData.get('titleTranslationRu'),
+            titleTranslationEn: formData.get('titleTranslationEn'),
           }),
         });
         window.location.reload();
       }}
-      className="flex gap-2"
+      className="flex gap-2 flex-wrap"
     >
       <input name="title" placeholder="Cyrillic" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="titleLatin" placeholder="Latin" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleTranslation" placeholder="Translation" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="titleTranslationRu" placeholder="Translation RU" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="titleTranslationEn" placeholder="Translation EN" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
         Add Lesson
       </button>
@@ -201,7 +205,7 @@ export function CreateLessonForm({ unitId }: { unitId: string }) {
 
 // ── Edit Lesson Form ─────────────────────────────────────────
 
-export function EditLessonForm({ lesson }: { lesson: { id: string; title: string; titleLatin: string; titleTranslation: string; xpReward: number } }) {
+export function EditLessonForm({ lesson }: { lesson: { id: string; title: string; titleLatin: string; titleTranslationRu: string; titleTranslationEn: string; xpReward: number } }) {
   return (
     <form
       onSubmit={async (e) => {
@@ -212,17 +216,19 @@ export function EditLessonForm({ lesson }: { lesson: { id: string; title: string
           body: JSON.stringify({
             title: formData.get('title'),
             titleLatin: formData.get('titleLatin'),
-            titleTranslation: formData.get('titleTranslation'),
+            titleTranslationRu: formData.get('titleTranslationRu'),
+            titleTranslationEn: formData.get('titleTranslationEn'),
             xpReward: parseInt(formData.get('xpReward') as string),
           }),
         });
         window.location.reload();
       }}
-      className="flex gap-2"
+      className="flex gap-2 flex-wrap"
     >
       <input name="title" defaultValue={lesson.title} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="titleLatin" defaultValue={lesson.titleLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="titleTranslation" defaultValue={lesson.titleTranslation} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="titleTranslationRu" defaultValue={lesson.titleTranslationRu} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="titleTranslationEn" defaultValue={lesson.titleTranslationEn} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="xpReward" type="number" defaultValue={lesson.xpReward} className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-20" />
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
         Save
@@ -241,9 +247,13 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
         const formData = new FormData(e.currentTarget);
         const choicesStr = formData.get('choices') as string;
         const choices = choicesStr.split('\n').filter(Boolean).map((line, i) => {
-          const [isCorrect, ...textParts] = line.trim().split(' ');
+          const parts = line.trim().split('\t');
+          const [isCorrect, ...enParts] = (parts[0] || '').split(' ');
+          const textEn = enParts.join(' ');
+          const textRu = parts[1] || '';
           return {
-            text: textParts.join(' '),
+            text: textEn,
+            textRu,
             isCorrect: isCorrect === '✓',
             order: i + 1,
           };
@@ -253,6 +263,8 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
           body: JSON.stringify({
             promptCyrillic: formData.get('promptCyrillic'),
             promptLatin: formData.get('promptLatin'),
+            promptTranslationRu: formData.get('promptTranslationRu'),
+            promptTranslationEn: formData.get('promptTranslationEn'),
             choices,
           }),
         });
@@ -262,7 +274,9 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
     >
       <input name="promptCyrillic" placeholder="Cyrillic" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="promptLatin" placeholder="Latin" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <textarea name="choices" placeholder="✓ correct answer&#10;wrong answer 1&#10;wrong answer 2" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm h-20" />
+      <input name="promptTranslationRu" placeholder="Translation RU" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="promptTranslationEn" placeholder="Translation EN" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <textarea name="choices" placeholder="✓ correct answer EN&#9;correct answer RU&#10;wrong answer 1 EN&#9;wrong answer 1 RU&#10;wrong answer 2 EN&#9;wrong answer 2 RU" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm h-24" />
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
         Add Exercise
       </button>
@@ -272,7 +286,7 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
 
 // ── Edit Exercise Form ───────────────────────────────────────
 
-export function EditExerciseForm({ exercise }: { exercise: { id: string; promptCyrillic: string; promptLatin: string } }) {
+export function EditExerciseForm({ exercise }: { exercise: { id: string; promptCyrillic: string; promptLatin: string; promptTranslationRu: string; promptTranslationEn: string } }) {
   return (
     <form
       onSubmit={async (e) => {
@@ -283,14 +297,18 @@ export function EditExerciseForm({ exercise }: { exercise: { id: string; promptC
           body: JSON.stringify({
             promptCyrillic: formData.get('promptCyrillic'),
             promptLatin: formData.get('promptLatin'),
+            promptTranslationRu: formData.get('promptTranslationRu'),
+            promptTranslationEn: formData.get('promptTranslationEn'),
           }),
         });
         window.location.reload();
       }}
-      className="flex gap-2 mt-3"
+      className="flex gap-2 mt-3 flex-wrap"
     >
       <input name="promptCyrillic" defaultValue={exercise.promptCyrillic} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="promptLatin" defaultValue={exercise.promptLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="promptTranslationRu" defaultValue={exercise.promptTranslationRu} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <input name="promptTranslationEn" defaultValue={exercise.promptTranslationEn} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <button type="submit" className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium">
         Save
       </button>
@@ -382,7 +400,7 @@ export function EditChoiceForm({
   exerciseId,
   totalChoices,
 }: {
-  choice: { id: string; text: string; isCorrect: boolean; order: number };
+  choice: { id: string; text: string; textRu: string; isCorrect: boolean; order: number };
   exerciseId: string;
   totalChoices: number;
 }) {
@@ -418,7 +436,7 @@ export function EditChoiceForm({
           onSubmit={async (e) => {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
-            await updateChoice({ text: formData.get('text') as string });
+            await updateChoice({ text: formData.get('text') as string, textRu: formData.get('textRu') as string });
             setEditing(false);
           }}
           className="flex items-center gap-2 flex-1"
@@ -427,7 +445,14 @@ export function EditChoiceForm({
             name="text"
             defaultValue={choice.text}
             className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
+            placeholder="EN"
             autoFocus
+          />
+          <input
+            name="textRu"
+            defaultValue={choice.textRu}
+            className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
+            placeholder="RU"
           />
           <button type="submit" className="px-2 py-1 bg-green-600 text-white rounded text-xs">
             Save
@@ -442,17 +467,18 @@ export function EditChoiceForm({
 
   return (
     <div className="flex items-center gap-2">
-      <input
-        value={choice.text}
+      <div
         onClick={() => setEditing(true)}
-        readOnly
         className={`px-3 py-2 rounded-lg text-sm flex-1 cursor-pointer border ${
           choice.isCorrect
             ? 'bg-green-50 text-green-800 border-green-200'
             : 'bg-gray-50 text-gray-700 border-gray-200'
         }`}
         title="Click to edit"
-      />
+      >
+        <span>{choice.text}</span>
+        {choice.textRu && <span className="text-gray-400 mx-1">|</span><span className="text-gray-500">{choice.textRu}</span>}
+      </div>
       <label className="flex items-center gap-1 text-xs cursor-pointer">
         <input
           type="checkbox"
@@ -501,6 +527,7 @@ export function AddChoiceForm({ exerciseId, nextOrder }: { exerciseId: string; n
           method: 'POST',
           body: JSON.stringify({
             text: formData.get('text'),
+            textRu: formData.get('textRu'),
             isCorrect: false,
             order: nextOrder,
           }),
@@ -511,7 +538,13 @@ export function AddChoiceForm({ exerciseId, nextOrder }: { exerciseId: string; n
     >
       <input
         name="text"
-        placeholder="New answer..."
+        placeholder="Answer EN"
+        required
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
+      />
+      <input
+        name="textRu"
+        placeholder="Ответ RU"
         required
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
       />
