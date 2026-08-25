@@ -10,7 +10,8 @@ interface Word {
   translationRu: string;
   translationEn: string;
   exampleCyrillic: string | null;
-  exampleTranslation: string | null;
+  exampleTranslationRu: string | null;
+  exampleTranslationEn: string | null;
   audioUrl: string | null;
 }
 

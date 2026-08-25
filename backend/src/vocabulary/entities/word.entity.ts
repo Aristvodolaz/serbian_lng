@@ -29,7 +29,10 @@ export class Word {
   exampleCyrillic: string | null;
 
   @Column({ type: 'text', nullable: true })
-  exampleTranslation: string | null;
+  exampleTranslationRu: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  exampleTranslationEn: string | null;
 
   @Column({ type: 'text', nullable: true })
   audioUrl: string | null;

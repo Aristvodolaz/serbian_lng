@@ -23,7 +23,7 @@ export function UploadWordsCsv() {
     // Skip header row
     const dataLines = lines.slice(1);
     const words = dataLines.map((line, i) => {
-      const [cyrillic, latin, translationRu, translationEn, exampleCyrillic, exampleTranslation, audioUrl] =
+      const [cyrillic, latin, translationRu, translationEn, exampleCyrillic, exampleTranslationRu, exampleTranslationEn, audioUrl] =
         line.split(',').map((c) => c.trim());
       if (!cyrillic || !latin || !translationRu || !translationEn) {
         throw new Error(`Row ${i + 2}: cyrillic, latin, translationRu, and translationEn are required`);
@@ -34,7 +34,8 @@ export function UploadWordsCsv() {
         translationRu,
         translationEn,
         exampleCyrillic: exampleCyrillic || undefined,
-        exampleTranslation: exampleTranslation || undefined,
+        exampleTranslationRu: exampleTranslationRu || undefined,
+        exampleTranslationEn: exampleTranslationEn || undefined,
         audioUrl: audioUrl || undefined,
       };
     });

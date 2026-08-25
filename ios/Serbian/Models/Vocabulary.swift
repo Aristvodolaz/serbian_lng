@@ -34,7 +34,8 @@ struct ReviewWord: Codable, Identifiable, Equatable, Sendable {
     let translationRu: String
     let translationEn: String
     let exampleCyrillic: String?
-    let exampleTranslation: String?
+    let exampleTranslationRu: String?
+    let exampleTranslationEn: String?
     let audioUrl: String?
     let status: WordStatus
 
@@ -50,6 +51,11 @@ extension ReviewWord {
     /// The translation matching the learner's preferred language.
     func translation(matching language: LanguagePreference) -> String {
         language == .en ? translationEn : translationRu
+    }
+
+    /// The example translation matching the learner's preferred language.
+    func exampleTranslation(matching language: LanguagePreference) -> String? {
+        language == .en ? exampleTranslationEn : exampleTranslationRu
     }
 }
 

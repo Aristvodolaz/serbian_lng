@@ -115,6 +115,9 @@
         }
       }
     },
+    "English" : {
+
+    },
     "http://localhost:3000" : {
 
     },
@@ -1357,6 +1360,9 @@
         }
       }
     },
+    "Русский" : {
+
+    },
     "Сачувај" : {
       "localizations" : {
         "en" : {
@@ -1640,6 +1646,9 @@
     "Учите српски, реч по реч." : {
       "comment" : "Brand tagline — fixed across locales, like Android's auth_tagline.",
       "shouldTranslate" : false
+    },
+    "Язык переводов" : {
+
     }
   },
   "version" : "1.0"

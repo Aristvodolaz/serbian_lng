@@ -13,7 +13,10 @@ struct SerbianApp: App {
         WindowGroup {
             RootView()
                 .environment(session)
-                .task { await session.restore() }
+                .task {
+                    SpeechService.shared.configure(api: session.api)
+                    await session.restore()
+                }
         }
     }
 }
