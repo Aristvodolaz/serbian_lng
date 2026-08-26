@@ -10,7 +10,7 @@ export class Unit {
   @Column()
   titleCyrillic: string;
 
-  @Column()
+  @Column({ default: '' })
   titleLatin: string;
 
   @Column({ type: 'text', default: '' })

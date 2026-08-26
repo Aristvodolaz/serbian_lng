@@ -255,20 +255,20 @@ export class CreateUnitDto {
   @MinLength(1)
   titleCyrillic: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleLatin: string;
+  titleLatin?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleTranslationRu: string;
+  titleTranslationRu?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleTranslationEn: string;
+  titleTranslationEn?: string;
 }
 
 export class UpdateUnitDto {
