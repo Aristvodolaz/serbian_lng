@@ -2,6 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import Link from 'next/link';
 import { CreateUnitForm } from '@/components/forms/create-unit-form';
 import { UploadUnitsCsv } from '@/components/forms/upload-units-csv';
+import { DeleteButton } from '@/components/forms/admin-forms';
 
 interface Unit {
   id: string;
@@ -56,9 +57,12 @@ export default async function UnitsPage({ searchParams }: { searchParams: Promis
                 <td className="px-4 py-3 text-gray-600">{unit.titleTranslationRu}</td>
                 <td className="px-4 py-3 text-gray-600">{unit.titleTranslationEn}</td>
                 <td className="px-4 py-3">
-                  <Link href={`/content/units/${unit.id}`} className="text-indigo-600 hover:underline">
-                    View
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link href={`/content/units/${unit.id}`} className="text-indigo-600 hover:underline">
+                      View
+                    </Link>
+                    <DeleteButton url={`/admin/units/${unit.id}`} />
+                  </div>
                 </td>
               </tr>
             ))}
