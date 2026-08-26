@@ -529,7 +529,7 @@ export class AdminService {
             textRu: c.textRu,
             isCorrect: c.isCorrect,
             order: c.order ?? i + 1,
-          }) as ExerciseChoice[]);
+          }) as ExerciseChoice);
           await this.exerciseRepo.save(existing);
           updated++;
         } else {
@@ -547,7 +547,7 @@ export class AdminService {
               textRu: c.textRu,
               isCorrect: c.isCorrect,
               order: c.order ?? i + 1,
-            }) as ExerciseChoice[]),
+            }) as ExerciseChoice),
           });
           await this.exerciseRepo.save(exercise);
           created++;
