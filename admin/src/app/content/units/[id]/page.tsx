@@ -1,7 +1,7 @@
 import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { EditUnitForm, CreateLessonForm } from '@/components/forms/admin-forms';
+import { EditUnitForm, CreateLessonForm, DeleteButton } from '@/components/forms/admin-forms';
 import { UploadLessonsCsv } from '@/components/forms/upload-lessons-csv';
 
 interface Unit {
@@ -95,9 +95,12 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                 <td className="px-4 py-3 text-gray-600">{lesson.titleTranslationEn}</td>
                 <td className="px-4 py-3">{lesson.xpReward}</td>
                 <td className="px-4 py-3">
-                  <Link href={`/content/lessons/${lesson.id}`} className="text-indigo-600 hover:underline">
-                    View
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link href={`/content/lessons/${lesson.id}`} className="text-indigo-600 hover:underline">
+                      View
+                    </Link>
+                    <DeleteButton url={`/admin/lessons/${lesson.id}`} />
+                  </div>
                 </td>
               </tr>
             ))}
