@@ -215,10 +215,11 @@ export class AdminService {
   }
 
   async createUnit(dto: CreateUnitDto): Promise<UnitAdminResponseDto> {
-    const maxOrder = await this.unitRepo.findOne({
+    const maxOrder = (await this.unitRepo.find({
       order: { order: 'DESC' },
       select: ['order'],
-    });
+      take: 1,
+    }))[0];
     const unit = this.unitRepo.create({
       ...dto,
       order: (maxOrder?.order ?? 0) + 1,
@@ -253,11 +254,12 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateUnits(units: CreateUnitDto[]): Promise<{ created: number; updated: number }> {
-    const maxOrder = await this.unitRepo.findOne({
+  async bulkCreateUnits(units: { titleCyrillic: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string }[]): Promise<{ created: number; updated: number }> {
+    const maxOrder = (await this.unitRepo.find({
       order: { order: 'DESC' },
       select: ['order'],
-    });
+      take: 1,
+    }))[0];
     let nextOrder = maxOrder?.order ?? 0;
     let created = 0;
     let updated = 0;
@@ -346,12 +348,12 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateLessons(lessons: CreateLessonDto[]): Promise<{ created: number; updated: number }> {
+  async bulkCreateLessons(lessons: { unitId: string; title: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string; xpReward?: number }[]): Promise<{ created: number; updated: number }> {
     let created = 0;
     let updated = 0;
 
     // Group by unitId to assign order
-    const byUnit = new Map<string, CreateLessonDto[]>();
+    const byUnit = new Map<string, typeof lessons[number][]>();
     for (const dto of lessons) {
       if (!byUnit.has(dto.unitId)) byUnit.set(dto.unitId, []);
       byUnit.get(dto.unitId)!.push(dto);
@@ -486,13 +488,21 @@ export class AdminService {
   }
 
   async bulkCreateExercises(
-    exercises: Array<CreateExerciseDto & { lessonId: string }>,
+    exercises: Array<{
+      lessonId: string;
+      type?: ExerciseType;
+      promptCyrillic: string;
+      promptLatin?: string;
+      promptTranslationRu?: string;
+      promptTranslationEn?: string;
+      choices: Array<{ text: string; textRu?: string; isCorrect: boolean; order?: number }>;
+    }>,
   ): Promise<{ created: number; updated: number }> {
     let created = 0;
     let updated = 0;
 
     // Group by lessonId to assign order
-    const byLesson = new Map<string, Array<CreateExerciseDto & { lessonId: string }>>();
+    const byLesson = new Map<string, typeof exercises[number][]>();
     for (const dto of exercises) {
       if (!byLesson.has(dto.lessonId)) byLesson.set(dto.lessonId, []);
       byLesson.get(dto.lessonId)!.push(dto);

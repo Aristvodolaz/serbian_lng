@@ -40,17 +40,24 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
 
       const words = data
         .filter((row: any) => row.cyrillic?.trim() && row.latin?.trim() && row.translationRu?.trim() && row.translationEn?.trim())
-        .map((row: any) => ({
-          unitId: unitId || row.unitId?.trim() || null,
-          cyrillic: row.cyrillic.trim(),
-          latin: row.latin.trim(),
-          translationRu: row.translationRu.trim(),
-          translationEn: row.translationEn.trim(),
-          exampleCyrillic: row.exampleCyrillic?.trim() || undefined,
-          exampleTranslationRu: row.exampleTranslationRu?.trim() || undefined,
-          exampleTranslationEn: row.exampleTranslationEn?.trim() || undefined,
-          audioUrl: row.audioUrl?.trim() || undefined,
-        }));
+        .map((row: any) => {
+          const word: any = {
+            unitId: unitId || row.unitId?.trim() || null,
+            cyrillic: row.cyrillic.trim(),
+            latin: row.latin.trim(),
+            translationRu: row.translationRu.trim(),
+            translationEn: row.translationEn.trim(),
+          };
+          const exampleCy = row.exampleCyrillic?.trim();
+          const exampleRu = row.exampleTranslationRu?.trim();
+          const exampleEn = row.exampleTranslationEn?.trim();
+          const audio = row.audioUrl?.trim();
+          if (exampleCy) word.exampleCyrillic = exampleCy;
+          if (exampleRu) word.exampleTranslationRu = exampleRu;
+          if (exampleEn) word.exampleTranslationEn = exampleEn;
+          if (audio) word.audioUrl = audio;
+          return word;
+        });
 
       if (words.length === 0) {
         throw new Error('No valid data rows found in CSV');

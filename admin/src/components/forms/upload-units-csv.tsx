@@ -40,12 +40,16 @@ export function UploadUnitsCsv() {
 
       const units = data
         .filter((row: any) => row.titleCyrillic?.trim())
-        .map((row: any) => ({
-          titleCyrillic: row.titleCyrillic.trim(),
-          titleLatin: row.titleLatin?.trim() || '',
-          titleTranslationRu: row.titleTranslationRu?.trim() || '',
-          titleTranslationEn: row.titleTranslationEn?.trim() || '',
-        }));
+        .map((row: any) => {
+          const unit: any = { titleCyrillic: row.titleCyrillic.trim() };
+          const latin = row.titleLatin?.trim();
+          const ru = row.titleTranslationRu?.trim();
+          const en = row.titleTranslationEn?.trim();
+          if (latin) unit.titleLatin = latin;
+          if (ru) unit.titleTranslationRu = ru;
+          if (en) unit.titleTranslationEn = en;
+          return unit;
+        });
 
       if (units.length === 0) {
         throw new Error('No valid data rows found in CSV');

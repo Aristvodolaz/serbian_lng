@@ -421,20 +421,20 @@ export class BulkCreateUnitDto {
   @MinLength(1)
   titleCyrillic: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleLatin: string;
+  titleLatin?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleTranslationRu: string;
+  titleTranslationRu?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleTranslationEn: string;
+  titleTranslationEn?: string;
 }
 
 export class BulkCreateLessonDto {
@@ -447,20 +447,20 @@ export class BulkCreateLessonDto {
   @MinLength(1)
   title: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleLatin: string;
+  titleLatin?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleTranslationRu: string;
+  titleTranslationRu?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  titleTranslationEn: string;
+  titleTranslationEn?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -484,20 +484,20 @@ export class BulkCreateExerciseDto {
   @MinLength(1)
   promptCyrillic: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  promptLatin: string;
+  promptLatin?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  promptTranslationRu: string;
+  promptTranslationRu?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  promptTranslationEn: string;
+  promptTranslationEn?: string;
 
   @ApiProperty({ type: [CreateExerciseChoiceDto] })
   @IsArray()

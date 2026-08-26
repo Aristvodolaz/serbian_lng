@@ -40,14 +40,20 @@ export function UploadLessonsCsv({ unitId }: { unitId: string }) {
 
       const lessons = data
         .filter((row: any) => row.title?.trim())
-        .map((row: any) => ({
-          unitId,
-          title: row.title.trim(),
-          titleLatin: row.titleLatin?.trim() || '',
-          titleTranslationRu: row.titleTranslationRu?.trim() || '',
-          titleTranslationEn: row.titleTranslationEn?.trim() || '',
-          xpReward: row.xpReward ? parseInt(row.xpReward) || 10 : 10,
-        }));
+        .map((row: any) => {
+          const lesson: any = {
+            unitId,
+            title: row.title.trim(),
+          };
+          const latin = row.titleLatin?.trim();
+          const ru = row.titleTranslationRu?.trim();
+          const en = row.titleTranslationEn?.trim();
+          if (latin) lesson.titleLatin = latin;
+          if (ru) lesson.titleTranslationRu = ru;
+          if (en) lesson.titleTranslationEn = en;
+          lesson.xpReward = row.xpReward ? parseInt(row.xpReward) || 10 : 10;
+          return lesson;
+        });
 
       if (lessons.length === 0) {
         throw new Error('No valid data rows found in CSV');

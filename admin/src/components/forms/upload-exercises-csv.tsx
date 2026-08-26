@@ -65,14 +65,19 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
           choices[0].isCorrect = true;
         }
 
-        exercises.push({
+        const exercise: any = {
           lessonId,
           promptCyrillic: row.promptCyrillic.trim(),
-          promptLatin: row.promptLatin?.trim() || '',
-          promptTranslationRu: row.promptTranslationRu?.trim() || '',
-          promptTranslationEn: row.promptTranslationEn?.trim() || '',
-          choices,
-        });
+        };
+        const latin = row.promptLatin?.trim();
+        const ru = row.promptTranslationRu?.trim();
+        const en = row.promptTranslationEn?.trim();
+        if (latin) exercise.promptLatin = latin;
+        if (ru) exercise.promptTranslationRu = ru;
+        if (en) exercise.promptTranslationEn = en;
+        exercise.choices = choices;
+
+        exercises.push(exercise);
       }
 
       if (exercises.length === 0) {

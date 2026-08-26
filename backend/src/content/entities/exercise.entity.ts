@@ -45,6 +45,6 @@ export class Exercise {
   @Column()
   order: number;
 
-  @OneToMany(() => ExerciseChoice, (choice) => choice.exercise, { cascade: true, eager: true })
+  @OneToMany(() => ExerciseChoice, (choice) => choice.exercise, { cascade: true })
   choices: ExerciseChoice[];
 }
