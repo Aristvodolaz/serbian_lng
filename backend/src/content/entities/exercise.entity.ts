@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Lesson } from './lesson.entity';
 import { ExerciseChoice } from './exercise-choice.entity';
@@ -14,6 +15,7 @@ export enum ExerciseType {
 }
 
 @Entity('exercises')
+@Unique(['lessonId', 'promptCyrillic'])
 export class Exercise {
   @PrimaryGeneratedColumn('uuid')
   id: string;

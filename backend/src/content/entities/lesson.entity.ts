@@ -5,11 +5,13 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Unit } from './unit.entity';
 import { Exercise } from './exercise.entity';
 
 @Entity('lessons')
+@Unique(['unitId', 'title'])
 export class Lesson {
   @PrimaryGeneratedColumn('uuid')
   id: string;

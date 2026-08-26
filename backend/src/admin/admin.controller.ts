@@ -23,6 +23,7 @@ import { DashboardStatsResponseDto } from './dtos/dashboard-stats-response.dto';
 import {
   BadgeAdminResponseDto,
   BadgeEarnerResponseDto,
+  BulkCreateExerciseDto,
   CreateBadgeDto,
   CreateExerciseChoiceDto,
   CreateExerciseDto,
@@ -126,6 +127,13 @@ export class AdminController {
     return this.adminService.deleteUnit(unitId);
   }
 
+  @Post('units/bulk')
+  bulkCreateUnits(
+    @Body() dto: { units: CreateUnitDto[] },
+  ): Promise<{ created: number; updated: number }> {
+    return this.adminService.bulkCreateUnits(dto.units);
+  }
+
   // ── Lessons ────────────────────────────────────────────────
 
   @Get('lessons')
@@ -166,6 +174,13 @@ export class AdminController {
     return this.adminService.deleteLesson(lessonId);
   }
 
+  @Post('lessons/bulk')
+  bulkCreateLessons(
+    @Body() dto: { lessons: CreateLessonDto[] },
+  ): Promise<{ created: number; updated: number }> {
+    return this.adminService.bulkCreateLessons(dto.lessons);
+  }
+
   // ── Exercises ──────────────────────────────────────────────
 
   @Post('lessons/:lessonId/exercises')
@@ -191,6 +206,13 @@ export class AdminController {
     @Param('id', ParseUUIDPipe) exerciseId: string,
   ): Promise<{ deleted: true }> {
     return this.adminService.deleteExercise(exerciseId);
+  }
+
+  @Post('exercises/bulk')
+  bulkCreateExercises(
+    @Body() dto: { exercises: BulkCreateExerciseDto[] },
+  ): Promise<{ created: number; updated: number }> {
+    return this.adminService.bulkCreateExercises(dto.exercises);
   }
 
   // ── Exercise Choices ───────────────────────────────────────
@@ -239,7 +261,9 @@ export class AdminController {
   }
 
   @Post('words/bulk')
-  bulkCreateWords(@Body() dto: { words: CreateWordDto[] }): Promise<{ created: number }> {
+  bulkCreateWords(
+    @Body() dto: { words: CreateWordDto[] },
+  ): Promise<{ created: number; updated: number }> {
     return this.adminService.bulkCreateWords(dto.words);
   }
 

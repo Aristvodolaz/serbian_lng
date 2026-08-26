@@ -12,36 +12,33 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-interface WordRow {
-  cyrillic: string;
-  latin: string;
-  translationRu: string;
-  translationEn: string;
-  exampleCyrillic?: string;
-  exampleTranslationRu?: string;
-  exampleTranslationEn?: string;
-  audioUrl?: string;
-  unitId?: string;
+interface ChoiceRow {
+  text: string;
+  textRu: string;
+  isCorrect: boolean;
 }
 
-interface UploadResult {
-  created: number;
-  updated: number;
+interface ExerciseRow {
+  lessonId: string;
+  promptCyrillic: string;
+  promptLatin: string;
+  promptTranslationRu: string;
+  promptTranslationEn: string;
+  choices: ChoiceRow[];
 }
 
-export function UploadWordsCsv({ unitId }: { unitId?: string }) {
+export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
   const [warnings, setWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const parseCsv = (text: string): { words: WordRow[]; errors: string[] } => {
-    // Strip BOM if present
+  const parseCsv = (text: string): { exercises: ExerciseRow[]; errors: string[] } => {
     if (text.charCodeAt(0) === 0xfeff) {
       text = text.slice(1);
     }
 
-    const words: WordRow[] = [];
+    const exercises: ExerciseRow[] = [];
     const errors: string[] = [];
 
     const results = Papa.parse<Record<string, string>>(text.trim(), {
@@ -49,44 +46,73 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
       skipEmptyLines: true,
     });
 
-    // Collect parse-level errors
     for (const err of results.errors) {
       const parseErr = err as { row?: number; message?: string };
-      errors.push(
-        `Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`,
-      );
+      errors.push(`Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`);
     }
 
     for (let i = 0; i < results.data.length; i++) {
       const row = results.data[i];
-      const rowNum = i + 2; // +2 because header is row 1
+      const rowNum = i + 2;
 
-      const cyrillic = (row.cyrillic || '').trim();
-      const latin = (row.latin || '').trim();
-      const translationRu = (row.translationRu || '').trim();
-      const translationEn = (row.translationEn || '').trim();
+      const promptCyrillic = (row.promptCyrillic || '').trim();
+      const promptLatin = (row.promptLatin || '').trim();
+      const promptTranslationRu = (row.promptTranslationRu || '').trim();
+      const promptTranslationEn = (row.promptTranslationEn || '').trim();
 
-      if (!cyrillic || !latin || !translationRu || !translationEn) {
+      if (!promptCyrillic || !promptLatin || !promptTranslationRu || !promptTranslationEn) {
         errors.push(
-          `Row ${rowNum}: cyrillic, latin, translationRu, and translationEn are required`,
+          `Row ${rowNum}: promptCyrillic, promptLatin, promptTranslationRu, and promptTranslationEn are required`,
         );
         continue;
       }
 
-      words.push({
-        cyrillic,
-        latin,
-        translationRu,
-        translationEn,
-        exampleCyrillic: row.exampleCyrillic?.trim() || undefined,
-        exampleTranslationRu: row.exampleTranslationRu?.trim() || undefined,
-        exampleTranslationEn: row.exampleTranslationEn?.trim() || undefined,
-        audioUrl: row.audioUrl?.trim() || undefined,
-        unitId: unitId || undefined,
+      // Parse choices from columns: choice1Text, choice1TextRu, choice1Correct, choice2Text, ...
+      const choices: ChoiceRow[] = [];
+      let choiceIdx = 1;
+      while (true) {
+        const text = (row[`choice${choiceIdx}Text`] || '').trim();
+        const textRu = (row[`choice${choiceIdx}TextRu`] || '').trim();
+        const correctRaw = (row[`choice${choiceIdx}Correct`] || '').trim().toLowerCase();
+
+        if (!text && !textRu) break; // no more choices
+
+        if (!text || !textRu) {
+          errors.push(`Row ${rowNum}: choice ${choiceIdx} has text but missing textRu or text`);
+          choiceIdx++;
+          continue;
+        }
+
+        choices.push({
+          text,
+          textRu,
+          isCorrect: correctRaw === '1' || correctRaw === 'true' || correctRaw === 'yes',
+        });
+        choiceIdx++;
+      }
+
+      if (choices.length === 0) {
+        errors.push(`Row ${rowNum}: at least one choice is required`);
+        continue;
+      }
+
+      const hasCorrect = choices.some((c) => c.isCorrect);
+      if (!hasCorrect) {
+        errors.push(`Row ${rowNum}: at least one choice must be marked as correct`);
+        continue;
+      }
+
+      exercises.push({
+        lessonId,
+        promptCyrillic,
+        promptLatin,
+        promptTranslationRu,
+        promptTranslationEn,
+        choices,
       });
     }
 
-    return { words, errors };
+    return { exercises, errors };
   };
 
   const handleFile = async (file: File) => {
@@ -102,25 +128,23 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
 
     try {
       const text = await file.text();
-      const { words, errors } = parseCsv(text);
+      const { exercises, errors } = parseCsv(text);
 
-      if (errors.length) {
-        setWarnings(errors);
-      }
+      if (errors.length) setWarnings(errors);
 
-      if (!words.length) {
+      if (!exercises.length) {
         setResult('Error: no valid rows found in CSV');
         return;
       }
 
       const token = getToken();
-      const res = await fetch(`${BACKEND_URL}/admin/words/bulk`, {
+      const res = await fetch(`${BACKEND_URL}/admin/exercises/bulk`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ words }),
+        body: JSON.stringify({ exercises }),
       });
 
       if (!res.ok) {
@@ -128,7 +152,7 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
         throw new Error(err.message || 'Upload failed');
       }
 
-      const data: UploadResult = await res.json();
+      const data = await res.json();
       const parts: string[] = [];
       if (data.created > 0) parts.push(`${data.created} created`);
       if (data.updated > 0) parts.push(`${data.updated} updated`);

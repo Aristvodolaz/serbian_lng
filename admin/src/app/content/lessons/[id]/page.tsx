@@ -2,6 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { EditLessonForm, CreateExerciseForm, EditExerciseForm, DeleteButton, EditChoiceForm, AddChoiceForm } from '@/components/forms/admin-forms';
+import { UploadExercisesCsv } from '@/components/forms/upload-exercises-csv';
 
 interface Lesson {
   id: string;
@@ -66,7 +67,10 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Exercises ({lesson.exercises?.length || 0})</h2>
-        <CreateExerciseForm lessonId={lesson.id} />
+        <div className="flex items-center gap-4">
+          <UploadExercisesCsv lessonId={lesson.id} />
+          <CreateExerciseForm lessonId={lesson.id} />
+        </div>
       </div>
 
       <div className="space-y-4">

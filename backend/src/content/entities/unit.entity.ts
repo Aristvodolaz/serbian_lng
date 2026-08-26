@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Lesson } from './lesson.entity';
 
 @Entity('units')
+@Unique(['titleCyrillic'])
 export class Unit {
   @PrimaryGeneratedColumn('uuid')
   id: string;

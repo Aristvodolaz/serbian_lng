@@ -12,36 +12,27 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-interface WordRow {
-  cyrillic: string;
-  latin: string;
-  translationRu: string;
-  translationEn: string;
-  exampleCyrillic?: string;
-  exampleTranslationRu?: string;
-  exampleTranslationEn?: string;
-  audioUrl?: string;
-  unitId?: string;
+interface LessonRow {
+  unitId: string;
+  title: string;
+  titleLatin: string;
+  titleTranslationRu: string;
+  titleTranslationEn: string;
+  xpReward?: number;
 }
 
-interface UploadResult {
-  created: number;
-  updated: number;
-}
-
-export function UploadWordsCsv({ unitId }: { unitId?: string }) {
+export function UploadLessonsCsv({ unitId }: { unitId: string }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
   const [warnings, setWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const parseCsv = (text: string): { words: WordRow[]; errors: string[] } => {
-    // Strip BOM if present
+  const parseCsv = (text: string): { lessons: LessonRow[]; errors: string[] } => {
     if (text.charCodeAt(0) === 0xfeff) {
       text = text.slice(1);
     }
 
-    const words: WordRow[] = [];
+    const lessons: LessonRow[] = [];
     const errors: string[] = [];
 
     const results = Papa.parse<Record<string, string>>(text.trim(), {
@@ -49,44 +40,40 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
       skipEmptyLines: true,
     });
 
-    // Collect parse-level errors
     for (const err of results.errors) {
       const parseErr = err as { row?: number; message?: string };
-      errors.push(
-        `Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`,
-      );
+      errors.push(`Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`);
     }
 
     for (let i = 0; i < results.data.length; i++) {
       const row = results.data[i];
-      const rowNum = i + 2; // +2 because header is row 1
+      const rowNum = i + 2;
 
-      const cyrillic = (row.cyrillic || '').trim();
-      const latin = (row.latin || '').trim();
-      const translationRu = (row.translationRu || '').trim();
-      const translationEn = (row.translationEn || '').trim();
+      const title = (row.title || '').trim();
+      const titleLatin = (row.titleLatin || '').trim();
+      const titleTranslationRu = (row.titleTranslationRu || '').trim();
+      const titleTranslationEn = (row.titleTranslationEn || '').trim();
 
-      if (!cyrillic || !latin || !translationRu || !translationEn) {
+      if (!title || !titleLatin || !titleTranslationRu || !titleTranslationEn) {
         errors.push(
-          `Row ${rowNum}: cyrillic, latin, translationRu, and translationEn are required`,
+          `Row ${rowNum}: title, titleLatin, titleTranslationRu, and titleTranslationEn are required`,
         );
         continue;
       }
 
-      words.push({
-        cyrillic,
-        latin,
-        translationRu,
-        translationEn,
-        exampleCyrillic: row.exampleCyrillic?.trim() || undefined,
-        exampleTranslationRu: row.exampleTranslationRu?.trim() || undefined,
-        exampleTranslationEn: row.exampleTranslationEn?.trim() || undefined,
-        audioUrl: row.audioUrl?.trim() || undefined,
-        unitId: unitId || undefined,
+      const xpReward = row.xpReward ? parseInt(row.xpReward.trim(), 10) : undefined;
+
+      lessons.push({
+        unitId,
+        title,
+        titleLatin,
+        titleTranslationRu,
+        titleTranslationEn,
+        xpReward: xpReward || undefined,
       });
     }
 
-    return { words, errors };
+    return { lessons, errors };
   };
 
   const handleFile = async (file: File) => {
@@ -102,25 +89,23 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
 
     try {
       const text = await file.text();
-      const { words, errors } = parseCsv(text);
+      const { lessons, errors } = parseCsv(text);
 
-      if (errors.length) {
-        setWarnings(errors);
-      }
+      if (errors.length) setWarnings(errors);
 
-      if (!words.length) {
+      if (!lessons.length) {
         setResult('Error: no valid rows found in CSV');
         return;
       }
 
       const token = getToken();
-      const res = await fetch(`${BACKEND_URL}/admin/words/bulk`, {
+      const res = await fetch(`${BACKEND_URL}/admin/lessons/bulk`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ words }),
+        body: JSON.stringify({ lessons }),
       });
 
       if (!res.ok) {
@@ -128,7 +113,7 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
         throw new Error(err.message || 'Upload failed');
       }
 
-      const data: UploadResult = await res.json();
+      const data = await res.json();
       const parts: string[] = [];
       if (data.created > 0) parts.push(`${data.created} created`);
       if (data.updated > 0) parts.push(`${data.updated} updated`);

@@ -108,6 +108,40 @@ export class CreateExerciseDto {
   choices: CreateExerciseChoiceDto[];
 }
 
+export class BulkCreateExerciseDto {
+  @ApiProperty()
+  @IsString()
+  lessonId: string;
+
+  @ApiProperty({ enum: ExerciseType, required: false })
+  @IsOptional()
+  type?: ExerciseType;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptCyrillic: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptLatin: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptTranslationEn: string;
+
+  @ApiProperty()
+  @IsArray()
+  choices: CreateExerciseChoiceDto[];
+}
+
 export class UpdateExerciseDto {
   @ApiPropertyOptional({ enum: ExerciseType })
   @IsOptional()

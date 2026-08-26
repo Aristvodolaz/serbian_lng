@@ -45,7 +45,7 @@ export default async function WordsPage({
           <span className="text-sm text-gray-500">
             {words.total} total, page {words.page}/{words.totalPages}
           </span>
-          <UploadWordsCsv />
+          <UploadWordsCsv unitId={sp.unitId} />
           <CreateWordForm />
         </div>
       </div>

@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Unit } from '../../content/entities/unit.entity';
 
 @Entity('words')
+@Unique(['cyrillic'])
 export class Word {
   @PrimaryGeneratedColumn('uuid')
   id: string;

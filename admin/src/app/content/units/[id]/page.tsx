@@ -2,6 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { EditUnitForm, CreateLessonForm } from '@/components/forms/admin-forms';
+import { UploadLessonsCsv } from '@/components/forms/upload-lessons-csv';
 
 interface Unit {
   id: string;
@@ -65,7 +66,10 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Lessons</h2>
-        <CreateLessonForm unitId={unit.id} />
+        <div className="flex items-center gap-4">
+          <UploadLessonsCsv unitId={unit.id} />
+          <CreateLessonForm unitId={unit.id} />
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
