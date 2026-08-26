@@ -12,84 +12,43 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-interface UnitRow {
-  titleCyrillic: string;
-  titleLatin: string;
-  titleTranslationRu: string;
-  titleTranslationEn: string;
-}
-
 export function UploadUnitsCsv() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
-  const [warnings, setWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const parseCsv = (text: string): { units: UnitRow[]; errors: string[] } => {
-    if (text.charCodeAt(0) === 0xfeff) {
-      text = text.slice(1);
-    }
-
-    const units: UnitRow[] = [];
-    const errors: string[] = [];
-
-    const results = Papa.parse<Record<string, string>>(text.trim(), {
-      header: true,
-      skipEmptyLines: true,
-    });
-
-    for (const err of results.errors) {
-      const parseErr = err as { row?: number; message?: string };
-      errors.push(`Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`);
-    }
-
-    for (let i = 0; i < results.data.length; i++) {
-      const row = results.data[i];
-      const rowNum = i + 2;
-
-      const titleCyrillic = (row.titleCyrillic || '').trim();
-      const titleLatin = (row.titleLatin || '').trim();
-      const titleTranslationRu = (row.titleTranslationRu || '').trim();
-      const titleTranslationEn = (row.titleTranslationEn || '').trim();
-
-      if (!titleCyrillic || !titleLatin || !titleTranslationRu || !titleTranslationEn) {
-        errors.push(
-          `Row ${rowNum}: titleCyrillic, titleLatin, titleTranslationRu, and titleTranslationEn are required`,
-        );
-        continue;
-      }
-
-      units.push({
-        titleCyrillic,
-        titleLatin,
-        titleTranslationRu,
-        titleTranslationEn,
-      });
-    }
-
-    return { units, errors };
-  };
 
   const handleFile = async (file: File) => {
     if (!file.name.endsWith('.csv')) {
       setResult('Error: please select a .csv file');
-      setWarnings([]);
       return;
     }
 
     setLoading(true);
     setResult('');
-    setWarnings([]);
 
     try {
       const text = await file.text();
-      const { units, errors } = parseCsv(text);
+      const { data, errors } = Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        beforeFirstChunk: (chunk: string) => chunk.replace(/^﻿/, ''),
+      });
 
-      if (errors.length) setWarnings(errors);
+      if (errors.length > 0) {
+        throw new Error('CSV parse error: ' + errors[0].message);
+      }
 
-      if (!units.length) {
-        setResult('Error: no valid rows found in CSV');
-        return;
+      const units = data
+        .filter((row: any) => row.titleCyrillic?.trim())
+        .map((row: any) => ({
+          titleCyrillic: row.titleCyrillic.trim(),
+          titleLatin: row.titleLatin?.trim() || '',
+          titleTranslationRu: row.titleTranslationRu?.trim() || '',
+          titleTranslationEn: row.titleTranslationEn?.trim() || '',
+        }));
+
+      if (units.length === 0) {
+        throw new Error('No valid data rows found in CSV');
       }
 
       const token = getToken();
@@ -107,11 +66,10 @@ export function UploadUnitsCsv() {
         throw new Error(err.message || 'Upload failed');
       }
 
-      const data = await res.json();
-      const parts: string[] = [];
-      if (data.created > 0) parts.push(`${data.created} created`);
-      if (data.updated > 0) parts.push(`${data.updated} updated`);
-      setResult(`Successfully uploaded: ${parts.join(', ')}`);
+      const response = await res.json();
+      setResult(
+        `Uploaded ${units.length} units: ${response.created} created, ${response.updated} updated`,
+      );
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       setResult(`Error: ${err instanceof Error ? err.message : 'Failed to parse CSV'}`);
@@ -139,13 +97,6 @@ export function UploadUnitsCsv() {
         <p className={`text-sm mt-2 ${result.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>
           {result}
         </p>
-      )}
-      {warnings.length > 0 && (
-        <div className="text-sm mt-1 text-amber-600">
-          {warnings.map((w, i) => (
-            <div key={i}>{w}</div>
-          ))}
-        </div>
       )}
     </div>
   );

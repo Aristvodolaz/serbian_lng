@@ -12,90 +12,45 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-interface LessonRow {
-  unitId: string;
-  title: string;
-  titleLatin: string;
-  titleTranslationRu: string;
-  titleTranslationEn: string;
-  xpReward?: number;
-}
-
 export function UploadLessonsCsv({ unitId }: { unitId: string }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
-  const [warnings, setWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const parseCsv = (text: string): { lessons: LessonRow[]; errors: string[] } => {
-    if (text.charCodeAt(0) === 0xfeff) {
-      text = text.slice(1);
-    }
-
-    const lessons: LessonRow[] = [];
-    const errors: string[] = [];
-
-    const results = Papa.parse<Record<string, string>>(text.trim(), {
-      header: true,
-      skipEmptyLines: true,
-    });
-
-    for (const err of results.errors) {
-      const parseErr = err as { row?: number; message?: string };
-      errors.push(`Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`);
-    }
-
-    for (let i = 0; i < results.data.length; i++) {
-      const row = results.data[i];
-      const rowNum = i + 2;
-
-      const title = (row.title || '').trim();
-      const titleLatin = (row.titleLatin || '').trim();
-      const titleTranslationRu = (row.titleTranslationRu || '').trim();
-      const titleTranslationEn = (row.titleTranslationEn || '').trim();
-
-      if (!title || !titleLatin || !titleTranslationRu || !titleTranslationEn) {
-        errors.push(
-          `Row ${rowNum}: title, titleLatin, titleTranslationRu, and titleTranslationEn are required`,
-        );
-        continue;
-      }
-
-      const xpReward = row.xpReward ? parseInt(row.xpReward.trim(), 10) : undefined;
-
-      lessons.push({
-        unitId,
-        title,
-        titleLatin,
-        titleTranslationRu,
-        titleTranslationEn,
-        xpReward: xpReward || undefined,
-      });
-    }
-
-    return { lessons, errors };
-  };
 
   const handleFile = async (file: File) => {
     if (!file.name.endsWith('.csv')) {
       setResult('Error: please select a .csv file');
-      setWarnings([]);
       return;
     }
 
     setLoading(true);
     setResult('');
-    setWarnings([]);
 
     try {
       const text = await file.text();
-      const { lessons, errors } = parseCsv(text);
+      const { data, errors } = Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        beforeFirstChunk: (chunk: string) => chunk.replace(/^﻿/, ''),
+      });
 
-      if (errors.length) setWarnings(errors);
+      if (errors.length > 0) {
+        throw new Error('CSV parse error: ' + errors[0].message);
+      }
 
-      if (!lessons.length) {
-        setResult('Error: no valid rows found in CSV');
-        return;
+      const lessons = data
+        .filter((row: any) => row.title?.trim())
+        .map((row: any) => ({
+          unitId,
+          title: row.title.trim(),
+          titleLatin: row.titleLatin?.trim() || '',
+          titleTranslationRu: row.titleTranslationRu?.trim() || '',
+          titleTranslationEn: row.titleTranslationEn?.trim() || '',
+          xpReward: row.xpReward ? parseInt(row.xpReward) || 10 : 10,
+        }));
+
+      if (lessons.length === 0) {
+        throw new Error('No valid data rows found in CSV');
       }
 
       const token = getToken();
@@ -113,11 +68,10 @@ export function UploadLessonsCsv({ unitId }: { unitId: string }) {
         throw new Error(err.message || 'Upload failed');
       }
 
-      const data = await res.json();
-      const parts: string[] = [];
-      if (data.created > 0) parts.push(`${data.created} created`);
-      if (data.updated > 0) parts.push(`${data.updated} updated`);
-      setResult(`Successfully uploaded: ${parts.join(', ')}`);
+      const response = await res.json();
+      setResult(
+        `Uploaded ${lessons.length} lessons: ${response.created} created, ${response.updated} updated`,
+      );
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       setResult(`Error: ${err instanceof Error ? err.message : 'Failed to parse CSV'}`);
@@ -145,13 +99,6 @@ export function UploadLessonsCsv({ unitId }: { unitId: string }) {
         <p className={`text-sm mt-2 ${result.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>
           {result}
         </p>
-      )}
-      {warnings.length > 0 && (
-        <div className="text-sm mt-1 text-amber-600">
-          {warnings.map((w, i) => (
-            <div key={i}>{w}</div>
-          ))}
-        </div>
       )}
     </div>
   );

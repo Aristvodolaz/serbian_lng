@@ -12,129 +12,71 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-interface ChoiceRow {
-  text: string;
-  textRu: string;
-  isCorrect: boolean;
-}
-
-interface ExerciseRow {
-  lessonId: string;
-  promptCyrillic: string;
-  promptLatin: string;
-  promptTranslationRu: string;
-  promptTranslationEn: string;
-  choices: ChoiceRow[];
-}
-
 export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
-  const [warnings, setWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const parseCsv = (text: string): { exercises: ExerciseRow[]; errors: string[] } => {
-    if (text.charCodeAt(0) === 0xfeff) {
-      text = text.slice(1);
-    }
-
-    const exercises: ExerciseRow[] = [];
-    const errors: string[] = [];
-
-    const results = Papa.parse<Record<string, string>>(text.trim(), {
-      header: true,
-      skipEmptyLines: true,
-    });
-
-    for (const err of results.errors) {
-      const parseErr = err as { row?: number; message?: string };
-      errors.push(`Row ${parseErr.row ?? '?'}: ${parseErr.message ?? 'parse error'}`);
-    }
-
-    for (let i = 0; i < results.data.length; i++) {
-      const row = results.data[i];
-      const rowNum = i + 2;
-
-      const promptCyrillic = (row.promptCyrillic || '').trim();
-      const promptLatin = (row.promptLatin || '').trim();
-      const promptTranslationRu = (row.promptTranslationRu || '').trim();
-      const promptTranslationEn = (row.promptTranslationEn || '').trim();
-
-      if (!promptCyrillic || !promptLatin || !promptTranslationRu || !promptTranslationEn) {
-        errors.push(
-          `Row ${rowNum}: promptCyrillic, promptLatin, promptTranslationRu, and promptTranslationEn are required`,
-        );
-        continue;
-      }
-
-      // Parse choices from columns: choice1Text, choice1TextRu, choice1Correct, choice2Text, ...
-      const choices: ChoiceRow[] = [];
-      let choiceIdx = 1;
-      while (true) {
-        const text = (row[`choice${choiceIdx}Text`] || '').trim();
-        const textRu = (row[`choice${choiceIdx}TextRu`] || '').trim();
-        const correctRaw = (row[`choice${choiceIdx}Correct`] || '').trim().toLowerCase();
-
-        if (!text && !textRu) break; // no more choices
-
-        if (!text || !textRu) {
-          errors.push(`Row ${rowNum}: choice ${choiceIdx} has text but missing textRu or text`);
-          choiceIdx++;
-          continue;
-        }
-
-        choices.push({
-          text,
-          textRu,
-          isCorrect: correctRaw === '1' || correctRaw === 'true' || correctRaw === 'yes',
-        });
-        choiceIdx++;
-      }
-
-      if (choices.length === 0) {
-        errors.push(`Row ${rowNum}: at least one choice is required`);
-        continue;
-      }
-
-      const hasCorrect = choices.some((c) => c.isCorrect);
-      if (!hasCorrect) {
-        errors.push(`Row ${rowNum}: at least one choice must be marked as correct`);
-        continue;
-      }
-
-      exercises.push({
-        lessonId,
-        promptCyrillic,
-        promptLatin,
-        promptTranslationRu,
-        promptTranslationEn,
-        choices,
-      });
-    }
-
-    return { exercises, errors };
-  };
 
   const handleFile = async (file: File) => {
     if (!file.name.endsWith('.csv')) {
       setResult('Error: please select a .csv file');
-      setWarnings([]);
       return;
     }
 
     setLoading(true);
     setResult('');
-    setWarnings([]);
 
     try {
       const text = await file.text();
-      const { exercises, errors } = parseCsv(text);
+      const { data, errors } = Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        beforeFirstChunk: (chunk: string) => chunk.replace(/^﻿/, ''),
+      });
 
-      if (errors.length) setWarnings(errors);
+      if (errors.length > 0) {
+        throw new Error('CSV parse error: ' + errors[0].message);
+      }
 
-      if (!exercises.length) {
-        setResult('Error: no valid rows found in CSV');
-        return;
+      const exercises: any[] = [];
+      const warnings: string[] = [];
+
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i] as any;
+        if (!row.promptCyrillic?.trim()) continue;
+
+        const choices: Array<{ text: string; textRu: string; isCorrect: boolean }> = [];
+        for (let c = 1; c <= 4; c++) {
+          const choiceText = row[`choice${c}Text`]?.trim();
+          if (!choiceText) continue;
+          choices.push({
+            text: choiceText,
+            textRu: row[`choice${c}TextRu`]?.trim() || '',
+            isCorrect: row[`choice${c}Correct`] === '1' || row[`choice${c}Correct`] === 'true',
+          });
+        }
+
+        if (choices.length === 0) {
+          warnings.push(`Row ${i + 2}: no choices found, skipped`);
+          continue;
+        }
+        if (!choices.some((c) => c.isCorrect)) {
+          warnings.push(`Row ${i + 2}: no correct answer marked, defaulting to first`);
+          choices[0].isCorrect = true;
+        }
+
+        exercises.push({
+          lessonId,
+          promptCyrillic: row.promptCyrillic.trim(),
+          promptLatin: row.promptLatin?.trim() || '',
+          promptTranslationRu: row.promptTranslationRu?.trim() || '',
+          promptTranslationEn: row.promptTranslationEn?.trim() || '',
+          choices,
+        });
+      }
+
+      if (exercises.length === 0) {
+        throw new Error('No valid data rows found in CSV');
       }
 
       const token = getToken();
@@ -152,11 +94,10 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
         throw new Error(err.message || 'Upload failed');
       }
 
-      const data = await res.json();
-      const parts: string[] = [];
-      if (data.created > 0) parts.push(`${data.created} created`);
-      if (data.updated > 0) parts.push(`${data.updated} updated`);
-      setResult(`Successfully uploaded: ${parts.join(', ')}`);
+      const response = await res.json();
+      let msg = `Uploaded ${exercises.length} exercises: ${response.created} created, ${response.updated} updated`;
+      if (warnings.length > 0) msg += ` | Warnings: ${warnings.join('; ')}`;
+      setResult(msg);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       setResult(`Error: ${err instanceof Error ? err.message : 'Failed to parse CSV'}`);
@@ -184,13 +125,6 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
         <p className={`text-sm mt-2 ${result.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>
           {result}
         </p>
-      )}
-      {warnings.length > 0 && (
-        <div className="text-sm mt-1 text-amber-600">
-          {warnings.map((w, i) => (
-            <div key={i}>{w}</div>
-          ))}
-        </div>
       )}
     </div>
   );

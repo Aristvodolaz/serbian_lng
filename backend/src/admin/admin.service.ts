@@ -23,7 +23,6 @@ import { DashboardStatsResponseDto } from './dtos/dashboard-stats-response.dto';
 import {
   BadgeAdminResponseDto,
   BadgeEarnerResponseDto,
-  BulkCreateExerciseDto,
   CreateBadgeDto,
   CreateExerciseChoiceDto,
   CreateExerciseDto,
@@ -254,25 +253,31 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateUnits(units: CreateUnitDto[]): Promise<{
-    created: number;
-    updated: number;
-  }> {
+  async bulkCreateUnits(units: CreateUnitDto[]): Promise<{ created: number; updated: number }> {
     const maxOrder = await this.unitRepo.findOne({
       order: { order: 'DESC' },
       select: ['order'],
     });
-    const baseOrder = maxOrder?.order ?? 0;
-    const entities = units.map((dto, i) => ({
-      ...dto,
-      order: baseOrder + i + 1,
-    }));
+    let nextOrder = maxOrder?.order ?? 0;
+    let created = 0;
+    let updated = 0;
 
-    const result = await this.unitRepo.upsert(entities, ['titleCyrillic']);
-    return {
-      created: result.identifiers?.length ?? 0,
-      updated: entities.length - (result.identifiers?.length ?? 0),
-    };
+    for (const dto of units) {
+      const existing = await this.unitRepo.findOne({
+        where: { titleCyrillic: dto.titleCyrillic },
+      });
+      if (existing) {
+        Object.assign(existing, dto);
+        await this.unitRepo.save(existing);
+        updated++;
+      } else {
+        nextOrder++;
+        const unit = this.unitRepo.create({ ...dto, order: nextOrder });
+        await this.unitRepo.save(unit);
+        created++;
+      }
+    }
+    return { created, updated };
   }
 
   // ── Lessons ────────────────────────────────────────────────
@@ -341,44 +346,58 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateLessons(lessons: CreateLessonDto[]): Promise<{
-    created: number;
-    updated: number;
-  }> {
-    // Group by unitId to compute order per unit
-    const unitGroups = new Map<string, CreateLessonDto[]>();
+  async bulkCreateLessons(lessons: CreateLessonDto[]): Promise<{ created: number; updated: number }> {
+    let created = 0;
+    let updated = 0;
+
+    // Group by unitId to assign order
+    const byUnit = new Map<string, CreateLessonDto[]>();
     for (const dto of lessons) {
-      if (!unitGroups.has(dto.unitId)) unitGroups.set(dto.unitId, []);
-      unitGroups.get(dto.unitId)!.push(dto);
+      if (!byUnit.has(dto.unitId)) byUnit.set(dto.unitId, []);
+      byUnit.get(dto.unitId)!.push(dto);
     }
 
-    const entities: Partial<Lesson>[] = [];
-    for (const [unitId, dtos] of unitGroups) {
+    for (const [unitId, dtos] of byUnit) {
+      const unit = await this.unitRepo.findOne({ where: { id: unitId } });
+      if (!unit) throw new NotFoundException(`Unit ${unitId} not found`);
+
       const maxOrder = await this.lessonRepo.findOne({
         where: { unitId },
         order: { order: 'DESC' },
         select: ['order'],
       });
-      const baseOrder = maxOrder?.order ?? 0;
-      for (let i = 0; i < dtos.length; i++) {
-        const dto = dtos[i];
-        entities.push({
-          unitId,
-          title: dto.title,
-          titleLatin: dto.titleLatin,
-          titleTranslationRu: dto.titleTranslationRu,
-          titleTranslationEn: dto.titleTranslationEn,
-          order: baseOrder + i + 1,
-          xpReward: dto.xpReward ?? 10,
+      let nextOrder = maxOrder?.order ?? 0;
+
+      for (const dto of dtos) {
+        const existing = await this.lessonRepo.findOne({
+          where: { unitId, title: dto.title },
         });
+        if (existing) {
+          Object.assign(existing, {
+            titleLatin: dto.titleLatin,
+            titleTranslationRu: dto.titleTranslationRu,
+            titleTranslationEn: dto.titleTranslationEn,
+            xpReward: dto.xpReward ?? existing.xpReward,
+          });
+          await this.lessonRepo.save(existing);
+          updated++;
+        } else {
+          nextOrder++;
+          const lesson = this.lessonRepo.create({
+            unitId,
+            title: dto.title,
+            titleLatin: dto.titleLatin,
+            titleTranslationRu: dto.titleTranslationRu,
+            titleTranslationEn: dto.titleTranslationEn,
+            order: nextOrder,
+            xpReward: dto.xpReward ?? 10,
+          });
+          await this.lessonRepo.save(lesson);
+          created++;
+        }
       }
     }
-
-    const result = await this.lessonRepo.upsert(entities, ['unitId', 'title']);
-    return {
-      created: result.identifiers?.length ?? 0,
-      updated: entities.length - (result.identifiers?.length ?? 0),
-    };
+    return { created, updated };
   }
 
   // ── Exercises ──────────────────────────────────────────────
@@ -466,77 +485,75 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateExercises(exercises: BulkCreateExerciseDto[]): Promise<{
-    created: number;
-    updated: number;
-  }> {
-    // Group by lessonId to compute order per lesson
-    const lessonGroups = new Map<string, BulkCreateExerciseDto[]>();
-    for (const dto of exercises) {
-      if (!lessonGroups.has(dto.lessonId)) lessonGroups.set(dto.lessonId, []);
-      lessonGroups.get(dto.lessonId)!.push(dto);
-    }
-
+  async bulkCreateExercises(
+    exercises: Array<CreateExerciseDto & { lessonId: string }>,
+  ): Promise<{ created: number; updated: number }> {
     let created = 0;
     let updated = 0;
 
-    for (const [lessonId, dtos] of lessonGroups) {
+    // Group by lessonId to assign order
+    const byLesson = new Map<string, Array<CreateExerciseDto & { lessonId: string }>>();
+    for (const dto of exercises) {
+      if (!byLesson.has(dto.lessonId)) byLesson.set(dto.lessonId, []);
+      byLesson.get(dto.lessonId)!.push(dto);
+    }
+
+    for (const [lessonId, dtos] of byLesson) {
+      const lesson = await this.lessonRepo.findOne({ where: { id: lessonId } });
+      if (!lesson) throw new NotFoundException(`Lesson ${lessonId} not found`);
+
       const maxOrder = await this.exerciseRepo.findOne({
         where: { lessonId },
         order: { order: 'DESC' },
         select: ['order'],
       });
-      const baseOrder = maxOrder?.order ?? 0;
+      let nextOrder = maxOrder?.order ?? 0;
 
-      for (let i = 0; i < dtos.length; i++) {
-        const dto = dtos[i];
-        const exercise = await this.exerciseRepo.findOne({
+      for (const dto of dtos) {
+        const existing = await this.exerciseRepo.findOne({
           where: { lessonId, promptCyrillic: dto.promptCyrillic },
           relations: ['choices'],
         });
-
-        if (exercise) {
-          // Update existing
-          exercise.promptLatin = dto.promptLatin;
-          exercise.promptTranslationRu = dto.promptTranslationRu;
-          exercise.promptTranslationEn = dto.promptTranslationEn;
-          if (dto.type) exercise.type = dto.type;
-          await this.exerciseRepo.save(exercise);
-
+        if (existing) {
+          Object.assign(existing, {
+            type: dto.type ?? existing.type,
+            promptLatin: dto.promptLatin,
+            promptTranslationRu: dto.promptTranslationRu,
+            promptTranslationEn: dto.promptTranslationEn,
+          });
           // Replace choices
-          await this.choiceRepo.delete({ exerciseId: exercise.id });
-          const choices = dto.choices.map((c, idx) => ({
-            exerciseId: exercise.id,
+          await this.choiceRepo.delete({ exerciseId: existing.id });
+          existing.choices = dto.choices.map((c, i) => ({
+            exerciseId: existing.id,
             text: c.text,
             textRu: c.textRu,
             isCorrect: c.isCorrect,
-            order: c.order ?? idx + 1,
-          }));
-          await this.choiceRepo.save(choices);
+            order: c.order ?? i + 1,
+          }) as ExerciseChoice[]);
+          await this.exerciseRepo.save(existing);
           updated++;
         } else {
-          // Create new
-          const newExercise = this.exerciseRepo.create({
+          nextOrder++;
+          const exercise = this.exerciseRepo.create({
             lessonId,
             type: dto.type ?? ExerciseType.TRANSLATE_CHOICE,
             promptCyrillic: dto.promptCyrillic,
             promptLatin: dto.promptLatin,
             promptTranslationRu: dto.promptTranslationRu,
             promptTranslationEn: dto.promptTranslationEn,
-            order: baseOrder + i + 1,
-            choices: dto.choices.map((c, idx) => ({
+            order: nextOrder,
+            choices: dto.choices.map((c, i) => ({
               text: c.text,
               textRu: c.textRu,
               isCorrect: c.isCorrect,
-              order: c.order ?? idx + 1,
-            })),
+              order: c.order ?? i + 1,
+            }) as ExerciseChoice[]),
           });
-          await this.exerciseRepo.save(newExercise);
+          await this.exerciseRepo.save(exercise);
           created++;
         }
       }
     }
-
     return { created, updated };
   }
 
@@ -622,27 +639,44 @@ export class AdminService {
     return this.mapWord(word);
   }
 
-  async bulkCreateWords(words: CreateWordDto[]): Promise<{
-    created: number;
-    updated: number;
-  }> {
-    const entities = words.map((dto) => ({
-      unitId: dto.unitId ?? null,
-      cyrillic: dto.cyrillic,
-      latin: dto.latin,
-      translationRu: dto.translationRu,
-      translationEn: dto.translationEn,
-      exampleCyrillic: dto.exampleCyrillic ?? null,
-      exampleTranslationRu: dto.exampleTranslationRu ?? null,
-      exampleTranslationEn: dto.exampleTranslationEn ?? null,
-      audioUrl: dto.audioUrl ?? null,
-    }));
+  async bulkCreateWords(words: CreateWordDto[]): Promise<{ created: number; updated: number }> {
+    let created = 0;
+    let updated = 0;
 
-    const result = await this.wordRepo.upsert(entities, ['cyrillic']);
-    return {
-      created: result.identifiers?.length ?? 0,
-      updated: entities.length - (result.identifiers?.length ?? 0),
-    };
+    for (const dto of words) {
+      const existing = await this.wordRepo.findOne({
+        where: { cyrillic: dto.cyrillic },
+      });
+      if (existing) {
+        Object.assign(existing, {
+          unitId: dto.unitId ?? existing.unitId,
+          latin: dto.latin,
+          translationRu: dto.translationRu,
+          translationEn: dto.translationEn,
+          exampleCyrillic: dto.exampleCyrillic ?? existing.exampleCyrillic,
+          exampleTranslationRu: dto.exampleTranslationRu ?? existing.exampleTranslationRu,
+          exampleTranslationEn: dto.exampleTranslationEn ?? existing.exampleTranslationEn,
+          audioUrl: dto.audioUrl ?? existing.audioUrl,
+        });
+        await this.wordRepo.save(existing);
+        updated++;
+      } else {
+        const word = this.wordRepo.create({
+          unitId: dto.unitId ?? null,
+          cyrillic: dto.cyrillic,
+          latin: dto.latin,
+          translationRu: dto.translationRu,
+          translationEn: dto.translationEn,
+          exampleCyrillic: dto.exampleCyrillic ?? null,
+          exampleTranslationRu: dto.exampleTranslationRu ?? null,
+          exampleTranslationEn: dto.exampleTranslationEn ?? null,
+          audioUrl: dto.audioUrl ?? null,
+        });
+        await this.wordRepo.save(word);
+        created++;
+      }
+    }
+    return { created, updated };
   }
 
   async getWord(wordId: string): Promise<WordAdminResponseDto> {

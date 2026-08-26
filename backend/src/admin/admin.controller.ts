@@ -24,6 +24,8 @@ import {
   BadgeAdminResponseDto,
   BadgeEarnerResponseDto,
   BulkCreateExerciseDto,
+  BulkCreateLessonDto,
+  BulkCreateUnitDto,
   CreateBadgeDto,
   CreateExerciseChoiceDto,
   CreateExerciseDto,
@@ -129,7 +131,7 @@ export class AdminController {
 
   @Post('units/bulk')
   bulkCreateUnits(
-    @Body() dto: { units: CreateUnitDto[] },
+    @Body() dto: { units: BulkCreateUnitDto[] },
   ): Promise<{ created: number; updated: number }> {
     return this.adminService.bulkCreateUnits(dto.units);
   }
@@ -176,7 +178,7 @@ export class AdminController {
 
   @Post('lessons/bulk')
   bulkCreateLessons(
-    @Body() dto: { lessons: CreateLessonDto[] },
+    @Body() dto: { lessons: BulkCreateLessonDto[] },
   ): Promise<{ created: number; updated: number }> {
     return this.adminService.bulkCreateLessons(dto.lessons);
   }
@@ -261,9 +263,7 @@ export class AdminController {
   }
 
   @Post('words/bulk')
-  bulkCreateWords(
-    @Body() dto: { words: CreateWordDto[] },
-  ): Promise<{ created: number; updated: number }> {
+  bulkCreateWords(@Body() dto: { words: CreateWordDto[] }): Promise<{ created: number }> {
     return this.adminService.bulkCreateWords(dto.words);
   }
 

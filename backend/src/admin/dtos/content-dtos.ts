@@ -448,6 +448,96 @@ export class UpdateWordDto {
   audioUrl?: string | null;
 }
 
+// Bulk DTOs
+export class BulkCreateUnitDto {
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleCyrillic: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleLatin: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleTranslationEn: string;
+}
+
+export class BulkCreateLessonDto {
+  @ApiProperty()
+  @IsString()
+  unitId: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  title: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleLatin: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleTranslationEn: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  xpReward?: number;
+}
+
+export class BulkCreateExerciseDto {
+  @ApiProperty()
+  @IsString()
+  lessonId: string;
+
+  @ApiProperty({ enum: ExerciseType, required: false })
+  @IsOptional()
+  type?: ExerciseType;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptCyrillic: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptLatin: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptTranslationRu: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  promptTranslationEn: string;
+
+  @ApiProperty({ type: [CreateExerciseChoiceDto] })
+  @IsArray()
+  choices: CreateExerciseChoiceDto[];
+}
+
 // Badge DTOs
 export class BadgeAdminResponseDto {
   @ApiProperty() id: string;
