@@ -23,10 +23,13 @@ async function baseline(): Promise<void> {
       )`,
     );
     for (const m of ALREADY_APPLIED) {
+      // Explicit casts: the same parameter appears in the INSERT list and in the
+      // WHERE subquery, and Postgres refuses to deduce a single type for it
+      // (42P08 "inconsistent types deduced") without them.
       await AppDataSource.query(
         `INSERT INTO "migrations" ("timestamp", "name")
-         SELECT $1, $2
-         WHERE NOT EXISTS (SELECT 1 FROM "migrations" WHERE "name" = $2)`,
+         SELECT $1::bigint, $2::varchar
+         WHERE NOT EXISTS (SELECT 1 FROM "migrations" WHERE "name" = $2::varchar)`,
         [m.timestamp, m.name],
       );
     }
