@@ -9,6 +9,11 @@ import { Unit } from '../content/entities/unit.entity';
 import { Lesson } from '../content/entities/lesson.entity';
 import { Exercise, ExerciseType } from '../content/entities/exercise.entity';
 import { ExerciseChoice } from '../content/entities/exercise-choice.entity';
+import {
+  ExerciseTemplate,
+  getExerciseTemplate,
+  getExerciseTemplates,
+} from '../content/exercise-templates';
 import { Word } from '../vocabulary/entities/word.entity';
 import { Badge } from '../badges/entities/badge.entity';
 import { UserBadge } from '../badges/entities/user-badge.entity';
@@ -404,6 +409,26 @@ export class AdminService {
 
   // ── Exercises ──────────────────────────────────────────────
 
+  getExerciseTemplates(): ExerciseTemplate[] {
+    return getExerciseTemplates();
+  }
+
+  private mapChoiceForTemplate(
+    template: ExerciseTemplate,
+    c: { text: string; textRu?: string; isCorrect: boolean; order?: number },
+    fallbackOrder: number,
+  ): Partial<ExerciseChoice> {
+    const choice: Partial<ExerciseChoice> = {
+      text: c.text,
+      isCorrect: c.isCorrect,
+      order: c.order ?? fallbackOrder,
+    };
+    if (template.choiceFields.includes('textRu')) {
+      choice.textRu = c.textRu;
+    }
+    return choice;
+  }
+
   async createExercise(
     lessonId: string,
     dto: CreateExerciseDto,
@@ -417,9 +442,12 @@ export class AdminService {
       select: ['order'],
     });
 
+    const type = dto.type ?? ExerciseType.TRANSLATE_CHOICE;
+    const template = getExerciseTemplate(type);
+
     const exercise = this.exerciseRepo.create({
       lessonId,
-      type: dto.type ?? ExerciseType.TRANSLATE_CHOICE,
+      type,
       promptCyrillic: dto.promptCyrillic,
       promptLatin: dto.promptLatin,
       promptTranslationRu: dto.promptTranslationRu,
@@ -428,12 +456,9 @@ export class AdminService {
     });
 
     if (dto.choices?.length) {
-      exercise.choices = dto.choices.map((c, i) => ({
-        text: c.text,
-        textRu: c.textRu,
-        isCorrect: c.isCorrect,
-        order: c.order ?? i + 1,
-      }) as ExerciseChoice);
+      exercise.choices = dto.choices.map(
+        (c, i) => this.mapChoiceForTemplate(template, c, i + 1) as ExerciseChoice,
+      );
     }
 
     await this.exerciseRepo.save(exercise);
@@ -463,13 +488,10 @@ export class AdminService {
 
     if (dto.choices !== undefined) {
       await this.choiceRepo.delete({ exerciseId: exercise.id });
-      exercise.choices = dto.choices.map((c, i) => ({
-        exerciseId: exercise.id,
-        text: c.text,
-        textRu: c.textRu,
-        isCorrect: c.isCorrect,
-        order: c.order ?? i + 1,
-      }) as ExerciseChoice);
+      const template = getExerciseTemplate(dto.type ?? exercise.type);
+      exercise.choices = dto.choices.map(
+        (c, i) => this.mapChoiceForTemplate(template, c, i + 1) as ExerciseChoice,
+      );
     }
 
     await this.exerciseRepo.save(exercise);
@@ -520,6 +542,7 @@ export class AdminService {
       let nextOrder = maxOrder?.order ?? 0;
 
       for (const dto of dtos) {
+        const template = getExerciseTemplate(dto.type ?? ExerciseType.TRANSLATE_CHOICE);
         const existing = await this.exerciseRepo.findOne({
           where: { lessonId, promptCyrillic: dto.promptCyrillic },
           relations: ['choices'],
@@ -534,11 +557,8 @@ export class AdminService {
           // Replace choices
           await this.choiceRepo.delete({ exerciseId: existing.id });
           existing.choices = dto.choices.map((c, i) => ({
+            ...this.mapChoiceForTemplate(template, c, i + 1),
             exerciseId: existing.id,
-            text: c.text,
-            textRu: c.textRu,
-            isCorrect: c.isCorrect,
-            order: c.order ?? i + 1,
           }) as ExerciseChoice);
           await this.exerciseRepo.save(existing);
           updated++;
@@ -552,12 +572,9 @@ export class AdminService {
             promptTranslationRu: dto.promptTranslationRu,
             promptTranslationEn: dto.promptTranslationEn,
             order: nextOrder,
-            choices: dto.choices.map((c, i) => ({
-              text: c.text,
-              textRu: c.textRu,
-              isCorrect: c.isCorrect,
-              order: c.order ?? i + 1,
-            }) as ExerciseChoice),
+            choices: dto.choices.map(
+              (c, i) => this.mapChoiceForTemplate(template, c, i + 1) as ExerciseChoice,
+            ),
           });
           await this.exerciseRepo.save(exercise);
           created++;
@@ -582,12 +599,10 @@ export class AdminService {
       select: ['order'],
     });
 
+    const template = getExerciseTemplate(exercise.type);
     const choice = this.choiceRepo.create({
       exerciseId,
-      text: dto.text,
-      textRu: dto.textRu,
-      isCorrect: dto.isCorrect,
-      order: dto.order ?? (maxOrder?.order ?? 0) + 1,
+      ...this.mapChoiceForTemplate(template, dto, (maxOrder?.order ?? 0) + 1),
     });
     await this.choiceRepo.save(choice);
     return this.mapChoice(choice);

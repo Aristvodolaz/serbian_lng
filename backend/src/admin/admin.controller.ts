@@ -34,6 +34,7 @@ import {
   CreateWordDto,
   ExerciseAdminResponseDto,
   ExerciseChoiceAdminResponseDto,
+  ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
   UnitAdminResponseDto,
   UpdateBadgeDto,
@@ -184,6 +185,12 @@ export class AdminController {
   }
 
   // ── Exercises ──────────────────────────────────────────────
+
+  @Get('exercise-templates')
+  @ApiOkResponse({ type: [ExerciseTemplateResponseDto] })
+  getExerciseTemplates(): ExerciseTemplateResponseDto[] {
+    return this.adminService.getExerciseTemplates();
+  }
 
   @Post('lessons/:lessonId/exercises')
   @ApiOkResponse({ type: ExerciseAdminResponseDto })

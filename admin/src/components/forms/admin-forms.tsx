@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ExerciseTemplate, getTemplate } from '@/lib/exercise-templates';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -239,7 +240,17 @@ export function EditLessonForm({ lesson }: { lesson: { id: string; title: string
 
 // ── Create Exercise Form ─────────────────────────────────────
 
-export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
+export function CreateExerciseForm({
+  lessonId,
+  templates,
+}: {
+  lessonId: string;
+  templates: ExerciseTemplate[];
+}) {
+  const [type, setType] = useState<string>(templates[0]?.type ?? 'translate_choice');
+  const template = getTemplate(templates, type);
+  const hasTextRu = template.choiceFields.includes('textRu');
+
   return (
     <form
       onSubmit={async (e) => {
@@ -248,19 +259,19 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
         const choicesStr = formData.get('choices') as string;
         const choices = choicesStr.split('\n').filter(Boolean).map((line, i) => {
           const parts = line.trim().split('\t');
-          const [isCorrect, ...enParts] = (parts[0] || '').split(' ');
-          const textEn = enParts.join(' ');
-          const textRu = parts[1] || '';
-          return {
-            text: textEn,
-            textRu,
+          const [isCorrect, ...textParts] = (parts[0] || '').split(' ');
+          const choice: Record<string, string | boolean | number> = {
+            text: textParts.join(' '),
             isCorrect: isCorrect === '✓',
             order: i + 1,
           };
+          if (hasTextRu) choice.textRu = parts[1] || '';
+          return choice;
         });
         await adminFetch(`/admin/lessons/${lessonId}/exercises`, {
           method: 'POST',
           body: JSON.stringify({
+            type,
             promptCyrillic: formData.get('promptCyrillic'),
             promptLatin: formData.get('promptLatin'),
             promptTranslationRu: formData.get('promptTranslationRu'),
@@ -270,13 +281,39 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
         });
         window.location.reload();
       }}
-      className="flex gap-2 flex-wrap"
+      className="flex gap-2 flex-wrap items-end"
     >
-      <input name="promptCyrillic" placeholder="Cyrillic" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptLatin" placeholder="Latin" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptTranslationRu" placeholder="Translation RU" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptTranslationEn" placeholder="Translation EN" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <textarea name="choices" placeholder="✓ correct answer EN&#9;correct answer RU&#10;wrong answer 1 EN&#9;wrong answer 1 RU&#10;wrong answer 2 EN&#9;wrong answer 2 RU" required className="px-3 py-2 border border-gray-300 rounded-lg text-sm h-24" />
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        title={template.description}
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+      >
+        {templates.map((t) => (
+          <option key={t.type} value={t.type}>
+            {t.label}
+          </option>
+        ))}
+      </select>
+      {template.promptFields.map((field) => (
+        <input
+          key={field.name}
+          name={field.name}
+          placeholder={field.label}
+          required={field.required}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        />
+      ))}
+      <textarea
+        name="choices"
+        placeholder={
+          hasTextRu
+            ? '✓ correct answer EN\tcorrect answer RU\nwrong answer 1 EN\twrong answer 1 RU\nwrong answer 2 EN\twrong answer 2 RU'
+            : '✓ correct answer\nwrong answer 1\nwrong answer 2'
+        }
+        required
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm h-24"
+      />
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
         Add Exercise
       </button>
@@ -286,7 +323,27 @@ export function CreateExerciseForm({ lessonId }: { lessonId: string }) {
 
 // ── Edit Exercise Form ───────────────────────────────────────
 
-export function EditExerciseForm({ exercise }: { exercise: { id: string; promptCyrillic: string; promptLatin: string; promptTranslationRu: string; promptTranslationEn: string } }) {
+export function EditExerciseForm({
+  exercise,
+  template,
+}: {
+  exercise: {
+    id: string;
+    type: string;
+    promptCyrillic: string;
+    promptLatin: string;
+    promptTranslationRu: string;
+    promptTranslationEn: string;
+  };
+  template: ExerciseTemplate;
+}) {
+  const defaults: Record<string, string> = {
+    promptCyrillic: exercise.promptCyrillic,
+    promptLatin: exercise.promptLatin,
+    promptTranslationRu: exercise.promptTranslationRu,
+    promptTranslationEn: exercise.promptTranslationEn,
+  };
+
   return (
     <form
       onSubmit={async (e) => {
@@ -303,12 +360,17 @@ export function EditExerciseForm({ exercise }: { exercise: { id: string; promptC
         });
         window.location.reload();
       }}
-      className="flex gap-2 mt-3 flex-wrap"
+      className="flex gap-2 mt-3 flex-wrap items-end"
     >
-      <input name="promptCyrillic" defaultValue={exercise.promptCyrillic} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptLatin" defaultValue={exercise.promptLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptTranslationRu" defaultValue={exercise.promptTranslationRu} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-      <input name="promptTranslationEn" defaultValue={exercise.promptTranslationEn} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <span className="text-xs text-gray-400 self-center">Type: {exercise.type}</span>
+      {template.promptFields.map((field) => (
+        <input
+          key={field.name}
+          name={field.name}
+          defaultValue={defaults[field.name] ?? ''}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        />
+      ))}
       <button type="submit" className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium">
         Save
       </button>
@@ -399,12 +461,15 @@ export function EditChoiceForm({
   choice,
   exerciseId,
   totalChoices,
+  template,
 }: {
   choice: { id: string; text: string; textRu: string; isCorrect: boolean; order: number };
   exerciseId: string;
   totalChoices: number;
+  template: ExerciseTemplate;
 }) {
   const [editing, setEditing] = useState(false);
+  const hasTextRu = template.choiceFields.includes('textRu');
 
   const updateChoice = async (data: { text?: string; textRu?: string; isCorrect?: boolean; order?: number }) => {
     await adminFetch(`/admin/exercise-choices/${choice.id}`, {
@@ -436,7 +501,9 @@ export function EditChoiceForm({
           onSubmit={async (e) => {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
-            await updateChoice({ text: formData.get('text') as string, textRu: formData.get('textRu') as string });
+            const data: { text: string; textRu?: string } = { text: formData.get('text') as string };
+            if (hasTextRu) data.textRu = formData.get('textRu') as string;
+            await updateChoice(data);
             setEditing(false);
           }}
           className="flex items-center gap-2 flex-1"
@@ -445,15 +512,17 @@ export function EditChoiceForm({
             name="text"
             defaultValue={choice.text}
             className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
-            placeholder="EN"
+            placeholder={template.choiceTextLabel}
             autoFocus
           />
-          <input
-            name="textRu"
-            defaultValue={choice.textRu}
-            className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
-            placeholder="RU"
-          />
+          {hasTextRu && (
+            <input
+              name="textRu"
+              defaultValue={choice.textRu}
+              className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
+              placeholder={template.choiceTextRuLabel ?? 'RU'}
+            />
+          )}
           <button type="submit" className="px-2 py-1 bg-green-600 text-white rounded text-xs">
             Save
           </button>
@@ -517,20 +586,30 @@ export function EditChoiceForm({
 
 // ── Add Choice Form ───────────────────────────────────────────
 
-export function AddChoiceForm({ exerciseId, nextOrder }: { exerciseId: string; nextOrder: number }) {
+export function AddChoiceForm({
+  exerciseId,
+  nextOrder,
+  template,
+}: {
+  exerciseId: string;
+  nextOrder: number;
+  template: ExerciseTemplate;
+}) {
+  const hasTextRu = template.choiceFields.includes('textRu');
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        const body: Record<string, unknown> = {
+          text: formData.get('text'),
+          isCorrect: false,
+          order: nextOrder,
+        };
+        if (hasTextRu) body.textRu = formData.get('textRu');
         await adminFetch(`/admin/exercises/${exerciseId}/choices`, {
           method: 'POST',
-          body: JSON.stringify({
-            text: formData.get('text'),
-            textRu: formData.get('textRu'),
-            isCorrect: false,
-            order: nextOrder,
-          }),
+          body: JSON.stringify(body),
         });
         window.location.reload();
       }}
@@ -538,16 +617,18 @@ export function AddChoiceForm({ exerciseId, nextOrder }: { exerciseId: string; n
     >
       <input
         name="text"
-        placeholder="Answer EN"
+        placeholder={template.choiceTextLabel}
         required
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
       />
-      <input
-        name="textRu"
-        placeholder="Ответ RU"
-        required
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
-      />
+      {hasTextRu && (
+        <input
+          name="textRu"
+          placeholder={template.choiceTextRuLabel ?? 'RU'}
+          required
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
+        />
+      )}
       <button type="submit" className="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs font-medium">
         Add
       </button>

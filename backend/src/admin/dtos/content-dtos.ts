@@ -22,10 +22,11 @@ export class CreateExerciseChoiceDto {
   @MinLength(1)
   text: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @MinLength(1)
-  textRu: string;
+  textRu?: string;
 
   @ApiProperty()
   @IsBoolean()
@@ -75,6 +76,24 @@ export class ExerciseAdminResponseDto {
   @ApiProperty() promptTranslationEn: string;
   @ApiProperty() order: number;
   @ApiProperty({ type: [ExerciseChoiceAdminResponseDto] }) choices: ExerciseChoiceAdminResponseDto[];
+}
+
+export class ExerciseTemplatePromptFieldResponseDto {
+  @ApiProperty() name: string;
+  @ApiProperty() label: string;
+  @ApiProperty() required: boolean;
+}
+
+export class ExerciseTemplateResponseDto {
+  @ApiProperty({ enum: ExerciseType }) type: ExerciseType;
+  @ApiProperty() label: string;
+  @ApiProperty() description: string;
+  @ApiProperty({ type: [ExerciseTemplatePromptFieldResponseDto] })
+  promptFields: ExerciseTemplatePromptFieldResponseDto[];
+  @ApiProperty({ type: [String] }) choiceFields: string[];
+  @ApiProperty() choiceTextLabel: string;
+  @ApiPropertyOptional() choiceTextRuLabel?: string;
+  @ApiPropertyOptional() choicesMin?: number;
 }
 
 export class CreateExerciseDto {

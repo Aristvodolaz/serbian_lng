@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { EditLessonForm, CreateExerciseForm, EditExerciseForm, DeleteButton, EditChoiceForm, AddChoiceForm } from '@/components/forms/admin-forms';
 import { UploadExercisesCsv } from '@/components/forms/upload-exercises-csv';
+import { getTemplate, ExerciseTemplate } from '@/lib/exercise-templates';
 
 interface Lesson {
   id: string;
@@ -35,6 +36,9 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   } catch {
     notFound();
   }
+  const templates: ExerciseTemplate[] = await fetchAdmin('/admin/exercise-templates', {
+    redirectOnError: false,
+  });
 
   return (
     <div>
@@ -68,13 +72,15 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Exercises ({lesson.exercises?.length || 0})</h2>
         <div className="flex items-center gap-4">
-          <UploadExercisesCsv lessonId={lesson.id} />
-          <CreateExerciseForm lessonId={lesson.id} />
+          <UploadExercisesCsv lessonId={lesson.id} templates={templates} />
+          <CreateExerciseForm lessonId={lesson.id} templates={templates} />
         </div>
       </div>
 
       <div className="space-y-4">
-        {lesson.exercises?.map((exercise) => (
+        {lesson.exercises?.map((exercise) => {
+          const template = getTemplate(templates, exercise.type);
+          return (
           <div key={exercise.id} className="bg-white p-6 rounded-xl border border-gray-200">
             <div className="flex items-start justify-between mb-3">
               <div>
@@ -95,13 +101,15 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
                     choice={choice}
                     exerciseId={exercise.id}
                     totalChoices={exercise.choices.length}
+                    template={template}
                   />
                 ))}
             </div>
-            <AddChoiceForm exerciseId={exercise.id} nextOrder={exercise.choices.length + 1} />
-            <EditExerciseForm exercise={exercise} />
+            <AddChoiceForm exerciseId={exercise.id} nextOrder={exercise.choices.length + 1} template={template} />
+            <EditExerciseForm exercise={exercise} template={template} />
           </div>
-        ))}
+          );
+        })}
         {!lesson.exercises?.length && (
           <p className="text-center text-gray-500 py-8">No exercises yet</p>
         )}

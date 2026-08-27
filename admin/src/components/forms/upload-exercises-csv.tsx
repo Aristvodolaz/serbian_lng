@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Papa from 'papaparse';
+import { getTemplate, ExerciseTemplate } from '@/lib/exercise-templates';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -12,7 +13,13 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
+export function UploadExercisesCsv({
+  lessonId,
+  templates,
+}: {
+  lessonId: string;
+  templates?: ExerciseTemplate[];
+}) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,15 +52,23 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
         const row = data[i] as any;
         if (!row.promptCyrillic?.trim()) continue;
 
-        const choices: Array<{ text: string; textRu: string; isCorrect: boolean }> = [];
+        const type = row.type?.trim() || 'translate_choice';
+        const template = getTemplate(templates, type);
+        const hasTextRu = template.choiceFields.includes('textRu');
+
+        const choices: Array<{ text: string; textRu?: string; isCorrect: boolean }> = [];
         for (let c = 1; c <= 4; c++) {
           const choiceText = row[`choice${c}Text`]?.trim();
           if (!choiceText) continue;
-          choices.push({
+          const choice: { text: string; textRu?: string; isCorrect: boolean } = {
             text: choiceText,
-            textRu: row[`choice${c}TextRu`]?.trim() || '',
             isCorrect: row[`choice${c}Correct`] === '1' || row[`choice${c}Correct`] === 'true',
-          });
+          };
+          if (hasTextRu) {
+            const textRu = row[`choice${c}TextRu`]?.trim();
+            if (textRu) choice.textRu = textRu;
+          }
+          choices.push(choice);
         }
 
         if (choices.length === 0) {
@@ -67,10 +82,9 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
 
         const exercise: any = {
           lessonId,
+          type,
           promptCyrillic: row.promptCyrillic.trim(),
         };
-        const type = row.type?.trim();
-        if (type) exercise.type = type;
         const latin = row.promptLatin?.trim();
         const ru = row.promptTranslationRu?.trim();
         const en = row.promptTranslationEn?.trim();
