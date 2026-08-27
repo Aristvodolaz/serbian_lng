@@ -3,20 +3,15 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { Lesson } from './lesson.entity';
-import { ExerciseChoice } from './exercise-choice.entity';
-
-export enum ExerciseType {
-  TRANSLATE_CHOICE = 'translate_choice',
-  FILL_BLANK = 'fill_blank',
-}
+import { ContentStatus } from '../../common/enums/content-status.enum';
+import { ExercisePayload, ExerciseType } from '../exercise-types';
 
 @Entity('exercises')
-@Unique(['lessonId', 'promptCyrillic'])
+@Unique(['lessonId', 'order'])
 export class Exercise {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -28,24 +23,17 @@ export class Exercise {
   @JoinColumn({ name: 'lessonId' })
   lesson: Lesson;
 
-  @Column({ type: 'enum', enum: ExerciseType, default: ExerciseType.TRANSLATE_CHOICE })
+  // Plain varchar (no Postgres enum): new exercise types are registry
+  // entries, never DB migrations. Validated against EXERCISE_TYPE_REGISTRY.
+  @Column()
   type: ExerciseType;
 
-  @Column()
-  promptCyrillic: string;
+  @Column({ type: 'jsonb', default: () => "'{}'" })
+  payload: ExercisePayload;
 
-  @Column()
-  promptLatin: string;
-
-  @Column({ type: 'text', default: '' })
-  promptTranslationRu: string;
-
-  @Column({ type: 'text', default: '' })
-  promptTranslationEn: string;
+  @Column({ type: 'varchar', default: ContentStatus.DRAFT })
+  status: ContentStatus;
 
   @Column()
   order: number;
-
-  @OneToMany(() => ExerciseChoice, (choice) => choice.exercise, { cascade: true })
-  choices: ExerciseChoice[];
 }

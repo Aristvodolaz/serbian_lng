@@ -1,18 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { Unit } from '../../content/entities/unit.entity';
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { ContentStatus } from '../../common/enums/content-status.enum';
 
 @Entity('words')
 @Unique(['cyrillic'])
 export class Word {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ type: 'uuid', nullable: true })
-  unitId: string | null;
-
-  @ManyToOne(() => Unit, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'unitId' })
-  unit: Unit | null;
 
   @Column()
   cyrillic: string;
@@ -37,4 +30,25 @@ export class Word {
 
   @Column({ type: 'text', nullable: true })
   audioUrl: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  partOfSpeech: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  gender: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  number: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  declension: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  conjugation: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  imageUrl: string | null;
+
+  @Column({ type: 'varchar', default: ContentStatus.DRAFT })
+  status: ContentStatus;
 }

@@ -8,7 +8,6 @@ import { UserWordProgress } from '../vocabulary/entities/user-word-progress.enti
 import { Unit } from '../content/entities/unit.entity';
 import { Lesson } from '../content/entities/lesson.entity';
 import { Exercise } from '../content/entities/exercise.entity';
-import { ExerciseChoice } from '../content/entities/exercise-choice.entity';
 import { Word } from '../vocabulary/entities/word.entity';
 import { Badge } from '../badges/entities/badge.entity';
 import { UserBadge } from '../badges/entities/user-badge.entity';
@@ -22,7 +21,6 @@ import { UserBadge } from '../badges/entities/user-badge.entity';
       Unit,
       Lesson,
       Exercise,
-      ExerciseChoice,
       Word,
       Badge,
       UserBadge,

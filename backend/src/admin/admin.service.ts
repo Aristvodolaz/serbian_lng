@@ -1,22 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, ILike, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../users/enums/user-role.enum';
 import { UserLessonProgress } from '../content/entities/user-lesson-progress.entity';
 import { UserWordProgress, WordProgressStatus } from '../vocabulary/entities/user-word-progress.entity';
 import { Unit } from '../content/entities/unit.entity';
 import { Lesson } from '../content/entities/lesson.entity';
-import { Exercise, ExerciseType } from '../content/entities/exercise.entity';
-import { ExerciseChoice } from '../content/entities/exercise-choice.entity';
-import {
-  ExerciseTemplate,
-  getExerciseTemplate,
-  getExerciseTemplates,
-} from '../content/exercise-templates';
+import { Exercise } from '../content/entities/exercise.entity';
 import { Word } from '../vocabulary/entities/word.entity';
 import { Badge } from '../badges/entities/badge.entity';
 import { UserBadge } from '../badges/entities/user-badge.entity';
+import { ContentStatus } from '../common/enums/content-status.enum';
+import { ExercisePayload, ExerciseType } from '../content/exercise-types';
+import {
+  getExerciseTypeDefinition,
+  validateExercisePayload,
+  EXERCISE_TYPE_REGISTRY,
+} from '../content/exercise-types';
+import { collectWordIds, exercisePreview } from '../content/exercise-resolver';
 import { PaginationDto, PaginatedResponse } from './dtos/pagination.dto';
 import {
   AdminUserDetailResponseDto,
@@ -26,25 +28,25 @@ import {
 } from './dtos/admin-user-response.dto';
 import { DashboardStatsResponseDto } from './dtos/dashboard-stats-response.dto';
 import {
+  AdminExerciseListItemDto,
   BadgeAdminResponseDto,
   BadgeEarnerResponseDto,
   CreateBadgeDto,
-  CreateExerciseChoiceDto,
   CreateExerciseDto,
   CreateLessonDto,
   CreateUnitDto,
   CreateWordDto,
   ExerciseAdminResponseDto,
-  ExerciseChoiceAdminResponseDto,
+  ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
   LessonCompletionDto,
+  ListExercisesQueryDto,
   UnitAdminResponseDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
   UpdateUnitDto,
   UpdateWordDto,
-  UserGrowthDataDto,
   WordAdminResponseDto,
 } from './dtos/content-dtos';
 
@@ -55,7 +57,6 @@ export class AdminService {
     @InjectRepository(Unit) private readonly unitRepo: Repository<Unit>,
     @InjectRepository(Lesson) private readonly lessonRepo: Repository<Lesson>,
     @InjectRepository(Exercise) private readonly exerciseRepo: Repository<Exercise>,
-    @InjectRepository(ExerciseChoice) private readonly choiceRepo: Repository<ExerciseChoice>,
     @InjectRepository(Word) private readonly wordRepo: Repository<Word>,
     @InjectRepository(Badge) private readonly badgeRepo: Repository<Badge>,
     @InjectRepository(UserBadge) private readonly userBadgeRepo: Repository<UserBadge>,
@@ -259,7 +260,7 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateUnits(units: { titleCyrillic: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string }[]): Promise<{ created: number; updated: number }> {
+  async bulkCreateUnits(units: { titleCyrillic: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string; icon?: string }[]): Promise<{ created: number; updated: number }> {
     const maxOrder = (await this.unitRepo.find({
       order: { order: 'DESC' },
       select: ['order'],
@@ -319,6 +320,9 @@ export class AdminService {
       titleLatin: dto.titleLatin,
       titleTranslationRu: dto.titleTranslationRu,
       titleTranslationEn: dto.titleTranslationEn,
+      descriptionRu: dto.descriptionRu ?? '',
+      descriptionEn: dto.descriptionEn ?? '',
+      minExercises: dto.minExercises ?? 5,
       order: (maxOrder?.order ?? 0) + 1,
       xpReward: dto.xpReward ?? 10,
     });
@@ -333,7 +337,6 @@ export class AdminService {
     const exercises = await this.exerciseRepo.find({
       where: { lessonId: lesson.id },
       order: { order: 'ASC' },
-      relations: ['choices'],
     });
     return this.mapLessonWithExercises(lesson, exercises);
   }
@@ -353,7 +356,7 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateLessons(lessons: { unitId: string; title: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string; xpReward?: number }[]): Promise<{ created: number; updated: number }> {
+  async bulkCreateLessons(lessons: { unitId: string; title: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string; descriptionRu?: string; descriptionEn?: string; minExercises?: number; xpReward?: number }[]): Promise<{ created: number; updated: number }> {
     let created = 0;
     let updated = 0;
 
@@ -396,6 +399,9 @@ export class AdminService {
             titleLatin: dto.titleLatin,
             titleTranslationRu: dto.titleTranslationRu,
             titleTranslationEn: dto.titleTranslationEn,
+            descriptionRu: dto.descriptionRu ?? '',
+            descriptionEn: dto.descriptionEn ?? '',
+            minExercises: dto.minExercises ?? 5,
             order: nextOrder,
             xpReward: dto.xpReward ?? 10,
           });
@@ -409,24 +415,122 @@ export class AdminService {
 
   // ── Exercises ──────────────────────────────────────────────
 
-  getExerciseTemplates(): ExerciseTemplate[] {
-    return getExerciseTemplates();
+  getExerciseTemplates(): ExerciseTemplateResponseDto[] {
+    return Object.values(EXERCISE_TYPE_REGISTRY).map((definition) => ({
+      type: definition.type,
+      label: definition.label,
+      description: definition.description,
+    }));
   }
 
-  private mapChoiceForTemplate(
-    template: ExerciseTemplate,
-    c: { text: string; textRu?: string; isCorrect: boolean; order?: number },
-    fallbackOrder: number,
-  ): Partial<ExerciseChoice> {
-    const choice: Partial<ExerciseChoice> = {
-      text: c.text,
-      isCorrect: c.isCorrect,
-      order: c.order ?? fallbackOrder,
-    };
-    if (template.choiceFields.includes('textRu')) {
-      choice.textRu = c.textRu;
+  async listExercises(
+    query: ListExercisesQueryDto,
+  ): Promise<PaginatedResponse<AdminExerciseListItemDto>> {
+    const { page, limit } = this.getP(query);
+    const qb = this.exerciseRepo
+      .createQueryBuilder('e')
+      .innerJoinAndSelect('e.lesson', 'lesson')
+      .innerJoin('lesson.unit', 'unit')
+      .orderBy('lesson.order', 'ASC')
+      .addOrderBy('e.order', 'ASC');
+
+    if (query.unitId) qb.andWhere('unit.id = :unitId', { unitId: query.unitId });
+    if (query.lessonId) qb.andWhere('lesson.id = :lessonId', { lessonId: query.lessonId });
+    if (query.type) qb.andWhere('e.type = :type', { type: query.type });
+    if (query.status) qb.andWhere('e.status = :status', { status: query.status });
+
+    const [rows, total] = await qb
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return PaginatedResponse.from(
+      rows.map((e) => this.mapExerciseListItem(e)),
+      total,
+      page,
+      limit,
+    );
+  }
+
+  async getExercise(exerciseId: string): Promise<ExerciseAdminResponseDto> {
+    const exercise = await this.exerciseRepo.findOne({ where: { id: exerciseId } });
+    if (!exercise) throw new NotFoundException('Exercise not found');
+    return this.mapExercise(exercise);
+  }
+
+  async publishExercise(exerciseId: string): Promise<ExerciseAdminResponseDto> {
+    const exercise = await this.exerciseRepo.findOne({ where: { id: exerciseId } });
+    if (!exercise) throw new NotFoundException('Exercise not found');
+    const issues = validateExercisePayload(exercise.type, exercise.payload);
+    if (issues.length > 0) {
+      throw new BadRequestException({
+        message: 'Exercise cannot be published while it has validation issues',
+        issues,
+      });
     }
-    return choice;
+    exercise.status = ContentStatus.PUBLISHED;
+    await this.exerciseRepo.save(exercise);
+    return this.mapExercise(exercise);
+  }
+
+  async unpublishExercise(exerciseId: string): Promise<ExerciseAdminResponseDto> {
+    const exercise = await this.exerciseRepo.findOne({ where: { id: exerciseId } });
+    if (!exercise) throw new NotFoundException('Exercise not found');
+    exercise.status = ContentStatus.DRAFT;
+    await this.exerciseRepo.save(exercise);
+    return this.mapExercise(exercise);
+  }
+
+  async publishLesson(lessonId: string): Promise<LessonAdminResponseDto> {
+    const lesson = await this.lessonRepo.findOne({
+      where: { id: lessonId },
+      relations: { exercises: true },
+    });
+    if (!lesson) throw new NotFoundException('Lesson not found');
+
+    const publishedExercises = lesson.exercises.filter(
+      (e) => e.status === ContentStatus.PUBLISHED,
+    );
+    if (publishedExercises.length < lesson.minExercises) {
+      throw new BadRequestException(
+        `Lesson needs at least ${lesson.minExercises} published exercises, has ${publishedExercises.length}`,
+      );
+    }
+    lesson.status = ContentStatus.PUBLISHED;
+    await this.lessonRepo.save(lesson);
+    return this.mapLesson(lesson);
+  }
+
+  async unpublishLesson(lessonId: string): Promise<LessonAdminResponseDto> {
+    const lesson = await this.lessonRepo.findOne({ where: { id: lessonId } });
+    if (!lesson) throw new NotFoundException('Lesson not found');
+    lesson.status = ContentStatus.DRAFT;
+    await this.lessonRepo.save(lesson);
+    return this.mapLesson(lesson);
+  }
+
+  async publishUnit(unitId: string): Promise<UnitAdminResponseDto> {
+    const unit = await this.unitRepo.findOne({
+      where: { id: unitId },
+      relations: { lessons: true },
+    });
+    if (!unit) throw new NotFoundException('Unit not found');
+
+    const publishedLessons = unit.lessons.filter((l) => l.status === ContentStatus.PUBLISHED);
+    if (publishedLessons.length === 0) {
+      throw new BadRequestException('Unit needs at least one published lesson');
+    }
+    unit.status = ContentStatus.PUBLISHED;
+    await this.unitRepo.save(unit);
+    return this.mapUnit(unit);
+  }
+
+  async unpublishUnit(unitId: string): Promise<UnitAdminResponseDto> {
+    const unit = await this.unitRepo.findOne({ where: { id: unitId } });
+    if (!unit) throw new NotFoundException('Unit not found');
+    unit.status = ContentStatus.DRAFT;
+    await this.unitRepo.save(unit);
+    return this.mapUnit(unit);
   }
 
   async createExercise(
@@ -436,70 +540,54 @@ export class AdminService {
     const lesson = await this.lessonRepo.findOne({ where: { id: lessonId } });
     if (!lesson) throw new NotFoundException('Lesson not found');
 
+    const type = (dto.type ?? 'translation_choice') as ExerciseType;
+    if (!getExerciseTypeDefinition(type)) {
+      throw new BadRequestException(`Unknown exercise type: ${type}`);
+    }
+    if (typeof dto.payload !== 'object' || dto.payload === null) {
+      throw new BadRequestException('payload must be an object');
+    }
+
     const maxOrder = await this.exerciseRepo.findOne({
       where: { lessonId },
       order: { order: 'DESC' },
       select: ['order'],
     });
 
-    const type = dto.type ?? ExerciseType.TRANSLATE_CHOICE;
-    const template = getExerciseTemplate(type);
-
     const exercise = this.exerciseRepo.create({
       lessonId,
       type,
-      promptCyrillic: dto.promptCyrillic,
-      promptLatin: dto.promptLatin,
-      promptTranslationRu: dto.promptTranslationRu,
-      promptTranslationEn: dto.promptTranslationEn,
+      payload: dto.payload as unknown as ExercisePayload,
       order: (maxOrder?.order ?? 0) + 1,
     });
-
-    if (dto.choices?.length) {
-      exercise.choices = dto.choices.map(
-        (c, i) => this.mapChoiceForTemplate(template, c, i + 1) as ExerciseChoice,
-      );
-    }
-
     await this.exerciseRepo.save(exercise);
-    const saved = await this.exerciseRepo.findOne({
-      where: { id: exercise.id },
-      relations: ['choices'],
-    });
-    return this.mapExercise(saved!);
+    return this.mapExercise(exercise);
   }
 
   async updateExercise(
     exerciseId: string,
     dto: UpdateExerciseDto,
   ): Promise<ExerciseAdminResponseDto> {
-    const exercise = await this.exerciseRepo.findOne({
-      where: { id: exerciseId },
-      relations: ['choices'],
-    });
+    const exercise = await this.exerciseRepo.findOne({ where: { id: exerciseId } });
     if (!exercise) throw new NotFoundException('Exercise not found');
 
-    if (dto.type !== undefined) exercise.type = dto.type;
-    if (dto.promptCyrillic !== undefined) exercise.promptCyrillic = dto.promptCyrillic;
-    if (dto.promptLatin !== undefined) exercise.promptLatin = dto.promptLatin;
-    if (dto.promptTranslationRu !== undefined) exercise.promptTranslationRu = dto.promptTranslationRu;
-    if (dto.promptTranslationEn !== undefined) exercise.promptTranslationEn = dto.promptTranslationEn;
-    if (dto.order !== undefined) exercise.order = dto.order;
-
-    if (dto.choices !== undefined) {
-      await this.choiceRepo.delete({ exerciseId: exercise.id });
-      const template = getExerciseTemplate(dto.type ?? exercise.type);
-      exercise.choices = dto.choices.map(
-        (c, i) => this.mapChoiceForTemplate(template, c, i + 1) as ExerciseChoice,
-      );
+    if (dto.type !== undefined) {
+      if (!getExerciseTypeDefinition(dto.type)) {
+        throw new BadRequestException(`Unknown exercise type: ${dto.type}`);
+      }
+      exercise.type = dto.type as ExerciseType;
     }
+    if (dto.payload !== undefined) {
+      if (typeof dto.payload !== 'object' || dto.payload === null) {
+        throw new BadRequestException('payload must be an object');
+      }
+      exercise.payload = dto.payload as unknown as ExercisePayload;
+    }
+    if (dto.order !== undefined) exercise.order = dto.order;
+    if (dto.status !== undefined) exercise.status = dto.status;
 
     await this.exerciseRepo.save(exercise);
-    const saved = await this.exerciseRepo.findOne({
-      where: { id: exercise.id },
-      relations: ['choices'],
-    });
-    return this.mapExercise(saved!);
+    return this.mapExercise(exercise);
   }
 
   async deleteExercise(exerciseId: string): Promise<{ deleted: true }> {
@@ -510,20 +598,10 @@ export class AdminService {
   }
 
   async bulkCreateExercises(
-    exercises: Array<{
-      lessonId: string;
-      type?: ExerciseType;
-      promptCyrillic: string;
-      promptLatin?: string;
-      promptTranslationRu?: string;
-      promptTranslationEn?: string;
-      choices: Array<{ text: string; textRu?: string; isCorrect: boolean; order?: number }>;
-    }>,
+    exercises: Array<{ lessonId: string; type?: string; payload: Record<string, unknown> }>,
   ): Promise<{ created: number; updated: number }> {
     let created = 0;
-    let updated = 0;
 
-    // Group by lessonId to assign order
     const byLesson = new Map<string, typeof exercises[number][]>();
     for (const dto of exercises) {
       if (!byLesson.has(dto.lessonId)) byLesson.set(dto.lessonId, []);
@@ -542,98 +620,42 @@ export class AdminService {
       let nextOrder = maxOrder?.order ?? 0;
 
       for (const dto of dtos) {
-        const template = getExerciseTemplate(dto.type ?? ExerciseType.TRANSLATE_CHOICE);
-        const existing = await this.exerciseRepo.findOne({
-          where: { lessonId, promptCyrillic: dto.promptCyrillic },
-          relations: ['choices'],
-        });
-        if (existing) {
-          Object.assign(existing, {
-            type: dto.type ?? existing.type,
-            promptLatin: dto.promptLatin,
-            promptTranslationRu: dto.promptTranslationRu,
-            promptTranslationEn: dto.promptTranslationEn,
-          });
-          // Replace choices
-          await this.choiceRepo.delete({ exerciseId: existing.id });
-          existing.choices = dto.choices.map((c, i) => ({
-            ...this.mapChoiceForTemplate(template, c, i + 1),
-            exerciseId: existing.id,
-          }) as ExerciseChoice);
-          await this.exerciseRepo.save(existing);
-          updated++;
-        } else {
-          nextOrder++;
-          const exercise = this.exerciseRepo.create({
-            lessonId,
-            type: dto.type ?? ExerciseType.TRANSLATE_CHOICE,
-            promptCyrillic: dto.promptCyrillic,
-            promptLatin: dto.promptLatin,
-            promptTranslationRu: dto.promptTranslationRu,
-            promptTranslationEn: dto.promptTranslationEn,
-            order: nextOrder,
-            choices: dto.choices.map(
-              (c, i) => this.mapChoiceForTemplate(template, c, i + 1) as ExerciseChoice,
-            ),
-          });
-          await this.exerciseRepo.save(exercise);
-          created++;
+        const type = (dto.type ?? 'translation_choice') as ExerciseType;
+        if (!getExerciseTypeDefinition(type)) {
+          throw new BadRequestException(`Unknown exercise type: ${type}`);
         }
+        if (typeof dto.payload !== 'object' || dto.payload === null) {
+          throw new BadRequestException('payload must be an object');
+        }
+        nextOrder++;
+        const exercise = this.exerciseRepo.create({
+          lessonId,
+          type,
+          payload: dto.payload as unknown as ExercisePayload,
+          order: nextOrder,
+        });
+        await this.exerciseRepo.save(exercise);
+        created++;
       }
     }
-    return { created, updated };
-  }
-
-  // ── Exercise Choices ───────────────────────────────────────
-
-  async createChoice(
-    exerciseId: string,
-    dto: CreateExerciseChoiceDto,
-  ): Promise<ExerciseChoiceAdminResponseDto> {
-    const exercise = await this.exerciseRepo.findOne({ where: { id: exerciseId } });
-    if (!exercise) throw new NotFoundException('Exercise not found');
-
-    const maxOrder = await this.choiceRepo.findOne({
-      where: { exerciseId },
-      order: { order: 'DESC' },
-      select: ['order'],
-    });
-
-    const template = getExerciseTemplate(exercise.type);
-    const choice = this.choiceRepo.create({
-      exerciseId,
-      ...this.mapChoiceForTemplate(template, dto, (maxOrder?.order ?? 0) + 1),
-    });
-    await this.choiceRepo.save(choice);
-    return this.mapChoice(choice);
-  }
-
-  async updateChoice(
-    choiceId: string,
-    dto: Partial<CreateExerciseChoiceDto>,
-  ): Promise<ExerciseChoiceAdminResponseDto> {
-    const choice = await this.choiceRepo.findOne({ where: { id: choiceId } });
-    if (!choice) throw new NotFoundException('Choice not found');
-    Object.assign(choice, dto);
-    await this.choiceRepo.save(choice);
-    return this.mapChoice(choice);
-  }
-
-  async deleteChoice(choiceId: string): Promise<{ deleted: true }> {
-    const choice = await this.choiceRepo.findOne({ where: { id: choiceId } });
-    if (!choice) throw new NotFoundException('Choice not found');
-    await this.choiceRepo.remove(choice);
-    return { deleted: true };
+    return { created, updated: 0 };
   }
 
   // ── Words ──────────────────────────────────────────────────
 
   async listWords(
     pagination: PaginationDto,
-    unitId?: string,
+    search?: string,
   ): Promise<PaginatedResponse<WordAdminResponseDto>> {
     const { page, limit } = this.getP(pagination);
-    const where = unitId ? { unitId } : {};
+    const where = search
+      ? [
+          { cyrillic: ILike(`%${search}%`) },
+          { latin: ILike(`%${search}%`) },
+          { translationRu: ILike(`%${search}%`) },
+          { translationEn: ILike(`%${search}%`) },
+        ]
+      : undefined;
     const [words, total] = await this.wordRepo.findAndCount({
       where,
       skip: (page - 1) * limit,
@@ -650,7 +672,6 @@ export class AdminService {
 
   async createWord(dto: CreateWordDto): Promise<WordAdminResponseDto> {
     const word = this.wordRepo.create({
-      unitId: dto.unitId ?? null,
       cyrillic: dto.cyrillic,
       latin: dto.latin,
       translationRu: dto.translationRu,
@@ -659,6 +680,12 @@ export class AdminService {
       exampleTranslationRu: dto.exampleTranslationRu ?? null,
       exampleTranslationEn: dto.exampleTranslationEn ?? null,
       audioUrl: dto.audioUrl ?? null,
+      partOfSpeech: dto.partOfSpeech ?? null,
+      gender: dto.gender ?? null,
+      number: dto.number ?? null,
+      declension: dto.declension ?? null,
+      conjugation: dto.conjugation ?? null,
+      imageUrl: dto.imageUrl ?? null,
     });
     await this.wordRepo.save(word);
     return this.mapWord(word);
@@ -674,7 +701,6 @@ export class AdminService {
       });
       if (existing) {
         Object.assign(existing, {
-          unitId: dto.unitId ?? existing.unitId,
           latin: dto.latin,
           translationRu: dto.translationRu,
           translationEn: dto.translationEn,
@@ -682,12 +708,17 @@ export class AdminService {
           exampleTranslationRu: dto.exampleTranslationRu ?? existing.exampleTranslationRu,
           exampleTranslationEn: dto.exampleTranslationEn ?? existing.exampleTranslationEn,
           audioUrl: dto.audioUrl ?? existing.audioUrl,
+          partOfSpeech: dto.partOfSpeech ?? existing.partOfSpeech,
+          gender: dto.gender ?? existing.gender,
+          number: dto.number ?? existing.number,
+          declension: dto.declension ?? existing.declension,
+          conjugation: dto.conjugation ?? existing.conjugation,
+          imageUrl: dto.imageUrl ?? existing.imageUrl,
         });
         await this.wordRepo.save(existing);
         updated++;
       } else {
         const word = this.wordRepo.create({
-          unitId: dto.unitId ?? null,
           cyrillic: dto.cyrillic,
           latin: dto.latin,
           translationRu: dto.translationRu,
@@ -696,6 +727,12 @@ export class AdminService {
           exampleTranslationRu: dto.exampleTranslationRu ?? null,
           exampleTranslationEn: dto.exampleTranslationEn ?? null,
           audioUrl: dto.audioUrl ?? null,
+          partOfSpeech: dto.partOfSpeech ?? null,
+          gender: dto.gender ?? null,
+          number: dto.number ?? null,
+          declension: dto.declension ?? null,
+          conjugation: dto.conjugation ?? null,
+          imageUrl: dto.imageUrl ?? null,
         });
         await this.wordRepo.save(word);
         created++;
@@ -876,6 +913,8 @@ export class AdminService {
       titleLatin: u.titleLatin,
       titleTranslationRu: u.titleTranslationRu,
       titleTranslationEn: u.titleTranslationEn,
+      status: u.status,
+      icon: u.icon,
       order: u.order,
     };
   }
@@ -895,6 +934,10 @@ export class AdminService {
       titleLatin: l.titleLatin,
       titleTranslationRu: l.titleTranslationRu,
       titleTranslationEn: l.titleTranslationEn,
+      descriptionRu: l.descriptionRu,
+      descriptionEn: l.descriptionEn,
+      minExercises: l.minExercises,
+      status: l.status,
       order: l.order,
       xpReward: l.xpReward,
     };
@@ -914,29 +957,30 @@ export class AdminService {
     return {
       id: e.id,
       type: e.type,
-      promptCyrillic: e.promptCyrillic,
-      promptLatin: e.promptLatin,
-      promptTranslationRu: e.promptTranslationRu,
-      promptTranslationEn: e.promptTranslationEn,
+      status: e.status,
       order: e.order,
-      choices: (e.choices || []).map((c) => this.mapChoice(c)),
+      payload: e.payload as unknown as Record<string, unknown>,
+      validationIssues: validateExercisePayload(e.type, e.payload),
     };
   }
 
-  private mapChoice(c: ExerciseChoice): ExerciseChoiceAdminResponseDto {
+  private mapExerciseListItem(e: Exercise): AdminExerciseListItemDto {
     return {
-      id: c.id,
-      text: c.text,
-      textRu: c.textRu,
-      isCorrect: c.isCorrect,
-      order: c.order,
+      id: e.id,
+      lessonId: e.lessonId,
+      unitId: e.lesson?.unitId ?? '',
+      type: e.type,
+      status: e.status,
+      order: e.order,
+      preview: exercisePreview(e.payload),
+      linkedWordCount: collectWordIds(e.payload).length,
+      validationIssues: validateExercisePayload(e.type, e.payload),
     };
   }
 
   private mapWord(w: Word): WordAdminResponseDto {
     return {
       id: w.id,
-      unitId: w.unitId,
       cyrillic: w.cyrillic,
       latin: w.latin,
       translationRu: w.translationRu,
@@ -945,6 +989,13 @@ export class AdminService {
       exampleTranslationRu: w.exampleTranslationRu,
       exampleTranslationEn: w.exampleTranslationEn,
       audioUrl: w.audioUrl,
+      partOfSpeech: w.partOfSpeech,
+      gender: w.gender,
+      number: w.number,
+      declension: w.declension,
+      conjugation: w.conjugation,
+      imageUrl: w.imageUrl,
+      status: w.status,
     };
   }
 

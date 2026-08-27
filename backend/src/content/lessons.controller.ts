@@ -32,7 +32,7 @@ export class LessonsController {
     @Param('exerciseId', ParseUUIDPipe) exerciseId: string,
     @Body() dto: AnswerExerciseDto,
   ): Promise<AnswerResultResponseDto> {
-    return this.contentService.checkAnswer(lessonId, exerciseId, dto.choiceId);
+    return this.contentService.checkAnswer(lessonId, exerciseId, dto.answerId);
   }
 
   @Post(':lessonId/complete')

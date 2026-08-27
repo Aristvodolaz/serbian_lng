@@ -1,23 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExerciseType } from '../entities/exercise.entity';
-
-export class ExerciseChoicePublicDto {
-  @ApiProperty() id: string;
-  @ApiProperty() text: string;
-  @ApiProperty() textRu: string;
-  // Deliberately no `isCorrect` — that would leak the answer before the
-  // learner submits one. See AnswerResultResponseDto for the reveal.
-}
 
 export class ExercisePublicDto {
   @ApiProperty() id: string;
-  @ApiProperty({ enum: ExerciseType }) type: ExerciseType;
-  @ApiProperty() promptCyrillic: string;
-  @ApiProperty() promptLatin: string;
-  @ApiProperty() promptTranslationRu: string;
-  @ApiProperty() promptTranslationEn: string;
+  @ApiProperty() type: string;
   @ApiProperty() order: number;
-  @ApiProperty({ type: [ExerciseChoicePublicDto] }) choices: ExerciseChoicePublicDto[];
+  @ApiProperty({
+    description:
+      'Resolved exercise payload with all languages/scripts, `correctAnswerId` deliberately stripped',
+  })
+  payload: Record<string, unknown>;
 }
 
 export class LessonDetailResponseDto {

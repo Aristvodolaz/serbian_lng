@@ -1,165 +1,96 @@
 import {
-  ApiHideProperty,
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import { IsArray, IsBoolean, IsInt, IsObject, IsOptional, IsString, Min, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ExerciseType } from '../../content/entities/exercise.entity';
+import { ContentStatus } from '../../common/enums/content-status.enum';
+import { EXERCISE_TYPES, ValidationIssue } from '../../content/exercise-types';
+import { PaginationDto } from './pagination.dto';
 
-// Exercise Choice DTOs
-export class ExerciseChoiceAdminResponseDto {
-  @ApiProperty() id: string;
-  @ApiProperty() text: string;
-  @ApiProperty() textRu: string;
-  @ApiProperty() isCorrect: boolean;
-  @ApiProperty() order: number;
+// ── Exercise payload / validation ─────────────────────────────
+
+export class ValidationIssueDto implements ValidationIssue {
+  @ApiProperty() field: string;
+  @ApiProperty() message: string;
 }
 
-export class CreateExerciseChoiceDto {
-  @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  text: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  textRu?: string;
-
-  @ApiProperty()
-  @IsBoolean()
-  isCorrect: boolean;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Type(() => Number)
-  order?: number;
-}
-
-export class UpdateExerciseChoiceDto {
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  text?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  textRu?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  isCorrect?: boolean;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Type(() => Number)
-  order?: number;
-}
-
-// Exercise DTOs
 export class ExerciseAdminResponseDto {
   @ApiProperty() id: string;
-  @ApiProperty({ enum: ExerciseType }) type: ExerciseType;
-  @ApiProperty() promptCyrillic: string;
-  @ApiProperty() promptLatin: string;
-  @ApiProperty() promptTranslationRu: string;
-  @ApiProperty() promptTranslationEn: string;
+  @ApiProperty({ enum: EXERCISE_TYPES }) type: string;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
   @ApiProperty() order: number;
-  @ApiProperty({ type: [ExerciseChoiceAdminResponseDto] }) choices: ExerciseChoiceAdminResponseDto[];
-}
-
-export class ExerciseTemplatePromptFieldResponseDto {
-  @ApiProperty() name: string;
-  @ApiProperty() label: string;
-  @ApiProperty() required: boolean;
+  @ApiProperty({ description: 'Admin payload — includes wordId refs and correctAnswerId' })
+  payload: Record<string, unknown>;
+  @ApiProperty({ type: [ValidationIssueDto] })
+  validationIssues: ValidationIssue[];
 }
 
 export class ExerciseTemplateResponseDto {
-  @ApiProperty({ enum: ExerciseType }) type: ExerciseType;
+  @ApiProperty({ enum: EXERCISE_TYPES }) type: string;
   @ApiProperty() label: string;
   @ApiProperty() description: string;
-  @ApiProperty({ type: [ExerciseTemplatePromptFieldResponseDto] })
-  promptFields: ExerciseTemplatePromptFieldResponseDto[];
-  @ApiProperty({ type: [String] }) choiceFields: string[];
-  @ApiProperty() choiceTextLabel: string;
-  @ApiPropertyOptional() choiceTextRuLabel?: string;
-  @ApiPropertyOptional() choicesMin?: number;
+}
+
+export class AdminExerciseListItemDto {
+  @ApiProperty() id: string;
+  @ApiProperty() lessonId: string;
+  @ApiProperty() unitId: string;
+  @ApiProperty({ enum: EXERCISE_TYPES }) type: string;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
+  @ApiProperty() order: number;
+  @ApiProperty() preview: string;
+  @ApiProperty({ description: 'Number of distinct dictionary words the payload references' })
+  linkedWordCount: number;
+  @ApiProperty({ type: [ValidationIssueDto] })
+  validationIssues: ValidationIssue[];
+}
+
+export class ListExercisesQueryDto extends PaginationDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  unitId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  lessonId?: string;
+
+  @ApiPropertyOptional({ enum: EXERCISE_TYPES })
+  @IsOptional()
+  @IsString()
+  type?: string;
+
+  @ApiPropertyOptional({ enum: ContentStatus })
+  @IsOptional()
+  @IsString()
+  status?: string;
 }
 
 export class CreateExerciseDto {
-  @ApiProperty({ enum: ExerciseType, required: false })
+  @ApiProperty({ enum: EXERCISE_TYPES, required: false })
   @IsOptional()
-  type?: ExerciseType;
+  type?: string;
 
-  @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  promptCyrillic: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  promptLatin: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  promptTranslationRu: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  promptTranslationEn: string;
-
-  @ApiProperty()
-  @IsArray()
-  choices: CreateExerciseChoiceDto[];
+  @ApiProperty({ description: 'Type-specific payload, validated against the exercise type registry' })
+  @IsObject()
+  payload: Record<string, unknown>;
 }
 
-
 export class UpdateExerciseDto {
-  @ApiPropertyOptional({ enum: ExerciseType })
+  @ApiPropertyOptional({ enum: EXERCISE_TYPES })
   @IsOptional()
-  type?: ExerciseType;
+  type?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsString()
-  @MinLength(1)
-  promptCyrillic?: string;
+  @IsObject()
+  payload?: Record<string, unknown>;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: ContentStatus })
   @IsOptional()
-  @IsString()
-  @MinLength(1)
-  promptLatin?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  promptTranslationRu?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  promptTranslationEn?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsArray()
-  choices?: CreateExerciseChoiceDto[];
+  status?: ContentStatus;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -169,7 +100,8 @@ export class UpdateExerciseDto {
   order?: number;
 }
 
-// Lesson DTOs
+// ── Lesson DTOs ───────────────────────────────────────────────
+
 export class LessonAdminResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() unitId: string;
@@ -177,6 +109,10 @@ export class LessonAdminResponseDto {
   @ApiProperty() titleLatin: string;
   @ApiProperty() titleTranslationRu: string;
   @ApiProperty() titleTranslationEn: string;
+  @ApiProperty() descriptionRu: string;
+  @ApiProperty() descriptionEn: string;
+  @ApiProperty() minExercises: number;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
   @ApiProperty() order: number;
   @ApiProperty() xpReward: number;
   @ApiProperty({ type: [ExerciseAdminResponseDto], required: false })
@@ -207,6 +143,23 @@ export class CreateLessonDto {
   @IsString()
   @MinLength(1)
   titleTranslationEn: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  descriptionRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  descriptionEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  minExercises?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -243,6 +196,27 @@ export class UpdateLessonDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  descriptionRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  descriptionEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  minExercises?: number;
+
+  @ApiPropertyOptional({ enum: ContentStatus })
+  @IsOptional()
+  status?: ContentStatus;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Type(() => Number)
@@ -256,13 +230,16 @@ export class UpdateLessonDto {
   order?: number;
 }
 
-// Unit DTOs
+// ── Unit DTOs ─────────────────────────────────────────────────
+
 export class UnitAdminResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() titleCyrillic: string;
   @ApiProperty() titleLatin: string;
   @ApiProperty() titleTranslationRu: string;
   @ApiProperty() titleTranslationEn: string;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
+  @ApiProperty({ nullable: true }) icon: string | null;
   @ApiProperty() order: number;
   @ApiProperty({ type: [LessonAdminResponseDto], required: false })
   lessons?: LessonAdminResponseDto[];
@@ -288,6 +265,11 @@ export class CreateUnitDto {
   @IsOptional()
   @IsString()
   titleTranslationEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  icon?: string;
 }
 
 export class UpdateUnitDto {
@@ -317,16 +299,25 @@ export class UpdateUnitDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  icon?: string;
+
+  @ApiPropertyOptional({ enum: ContentStatus })
+  @IsOptional()
+  status?: ContentStatus;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Type(() => Number)
   order?: number;
 }
 
-// Word DTOs
+// ── Word DTOs ─────────────────────────────────────────────────
+
 export class WordAdminResponseDto {
   @ApiProperty() id: string;
-  @ApiProperty({ nullable: true }) unitId: string | null;
   @ApiProperty() cyrillic: string;
   @ApiProperty() latin: string;
   @ApiProperty() translationRu: string;
@@ -335,13 +326,16 @@ export class WordAdminResponseDto {
   @ApiProperty({ nullable: true }) exampleTranslationRu: string | null;
   @ApiProperty({ nullable: true }) exampleTranslationEn: string | null;
   @ApiProperty({ nullable: true }) audioUrl: string | null;
+  @ApiProperty({ nullable: true }) partOfSpeech: string | null;
+  @ApiProperty({ nullable: true }) gender: string | null;
+  @ApiProperty({ nullable: true }) number: string | null;
+  @ApiProperty({ nullable: true }) declension: string | null;
+  @ApiProperty({ nullable: true }) conjugation: string | null;
+  @ApiProperty({ nullable: true }) imageUrl: string | null;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
 }
 
 export class CreateWordDto {
-  @ApiProperty({ required: false })
-  @IsOptional()
-  unitId?: string;
-
   @ApiProperty()
   @IsString()
   @MinLength(1)
@@ -381,13 +375,39 @@ export class CreateWordDto {
   @IsOptional()
   @IsString()
   audioUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  partOfSpeech?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  gender?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  number?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  declension?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  conjugation?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }
 
 export class UpdateWordDto {
-  @ApiPropertyOptional({ required: false })
-  @IsOptional()
-  unitId?: string | null;
-
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -431,9 +451,44 @@ export class UpdateWordDto {
   @IsOptional()
   @IsString()
   audioUrl?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  partOfSpeech?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  gender?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  number?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  declension?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  conjugation?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  imageUrl?: string | null;
+
+  @ApiPropertyOptional({ enum: ContentStatus })
+  @IsOptional()
+  status?: ContentStatus;
 }
 
-// Bulk DTOs
+// ── Bulk DTOs ─────────────────────────────────────────────────
+
 export class BulkCreateUnitDto {
   @ApiProperty()
   @IsString()
@@ -454,6 +509,11 @@ export class BulkCreateUnitDto {
   @IsOptional()
   @IsString()
   titleTranslationEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  icon?: string;
 }
 
 export class BulkCreateLessonDto {
@@ -494,36 +554,17 @@ export class BulkCreateExerciseDto {
   @IsString()
   lessonId: string;
 
-  @ApiProperty({ enum: ExerciseType, required: false })
+  @ApiProperty({ enum: EXERCISE_TYPES, required: false })
   @IsOptional()
-  type?: ExerciseType;
+  type?: string;
 
   @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  promptCyrillic: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  promptLatin?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  promptTranslationRu?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  promptTranslationEn?: string;
-
-  @ApiProperty({ type: [CreateExerciseChoiceDto] })
-  @IsArray()
-  choices: CreateExerciseChoiceDto[];
+  @IsObject()
+  payload: Record<string, unknown>;
 }
 
-// Badge DTOs
+// ── Badge DTOs ────────────────────────────────────────────────
+
 export class BadgeAdminResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() code: string;
@@ -581,7 +622,8 @@ export class UpdateBadgeDto {
   description?: string;
 }
 
-// Analytics DTOs
+// ── Analytics DTOs ────────────────────────────────────────────
+
 export class UserGrowthDataDto {
   @ApiProperty() day: string;
   @ApiProperty() count: number;

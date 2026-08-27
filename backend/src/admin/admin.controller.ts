@@ -21,21 +21,21 @@ import {
 } from './dtos/admin-user-response.dto';
 import { DashboardStatsResponseDto } from './dtos/dashboard-stats-response.dto';
 import {
+  AdminExerciseListItemDto,
   BadgeAdminResponseDto,
   BadgeEarnerResponseDto,
   BulkCreateExerciseDto,
   BulkCreateLessonDto,
   BulkCreateUnitDto,
   CreateBadgeDto,
-  CreateExerciseChoiceDto,
   CreateExerciseDto,
   CreateLessonDto,
   CreateUnitDto,
   CreateWordDto,
   ExerciseAdminResponseDto,
-  ExerciseChoiceAdminResponseDto,
   ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
+  ListExercisesQueryDto,
   UnitAdminResponseDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
@@ -123,6 +123,20 @@ export class AdminController {
     return this.adminService.updateUnit(unitId, dto);
   }
 
+  @Post('units/:id/publish')
+  publishUnit(
+    @Param('id', ParseUUIDPipe) unitId: string,
+  ): Promise<UnitAdminResponseDto> {
+    return this.adminService.publishUnit(unitId);
+  }
+
+  @Post('units/:id/unpublish')
+  unpublishUnit(
+    @Param('id', ParseUUIDPipe) unitId: string,
+  ): Promise<UnitAdminResponseDto> {
+    return this.adminService.unpublishUnit(unitId);
+  }
+
   @Delete('units/:id')
   deleteUnit(
     @Param('id', ParseUUIDPipe) unitId: string,
@@ -168,6 +182,20 @@ export class AdminController {
     @Body() dto: UpdateLessonDto,
   ): Promise<LessonAdminResponseDto> {
     return this.adminService.updateLesson(lessonId, dto);
+  }
+
+  @Post('lessons/:id/publish')
+  publishLesson(
+    @Param('id', ParseUUIDPipe) lessonId: string,
+  ): Promise<LessonAdminResponseDto> {
+    return this.adminService.publishLesson(lessonId);
+  }
+
+  @Post('lessons/:id/unpublish')
+  unpublishLesson(
+    @Param('id', ParseUUIDPipe) lessonId: string,
+  ): Promise<LessonAdminResponseDto> {
+    return this.adminService.unpublishLesson(lessonId);
   }
 
   @Delete('lessons/:id')
@@ -217,6 +245,38 @@ export class AdminController {
     return this.adminService.deleteExercise(exerciseId);
   }
 
+  @Get('exercises')
+  @ApiOkResponse({ type: PaginatedResponse })
+  listExercises(
+    @Query() query: ListExercisesQueryDto,
+  ): Promise<PaginatedResponse<AdminExerciseListItemDto>> {
+    return this.adminService.listExercises(query);
+  }
+
+  @Get('exercises/:id')
+  @ApiOkResponse({ type: ExerciseAdminResponseDto })
+  getExercise(
+    @Param('id', ParseUUIDPipe) exerciseId: string,
+  ): Promise<ExerciseAdminResponseDto> {
+    return this.adminService.getExercise(exerciseId);
+  }
+
+  @Post('exercises/:id/publish')
+  @ApiOkResponse({ type: ExerciseAdminResponseDto })
+  publishExercise(
+    @Param('id', ParseUUIDPipe) exerciseId: string,
+  ): Promise<ExerciseAdminResponseDto> {
+    return this.adminService.publishExercise(exerciseId);
+  }
+
+  @Post('exercises/:id/unpublish')
+  @ApiOkResponse({ type: ExerciseAdminResponseDto })
+  unpublishExercise(
+    @Param('id', ParseUUIDPipe) exerciseId: string,
+  ): Promise<ExerciseAdminResponseDto> {
+    return this.adminService.unpublishExercise(exerciseId);
+  }
+
   @Post('exercises/bulk')
   bulkCreateExercises(
     @Body() dto: { exercises: BulkCreateExerciseDto[] },
@@ -224,43 +284,16 @@ export class AdminController {
     return this.adminService.bulkCreateExercises(dto.exercises);
   }
 
-  // ── Exercise Choices ───────────────────────────────────────
-
-  @Post('exercises/:exerciseId/choices')
-  @ApiOkResponse({ type: ExerciseChoiceAdminResponseDto })
-  createChoice(
-    @Param('exerciseId', ParseUUIDPipe) exerciseId: string,
-    @Body() dto: CreateExerciseChoiceDto,
-  ): Promise<ExerciseChoiceAdminResponseDto> {
-    return this.adminService.createChoice(exerciseId, dto);
-  }
-
-  @Patch('exercise-choices/:id')
-  @ApiOkResponse({ type: ExerciseChoiceAdminResponseDto })
-  updateChoice(
-    @Param('id', ParseUUIDPipe) choiceId: string,
-    @Body() dto: Partial<CreateExerciseChoiceDto>,
-  ): Promise<ExerciseChoiceAdminResponseDto> {
-    return this.adminService.updateChoice(choiceId, dto);
-  }
-
-  @Delete('exercise-choices/:id')
-  deleteChoice(
-    @Param('id', ParseUUIDPipe) choiceId: string,
-  ): Promise<{ deleted: true }> {
-    return this.adminService.deleteChoice(choiceId);
-  }
-
   // ── Words ──────────────────────────────────────────────────
 
   @Get('words')
   @ApiOkResponse({ type: PaginatedResponse })
-  @ApiQuery({ name: 'unitId', required: false })
+  @ApiQuery({ name: 'search', required: false })
   listWords(
     @Query() pagination: PaginationDto,
-    @Query('unitId') unitId?: string,
+    @Query('search') search?: string,
   ): Promise<PaginatedResponse<WordAdminResponseDto>> {
-    return this.adminService.listWords(pagination, unitId);
+    return this.adminService.listWords(pagination, search);
   }
 
   @Post('words')

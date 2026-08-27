@@ -36,13 +36,23 @@ curl http://localhost:3000/health
 # {"status":"ok","timestamp":"..."}
 ```
 
-## 4. Load initial content (first deploy only)
+## 4. Run the schema migration
+
+Nothing is seeded anymore — content is authored through the admin panel (`admin/`) and CSV uploads, so a first deploy against an empty database needs no content step. `TYPEORM_SYNCHRONIZE=true` (from `.env`) creates the schema on first boot.
+
+When updating an existing deployment whose schema has changed, run the migration **before** the new app starts, so the new build never boots with synchronize enabled against the old schema:
 
 ```bash
-docker compose -f docker-compose.prod.yml exec app node dist/database/seed.js
+docker compose -f docker-compose.prod.yml up -d postgres
+docker compose -f docker-compose.prod.yml run --rm app \
+  node node_modules/typeorm/cli.js migration:run -d dist/database/data-source.js
 ```
 
-Idempotent — safe to re-run; it skips units/lessons/words that already exist and only inserts missing badges.
+(The `npm run migration:run` script uses `typeorm-ts-node-commonjs`, which needs ts-node — not installed in the production image. Use the compiled CLI above.)
+
+The current schema migration (`1790000000000-ContentPayloadSchema`) is intentionally destructive: it converts the old `translate_choice`/`fill_blank` exercise types to the payload model (existing exercise content becomes empty drafts) and drops the `exercise_choices` table. Users, lessons and units are preserved.
+
+> **Admin access.** The admin user is only ever created by the old seed script, which has been removed. On the *existing* deployment the admin row is already in the database and survives the migration — **do not** wipe the `pgdata` volume, or the admin (and all registered users) are gone with no way to recreate them.
 
 ## 5. Put it behind HTTPS
 
@@ -52,6 +62,7 @@ The container listens on plain HTTP — put a reverse proxy in front for TLS. A 
 
 ```bash
 git pull
+# if the schema changed, run step 4 (migration) first
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 

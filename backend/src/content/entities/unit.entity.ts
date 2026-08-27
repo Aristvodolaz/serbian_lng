@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Lesson } from './lesson.entity';
+import { ContentStatus } from '../../common/enums/content-status.enum';
 
 @Entity('units')
 @Unique(['titleCyrillic'])
@@ -18,6 +19,12 @@ export class Unit {
 
   @Column({ type: 'text', default: '' })
   titleTranslationEn: string;
+
+  @Column({ type: 'varchar', default: ContentStatus.DRAFT })
+  status: ContentStatus;
+
+  @Column({ type: 'varchar', nullable: true })
+  icon: string | null;
 
   @Column()
   order: number;
