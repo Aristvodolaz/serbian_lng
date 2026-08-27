@@ -1,79 +1,103 @@
 'use client';
 
 import { useState } from 'react';
-import { ExerciseTemplate, getTemplate } from '@/lib/exercise-templates';
+import { adminFetch } from '@/lib/client-api';
+import {
+  ExercisePayload,
+  createEmptyPayload,
+  getEditorConfig,
+  normalizePayload,
+} from '@/lib/exercise-templates';
+import { ExercisePayloadEditor } from './exercise-payload-editor';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-
-function getToken(): string | undefined {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('admin_access_token='))
-    ?.split('=')[1];
+export interface ExerciseTemplateSummary {
+  type: string;
+  label: string;
+  description: string;
 }
 
-function getRefreshToken(): string | undefined {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('admin_refresh_token='))
-    ?.split('=')[1];
+// ── Status helpers ───────────────────────────────────────────
+
+export function StatusBadge({ status }: { status: string }) {
+  const published = status === 'published';
+  return (
+    <span
+      className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+        published ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600'
+      }`}
+    >
+      {published ? 'Published' : 'Draft'}
+    </span>
+  );
 }
 
-function setCookies(access_token: string, refresh_token: string) {
-  document.cookie = `admin_access_token=${access_token}; Path=/; Max-Age=900; SameSite=Lax`;
-  document.cookie = `admin_refresh_token=${refresh_token}; Path=/; Max-Age=2592000; SameSite=Lax`;
+// Publish/unpublish for units, lessons and exercises (POST /:id/publish|unpublish).
+export function ContentPublishButton({ resourceUrl, status }: { resourceUrl: string; status: string }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const published = status === 'published';
+
+  return (
+    <span className="inline-flex items-center gap-2">
+      <button
+        type="button"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setError('');
+          try {
+            const res = await adminFetch(`${resourceUrl}/${published ? 'unpublish' : 'publish'}`, {
+              method: 'POST',
+              body: '{}',
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok) throw new Error(data?.message || 'Failed');
+            window.location.reload();
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed');
+          } finally {
+            setBusy(false);
+          }
+        }}
+        className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
+          published
+            ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+            : 'bg-emerald-600 text-white hover:bg-emerald-700'
+        }`}
+      >
+        {busy ? '…' : published ? 'Unpublish' : 'Publish'}
+      </button>
+      {error && <span className="text-xs text-red-600">{error}</span>}
+    </span>
+  );
 }
 
-async function refreshSession(): Promise<boolean> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) return false;
-  try {
-    const res = await fetch(`${BACKEND_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    setCookies(data.accessToken, data.refreshToken);
-    return true;
-  } catch {
-    return false;
-  }
-}
+// Words have no dedicated publish endpoint — toggle via PATCH status.
+export function WordStatusButton({ wordId, status }: { wordId: string; status: string }) {
+  const [busy, setBusy] = useState(false);
+  const published = status === 'published';
 
-export async function adminFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const token = getToken();
-  const response = await fetch(`${BACKEND_URL}${url}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    },
-  });
-
-  // On 401, try to refresh token and retry once
-  if (response.status === 401) {
-    const refreshed = await refreshSession();
-    if (refreshed) {
-      const newToken = getToken();
-      return fetch(`${BACKEND_URL}${url}`, {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${newToken}`,
-          ...options.headers,
-        },
-      });
-    }
-    // Refresh failed — log out
-    document.cookie = 'admin_access_token=; Path=/; Max-Age=0';
-    document.cookie = 'admin_refresh_token=; Path=/; Max-Age=0';
-    window.location.href = '/login';
-  }
-
-  return response;
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={async () => {
+        setBusy(true);
+        await adminFetch(`/admin/words/${wordId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status: published ? 'draft' : 'published' }),
+        });
+        window.location.reload();
+      }}
+      className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
+        published
+          ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+          : 'bg-emerald-600 text-white hover:bg-emerald-700'
+      }`}
+    >
+      {busy ? '…' : published ? 'Unpublish' : 'Publish'}
+    </button>
+  );
 }
 
 // ── Delete Button ────────────────────────────────────────────
@@ -238,6 +262,41 @@ export function EditLessonForm({ lesson }: { lesson: { id: string; title: string
   );
 }
 
+// ── JSON fallback editor (for registry types without a config yet) ──
+
+function JsonPayloadEditor({
+  value,
+  onChange,
+}: {
+  value: ExercisePayload;
+  onChange: (payload: ExercisePayload) => void;
+}) {
+  const [text, setText] = useState(() => JSON.stringify(value, null, 2));
+  const [error, setError] = useState('');
+  return (
+    <div>
+      <p className="text-xs text-amber-600 mb-1">
+        No visual editor for this type yet — edit the raw JSON payload.
+      </p>
+      <textarea
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+          try {
+            onChange(JSON.parse(e.target.value));
+            setError('');
+          } catch {
+            setError('Invalid JSON');
+          }
+        }}
+        rows={10}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+      />
+      {error && <p className="text-sm text-red-600">{error}</p>}
+    </div>
+  );
+}
+
 // ── Create Exercise Form ─────────────────────────────────────
 
 export function CreateExerciseForm({
@@ -245,79 +304,71 @@ export function CreateExerciseForm({
   templates,
 }: {
   lessonId: string;
-  templates: ExerciseTemplate[];
+  templates: ExerciseTemplateSummary[];
 }) {
-  const [type, setType] = useState<string>(templates[0]?.type ?? 'translate_choice');
-  const template = getTemplate(templates, type);
-  const hasTextRu = template.choiceFields.includes('textRu');
+  const [type, setType] = useState<string>(templates[0]?.type ?? '');
+  const [payload, setPayload] = useState<ExercisePayload>(() =>
+    createEmptyPayload(templates[0]?.type ?? ''),
+  );
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const config = getEditorConfig(type);
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const choicesStr = formData.get('choices') as string;
-        const choices = choicesStr.split('\n').filter(Boolean).map((line, i) => {
-          const parts = line.trim().split('\t');
-          const [isCorrect, ...textParts] = (parts[0] || '').split(' ');
-          const choice: Record<string, string | boolean | number> = {
-            text: textParts.join(' '),
-            isCorrect: isCorrect === '✓',
-            order: i + 1,
-          };
-          if (hasTextRu) choice.textRu = parts[1] || '';
-          return choice;
-        });
-        await adminFetch(`/admin/lessons/${lessonId}/exercises`, {
-          method: 'POST',
-          body: JSON.stringify({
-            type,
-            promptCyrillic: formData.get('promptCyrillic'),
-            promptLatin: formData.get('promptLatin'),
-            promptTranslationRu: formData.get('promptTranslationRu'),
-            promptTranslationEn: formData.get('promptTranslationEn'),
-            choices,
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2 flex-wrap items-end"
-    >
-      <select
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-        title={template.description}
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-      >
-        {templates.map((t) => (
-          <option key={t.type} value={t.type}>
-            {t.label}
-          </option>
-        ))}
-      </select>
-      {template.promptFields.map((field) => (
-        <input
-          key={field.name}
-          name={field.name}
-          placeholder={field.label}
-          required={field.required}
+    <div className="bg-white p-4 rounded-xl border border-gray-200 min-w-[520px]">
+      <div className="flex items-center gap-3 mb-3">
+        <select
+          value={type}
+          onChange={(e) => {
+            const t = e.target.value;
+            setType(t);
+            setPayload(createEmptyPayload(t));
+          }}
           className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-        />
-      ))}
-      <textarea
-        name="choices"
-        placeholder={
-          hasTextRu
-            ? '✓ correct answer EN\tcorrect answer RU\nwrong answer 1 EN\twrong answer 1 RU\nwrong answer 2 EN\twrong answer 2 RU'
-            : '✓ correct answer\nwrong answer 1\nwrong answer 2'
-        }
-        required
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm h-24"
-      />
-      <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
-        Add Exercise
+        >
+          {templates.map((t) => (
+            <option key={t.type} value={t.type}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+        <span className="text-xs text-gray-400">
+          {config?.description ?? 'No editor for this type — edit JSON directly'}
+        </span>
+      </div>
+
+      {config ? (
+        <ExercisePayloadEditor config={config} payload={payload} onChange={setPayload} />
+      ) : (
+        <JsonPayloadEditor key={type} value={payload} onChange={setPayload} />
+      )}
+
+      {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+      <button
+        type="button"
+        disabled={saving}
+        onClick={async () => {
+          setSaving(true);
+          setError('');
+          try {
+            const res = await adminFetch(`/admin/lessons/${lessonId}/exercises`, {
+              method: 'POST',
+              body: JSON.stringify({ type, payload }),
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok) throw new Error(data?.message || 'Failed to create exercise');
+            window.location.reload();
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed');
+          } finally {
+            setSaving(false);
+          }
+        }}
+        className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium"
+      >
+        {saving ? 'Saving…' : 'Add Exercise'}
       </button>
-    </form>
+    </div>
   );
 }
 
@@ -325,62 +376,117 @@ export function CreateExerciseForm({
 
 export function EditExerciseForm({
   exercise,
-  template,
 }: {
-  exercise: {
-    id: string;
-    type: string;
-    promptCyrillic: string;
-    promptLatin: string;
-    promptTranslationRu: string;
-    promptTranslationEn: string;
-  };
-  template: ExerciseTemplate;
+  exercise: { id: string; type: string; payload: Record<string, unknown> };
 }) {
-  const defaults: Record<string, string> = {
-    promptCyrillic: exercise.promptCyrillic,
-    promptLatin: exercise.promptLatin,
-    promptTranslationRu: exercise.promptTranslationRu,
-    promptTranslationEn: exercise.promptTranslationEn,
-  };
+  const [open, setOpen] = useState(false);
+  const [payload, setPayload] = useState<ExercisePayload>(() =>
+    normalizePayload(exercise.type, exercise.payload),
+  );
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const config = getEditorConfig(exercise.type);
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-xs text-indigo-600 hover:underline"
+      >
+        Edit payload
+      </button>
+    );
+  }
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        await adminFetch(`/admin/exercises/${exercise.id}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            promptCyrillic: formData.get('promptCyrillic'),
-            promptLatin: formData.get('promptLatin'),
-            promptTranslationRu: formData.get('promptTranslationRu'),
-            promptTranslationEn: formData.get('promptTranslationEn'),
-          }),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2 mt-3 flex-wrap items-end"
-    >
-      <span className="text-xs text-gray-400 self-center">Type: {exercise.type}</span>
-      {template.promptFields.map((field) => (
-        <input
-          key={field.name}
-          name={field.name}
-          defaultValue={defaults[field.name] ?? ''}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-        />
-      ))}
-      <button type="submit" className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium">
-        Save
+    <div className="mt-3 border-t border-gray-200 pt-3">
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-sm font-medium text-gray-700">Edit {exercise.type} payload</p>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="text-xs text-gray-400 hover:text-gray-600"
+        >
+          Close
+        </button>
+      </div>
+
+      {config ? (
+        <ExercisePayloadEditor config={config} payload={payload} onChange={setPayload} />
+      ) : (
+        <JsonPayloadEditor key={exercise.type} value={payload} onChange={setPayload} />
+      )}
+
+      {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+      <button
+        type="button"
+        disabled={saving}
+        onClick={async () => {
+          setSaving(true);
+          setError('');
+          try {
+            const res = await adminFetch(`/admin/exercises/${exercise.id}`, {
+              method: 'PATCH',
+              body: JSON.stringify({ payload }),
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok) throw new Error(data?.message || 'Failed to save exercise');
+            window.location.reload();
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed');
+          } finally {
+            setSaving(false);
+          }
+        }}
+        className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium"
+      >
+        {saving ? 'Saving…' : 'Save'}
       </button>
-    </form>
+    </div>
   );
 }
 
 // ── Edit Word Form ───────────────────────────────────────────
 
-export function EditWordForm({ word }: { word: { id: string; cyrillic: string; latin: string; translationRu: string; translationEn: string; exampleCyrillic: string | null; exampleTranslationRu: string | null; exampleTranslationEn: string | null; audioUrl: string | null } }) {
+const PART_OF_SPEECH_OPTIONS = [
+  'noun',
+  'verb',
+  'adjective',
+  'adverb',
+  'pronoun',
+  'preposition',
+  'conjunction',
+  'particle',
+  'interjection',
+  'numeral',
+];
+
+const GENDER_OPTIONS = ['m', 'f', 'n'];
+const NUMBER_OPTIONS = ['singular', 'plural'];
+
+export function EditWordForm({
+  word,
+}: {
+  word: {
+    id: string;
+    cyrillic: string;
+    latin: string;
+    translationRu: string;
+    translationEn: string;
+    exampleCyrillic: string | null;
+    exampleTranslationRu: string | null;
+    exampleTranslationEn: string | null;
+    audioUrl: string | null;
+    partOfSpeech?: string | null;
+    gender?: string | null;
+    number?: string | null;
+    declension?: string | null;
+    conjugation?: string | null;
+    imageUrl?: string | null;
+    status?: string;
+  };
+}) {
   return (
     <form
       onSubmit={async (e) => {
@@ -397,12 +503,30 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
             exampleTranslationRu: formData.get('exampleTranslationRu') || null,
             exampleTranslationEn: formData.get('exampleTranslationEn') || null,
             audioUrl: formData.get('audioUrl') || null,
+            partOfSpeech: formData.get('partOfSpeech') || null,
+            gender: formData.get('gender') || null,
+            number: formData.get('number') || null,
+            declension: formData.get('declension') || null,
+            conjugation: formData.get('conjugation') || null,
+            imageUrl: formData.get('imageUrl') || null,
+            status: formData.get('status'),
           }),
         });
         window.location.reload();
       }}
       className="space-y-4"
     >
+      <div className="flex items-center gap-3">
+        <label className="block text-sm font-medium text-gray-700">Status</label>
+        <select
+          name="status"
+          defaultValue={word.status || 'draft'}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        >
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Cyrillic</label>
         <input name="cyrillic" defaultValue={word.cyrillic} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
@@ -431,9 +555,57 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
         <label className="block text-sm font-medium text-gray-700 mb-1">Example Translation EN</label>
         <input name="exampleTranslationEn" defaultValue={word.exampleTranslationEn || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
       </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Part of speech</label>
+          <input
+            name="partOfSpeech"
+            list="part-of-speech-options"
+            defaultValue={word.partOfSpeech || ''}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+          />
+          <datalist id="part-of-speech-options">
+            {PART_OF_SPEECH_OPTIONS.map((p) => (
+              <option key={p} value={p} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+          <select name="gender" defaultValue={word.gender || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+            <option value="">—</option>
+            {GENDER_OPTIONS.map((g) => (
+              <option key={g} value={g}>{g}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Number</label>
+          <select name="number" defaultValue={word.number || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+            <option value="">—</option>
+            {NUMBER_OPTIONS.map((n) => (
+              <option key={n} value={n}>{n}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Declension</label>
+          <input name="declension" defaultValue={word.declension || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Conjugation</label>
+          <input name="conjugation" defaultValue={word.conjugation || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+        </div>
+      </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Audio URL</label>
         <input name="audioUrl" defaultValue={word.audioUrl || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+        <input name="imageUrl" defaultValue={word.imageUrl || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
       </div>
       <div className="flex gap-2">
         <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
@@ -451,187 +623,6 @@ export function EditWordForm({ word }: { word: { id: string; cyrillic: string; l
           Delete
         </button>
       </div>
-    </form>
-  );
-}
-
-// ── Edit Choice Form ──────────────────────────────────────────
-
-export function EditChoiceForm({
-  choice,
-  exerciseId,
-  totalChoices,
-  template,
-}: {
-  choice: { id: string; text: string; textRu: string; isCorrect: boolean; order: number };
-  exerciseId: string;
-  totalChoices: number;
-  template: ExerciseTemplate;
-}) {
-  const [editing, setEditing] = useState(false);
-  const hasTextRu = template.choiceFields.includes('textRu');
-
-  const updateChoice = async (data: { text?: string; textRu?: string; isCorrect?: boolean; order?: number }) => {
-    await adminFetch(`/admin/exercise-choices/${choice.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    });
-    window.location.reload();
-  };
-
-  const toggleCorrect = async () => {
-    await updateChoice({ isCorrect: !choice.isCorrect });
-  };
-
-  const moveChoice = async (direction: 'up' | 'down') => {
-    const newOrder = direction === 'up' ? choice.order - 1 : choice.order + 1;
-    await updateChoice({ order: newOrder });
-  };
-
-  const deleteChoice = async () => {
-    if (!confirm('Delete this answer?')) return;
-    await adminFetch(`/admin/exercise-choices/${choice.id}`, { method: 'DELETE' });
-    window.location.reload();
-  };
-
-  if (editing) {
-    return (
-      <div className="flex items-center gap-2">
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            const data: { text: string; textRu?: string } = { text: formData.get('text') as string };
-            if (hasTextRu) data.textRu = formData.get('textRu') as string;
-            await updateChoice(data);
-            setEditing(false);
-          }}
-          className="flex items-center gap-2 flex-1"
-        >
-          <input
-            name="text"
-            defaultValue={choice.text}
-            className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
-            placeholder={template.choiceTextLabel}
-            autoFocus
-          />
-          {hasTextRu && (
-            <input
-              name="textRu"
-              defaultValue={choice.textRu}
-              className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
-              placeholder={template.choiceTextRuLabel ?? 'RU'}
-            />
-          )}
-          <button type="submit" className="px-2 py-1 bg-green-600 text-white rounded text-xs">
-            Save
-          </button>
-          <button type="button" onClick={() => setEditing(false)} className="px-2 py-1 bg-gray-400 text-white rounded text-xs">
-            Cancel
-          </button>
-        </form>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-2">
-      <div
-        onClick={() => setEditing(true)}
-        className={`px-3 py-2 rounded-lg text-sm flex-1 cursor-pointer border ${
-          choice.isCorrect
-            ? 'bg-green-50 text-green-800 border-green-200'
-            : 'bg-gray-50 text-gray-700 border-gray-200'
-        }`}
-        title="Click to edit"
-      >
-        <span>{choice.text}</span>
-        {choice.textRu && <><span className="text-gray-400 mx-1">|</span><span className="text-gray-500">{choice.textRu}</span></>}
-      </div>
-      <label className="flex items-center gap-1 text-xs cursor-pointer">
-        <input
-          type="checkbox"
-          checked={choice.isCorrect}
-          onChange={toggleCorrect}
-          className="rounded"
-        />
-        Correct
-      </label>
-      <button
-        onClick={() => moveChoice('up')}
-        disabled={choice.order === 1}
-        className="px-1 py-1 text-gray-500 hover:text-gray-800 disabled:opacity-30 text-sm"
-        title="Move up"
-      >
-        ↑
-      </button>
-      <button
-        onClick={() => moveChoice('down')}
-        disabled={choice.order === totalChoices}
-        className="px-1 py-1 text-gray-500 hover:text-gray-800 disabled:opacity-30 text-sm"
-        title="Move down"
-      >
-        ↓
-      </button>
-      <button
-        onClick={deleteChoice}
-        className="text-red-500 hover:text-red-700 text-xs"
-        title="Delete"
-      >
-        ✕
-      </button>
-    </div>
-  );
-}
-
-// ── Add Choice Form ───────────────────────────────────────────
-
-export function AddChoiceForm({
-  exerciseId,
-  nextOrder,
-  template,
-}: {
-  exerciseId: string;
-  nextOrder: number;
-  template: ExerciseTemplate;
-}) {
-  const hasTextRu = template.choiceFields.includes('textRu');
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const body: Record<string, unknown> = {
-          text: formData.get('text'),
-          isCorrect: false,
-          order: nextOrder,
-        };
-        if (hasTextRu) body.textRu = formData.get('textRu');
-        await adminFetch(`/admin/exercises/${exerciseId}/choices`, {
-          method: 'POST',
-          body: JSON.stringify(body),
-        });
-        window.location.reload();
-      }}
-      className="flex gap-2 mt-2"
-    >
-      <input
-        name="text"
-        placeholder={template.choiceTextLabel}
-        required
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
-      />
-      {hasTextRu && (
-        <input
-          name="textRu"
-          placeholder={template.choiceTextRuLabel ?? 'RU'}
-          required
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1"
-        />
-      )}
-      <button type="submit" className="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs font-medium">
-        Add
-      </button>
     </form>
   );
 }

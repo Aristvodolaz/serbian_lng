@@ -7,16 +7,16 @@ The premise of both the design and the API is that Serbian is written in two alp
 ## Requirements
 
 - Xcode 26 or newer (iOS 26 deployment target, Swift 5 language mode)
-- The backend running locally — see its README: `docker compose up -d`, `npm run seed`, `npm run start:dev`
+- The backend running locally — see its README: `docker compose up -d`, `npm run start:dev`. Course content is authored through the admin panel (`admin/`), not seeded.
 
 No third-party packages: URLSession, Observation, Keychain and AVFoundation only.
 
 ## Running
 
 1. Open `Serbian.xcodeproj` and run on a simulator or device.
-2. Register a new account on the onboarding screen, or sign in with a seeded one.
+2. Register a new account on the onboarding screen, or sign in with an existing one.
 
-Debug builds point at the shared dev server (`http://159.194.226.2:3000`) and Release at production, set by the `REC_API_BASE_URL` build setting per configuration — the counterpart of Android's `BASE_URL` `buildConfigField`. To work against a backend on your own machine instead, change that setting to `http://localhost:3000` (see the backend README: `docker compose up -d`, `npm run seed`, `npm run start:dev`), or override it at runtime without a rebuild.
+Debug builds point at the shared dev server (`http://159.194.226.2:3000`) and Release at production, set by the `REC_API_BASE_URL` build setting per configuration — the counterpart of Android's `BASE_URL` `buildConfigField`. To work against a backend on your own machine instead, change that setting to `http://localhost:3000` (see the backend README: `docker compose up -d`, `npm run start:dev`), or override it at runtime without a rebuild.
 
 Resolution order for the API host:
 
@@ -63,7 +63,7 @@ Each feature is a `@Observable` view model plus a view; screens hold a `LoadStat
 
 ## Notes on the implementation
 
-- **One exercise type.** The backend's `ExerciseType` enum contains only `translate_choice`, so that is the only thing the lesson screen renders. Exercises of any other type are filtered out of `playableExercises` and excluded from the `totalCount` sent to `/complete`, rather than being pushed through the multiple-choice layout by a build that doesn't understand them. Android does the same.
+- **One exercise type rendered.** The backend's exercise type registry defines `translation_choice` and `fill_word`; iOS renders only `translation_choice`. Exercises of any other type are filtered out of `playableExercises` and excluded from the `totalCount` sent to `/complete`, rather than being pushed through the multiple-choice layout by a build that doesn't understand them. Android does the same.
 - **The client never knows the right answer in advance.** `GET /lessons/:id` omits `isCorrect`, so tapping "Провери" awaits `POST .../answer` before it can colour the choices. That server round trip is the reason the button shows a spinner.
 - **Unknown enum values don't fail the response.** Lesson status, word status and script preference all decode unrecognised strings to a safe default (`locked`, `learning`, `both`) instead of throwing, which is how the Android client already behaves with its stringly-typed DTOs.
 - **Tokens.** The access/refresh pair lives in the keychain (`kSecAttrAccessibleAfterFirstUnlock`). A 401 triggers a single refresh attempt; concurrent 401s are coalesced into one `POST /auth/refresh` call, and a failed refresh drops the session back to onboarding.

@@ -13,6 +13,13 @@ interface Word {
   exampleTranslationRu: string | null;
   exampleTranslationEn: string | null;
   audioUrl: string | null;
+  partOfSpeech: string | null;
+  gender: string | null;
+  number: string | null;
+  declension: string | null;
+  conjugation: string | null;
+  imageUrl: string | null;
+  status: string;
 }
 
 export default async function WordDetailPage({ params }: { params: Promise<{ id: string }> }) {

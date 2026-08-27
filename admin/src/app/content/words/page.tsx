@@ -2,6 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import Link from 'next/link';
 import { CreateWordForm } from '@/components/forms/create-word-form';
 import { UploadWordsCsv } from '@/components/forms/upload-words-csv';
+import { WordStatusButton, StatusBadge } from '@/components/forms/admin-forms';
 
 interface Word {
   id: string;
@@ -11,6 +12,7 @@ interface Word {
   translationEn: string;
   exampleTranslationRu: string | null;
   exampleTranslationEn: string | null;
+  status: string;
 }
 
 interface PaginatedWords {
@@ -60,6 +62,7 @@ export default async function WordsPage({
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Example Translation RU</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Example Translation EN</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Status</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
@@ -72,6 +75,12 @@ export default async function WordsPage({
                 <td className="px-4 py-3 text-gray-600">{word.translationEn}</td>
                 <td className="px-4 py-3 text-gray-600">{word.exampleTranslationRu ?? ''}</td>
                 <td className="px-4 py-3 text-gray-600">{word.exampleTranslationEn ?? ''}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={word.status} />
+                    <WordStatusButton wordId={word.id} status={word.status} />
+                  </div>
+                </td>
                 <td className="px-4 py-3">
                   <Link href={`/content/words/${word.id}`} className="text-indigo-600 hover:underline">
                     Edit

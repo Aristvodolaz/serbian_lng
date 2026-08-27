@@ -2,24 +2,29 @@
 
 import { useState, useRef } from 'react';
 import Papa from 'papaparse';
-import { getTemplate, ExerciseTemplate } from '@/lib/exercise-templates';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
-function getToken(): string | undefined {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('admin_access_token='))
-    ?.split('=')[1];
+// Exercise type registry (backend/src/content/exercise-types.ts). The CSV type
+// column may also carry the legacy spellings from the pre-payload schema.
+const TYPE_ALIASES: Record<string, string> = {
+  translate_choice: 'translation_choice',
+  translation_choice: 'translation_choice',
+  fill_blank: 'fill_word',
+  fill_word: 'fill_word',
+};
+
+function makeId(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+  return `ans-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }
 
-export function UploadExercisesCsv({
-  lessonId,
-  templates,
-}: {
-  lessonId: string;
-  templates?: ExerciseTemplate[];
-}) {
+interface Choice {
+  text: string;
+  textRu?: string;
+}
+
+export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,29 +50,27 @@ export function UploadExercisesCsv({
         throw new Error('CSV parse error: ' + errors[0].message);
       }
 
-      const exercises: any[] = [];
+      const exercises: Array<{ lessonId: string; type: string; payload: unknown }> = [];
       const warnings: string[] = [];
 
       for (let i = 0; i < data.length; i++) {
-        const row = data[i] as any;
-        if (!row.promptCyrillic?.trim()) continue;
+        const row = data[i] as Record<string, string>;
+        const promptCyrillic = row.promptCyrillic?.trim();
+        if (!promptCyrillic) continue;
 
-        const type = row.type?.trim() || 'translate_choice';
-        const template = getTemplate(templates, type);
-        const hasTextRu = template.choiceFields.includes('textRu');
+        const type = TYPE_ALIASES[row.type?.trim() || 'translation_choice'];
+        if (!type) {
+          warnings.push(`Row ${i + 2}: unknown type "${row.type}", skipped`);
+          continue;
+        }
 
-        const choices: Array<{ text: string; textRu?: string; isCorrect: boolean }> = [];
+        const choices: Choice[] = [];
         for (let c = 1; c <= 4; c++) {
           const choiceText = row[`choice${c}Text`]?.trim();
           if (!choiceText) continue;
-          const choice: { text: string; textRu?: string; isCorrect: boolean } = {
-            text: choiceText,
-            isCorrect: row[`choice${c}Correct`] === '1' || row[`choice${c}Correct`] === 'true',
-          };
-          if (hasTextRu) {
-            const textRu = row[`choice${c}TextRu`]?.trim();
-            if (textRu) choice.textRu = textRu;
-          }
+          const choice: Choice = { text: choiceText };
+          const textRu = row[`choice${c}TextRu`]?.trim();
+          if (textRu) choice.textRu = textRu;
           choices.push(choice);
         }
 
@@ -75,25 +78,52 @@ export function UploadExercisesCsv({
           warnings.push(`Row ${i + 2}: no choices found, skipped`);
           continue;
         }
-        if (!choices.some((c) => c.isCorrect)) {
+        let correctIndex = -1;
+        for (let c = 1; c <= 4; c++) {
+          if (row[`choice${c}Correct`] === '1' || row[`choice${c}Correct`] === 'true') {
+            correctIndex = c - 1;
+            break;
+          }
+        }
+        if (correctIndex < 0) {
           warnings.push(`Row ${i + 2}: no correct answer marked, defaulting to first`);
-          choices[0].isCorrect = true;
+          correctIndex = 0;
         }
 
-        const exercise: any = {
-          lessonId,
-          type,
-          promptCyrillic: row.promptCyrillic.trim(),
-        };
-        const latin = row.promptLatin?.trim();
-        const ru = row.promptTranslationRu?.trim();
-        const en = row.promptTranslationEn?.trim();
-        if (latin) exercise.promptLatin = latin;
-        if (ru) exercise.promptTranslationRu = ru;
-        if (en) exercise.promptTranslationEn = en;
-        exercise.choices = choices;
+        const answers = choices.map((choice) => {
+          const answer: Record<string, string> = { id: makeId() };
+          if (type === 'fill_word') {
+            answer.srCyr = choice.text;
+          } else {
+            answer.en = choice.text;
+            if (choice.textRu) answer.ru = choice.textRu;
+          }
+          return answer;
+        });
 
-        exercises.push(exercise);
+        const base = {
+          srCyr: promptCyrillic,
+          srLat: row.promptLatin?.trim() || undefined,
+          ru: row.promptTranslationRu?.trim() || undefined,
+          en: row.promptTranslationEn?.trim() || undefined,
+        };
+
+        const payload =
+          type === 'fill_word'
+            ? {
+                sentence: { srCyr: base.srCyr, srLat: base.srLat, ru: base.ru, en: base.en },
+                answers,
+                correctAnswerId: answers[correctIndex].id,
+                settings: { shuffleOptions: true, showSentenceTranslation: true, playAudio: false },
+              }
+            : {
+                question: { srCyr: base.srCyr, srLat: base.srLat, ru: base.ru, en: base.en },
+                answers,
+                correctAnswerId: answers[correctIndex].id,
+                settings: { shuffleOptions: true, showImage: false, playAudio: true },
+              };
+
+        exercises.push({ lessonId, type, payload });
       }
 
       if (exercises.length === 0) {
@@ -149,4 +179,11 @@ export function UploadExercisesCsv({
       )}
     </div>
   );
+}
+
+function getToken(): string | undefined {
+  return document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('admin_access_token='))
+    ?.split('=')[1];
 }

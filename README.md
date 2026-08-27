@@ -9,7 +9,7 @@ Mobile app (Android/iOS) for learning Serbian, built around the language's dual-
 - [`ios/`](ios/) — SwiftUI client. See [ios/README.md](ios/README.md).
 - [`srpski-app/`](srpski-app/) — a separate Python pipeline that authors and validates a Russian→Serbian course from CSV into JSON. **Nothing consumes its output yet.** It describes richer exercise formats (`word_bank`, `match_pairs`, `listen_word_bank`) that exist only in that schema, not in the backend and not in either client.
 
-Both clients are thin: they bundle no course content and read everything from the API. The content itself lives in `backend/src/database/seed.ts`.
+Both clients are thin: they bundle no course content and read everything from the API. Content lives in the database and is authored through the admin panel ([`admin/`](admin/)) — units/lessons and dictionary words in the UI, exercises via the exercise APIs or bulk CSV upload.
 
 ## What the clients share
 
@@ -28,6 +28,6 @@ Other shared behaviour worth keeping in step when either client changes: JWT acc
 
 ### Known gaps
 
-- No word-pair matching, word bank or listening exercises anywhere in the shipping stack. Adding one means a new `ExerciseType` on the backend, seed data for it, and a screen on both clients before it is worth wiring up.
+- No word-pair matching, word bank or listening exercises anywhere in the shipping stack. Adding one means a new entry in the backend's exercise type registry, content for it (authored through the admin panel), and a screen on both clients before it is worth wiring up.
 - `PATCH /users/me` is implemented on the backend and called by iOS (profile settings), but Android has no screen for it yet.
-- Lesson content is seeded with **English** translations, while both clients localise their own chrome into Russian and English — so a Russian-speaking learner currently gets a Russian interface around English answers.
+- Lesson content is authored with **English** translations, while both clients localise their own chrome into Russian and English — so a Russian-speaking learner currently gets a Russian interface around English answers.

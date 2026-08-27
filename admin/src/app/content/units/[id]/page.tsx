@@ -1,7 +1,13 @@
 import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { EditUnitForm, CreateLessonForm, DeleteButton } from '@/components/forms/admin-forms';
+import {
+  EditUnitForm,
+  CreateLessonForm,
+  DeleteButton,
+  ContentPublishButton,
+  StatusBadge,
+} from '@/components/forms/admin-forms';
 import { UploadLessonsCsv } from '@/components/forms/upload-lessons-csv';
 
 interface Unit {
@@ -10,6 +16,7 @@ interface Unit {
   titleLatin: string;
   titleTranslationRu: string;
   titleTranslationEn: string;
+  status: string;
   order: number;
   lessons?: Lesson[];
 }
@@ -20,6 +27,7 @@ interface Lesson {
   titleLatin: string;
   titleTranslationRu: string;
   titleTranslationEn: string;
+  status: string;
   order: number;
   xpReward: number;
 }
@@ -42,6 +50,8 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
         <h1 className="text-2xl font-bold">
           {unit.titleCyrillic} / {unit.titleLatin}
         </h1>
+        <StatusBadge status={unit.status} />
+        <ContentPublishButton resourceUrl={`/admin/units/${unit.id}`} status={unit.status} />
       </div>
 
       <div className="bg-white p-6 rounded-xl border border-gray-200 mb-6">
@@ -82,6 +92,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation RU</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">XP</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Status</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
@@ -95,6 +106,12 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                 <td className="px-4 py-3 text-gray-600">{lesson.titleTranslationEn}</td>
                 <td className="px-4 py-3">{lesson.xpReward}</td>
                 <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={lesson.status} />
+                    <ContentPublishButton resourceUrl={`/admin/lessons/${lesson.id}`} status={lesson.status} />
+                  </div>
+                </td>
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <Link href={`/content/lessons/${lesson.id}`} className="text-indigo-600 hover:underline">
                       View
@@ -106,7 +123,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
             ))}
             {!unit.lessons?.length && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
                   No lessons yet
                 </td>
               </tr>

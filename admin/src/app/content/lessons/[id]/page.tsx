@@ -1,9 +1,17 @@
 import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { EditLessonForm, CreateExerciseForm, EditExerciseForm, DeleteButton, EditChoiceForm, AddChoiceForm } from '@/components/forms/admin-forms';
+import {
+  EditLessonForm,
+  CreateExerciseForm,
+  EditExerciseForm,
+  DeleteButton,
+  ContentPublishButton,
+  StatusBadge,
+  ExerciseTemplateSummary,
+} from '@/components/forms/admin-forms';
 import { UploadExercisesCsv } from '@/components/forms/upload-exercises-csv';
-import { getTemplate, ExerciseTemplate } from '@/lib/exercise-templates';
+import { ExercisePayload, getEditorConfig, payloadPreview } from '@/lib/exercise-templates';
 
 interface Lesson {
   id: string;
@@ -12,6 +20,10 @@ interface Lesson {
   titleLatin: string;
   titleTranslationRu: string;
   titleTranslationEn: string;
+  descriptionRu?: string;
+  descriptionEn?: string;
+  minExercises?: number;
+  status: string;
   order: number;
   xpReward: number;
   exercises?: Exercise[];
@@ -20,12 +32,10 @@ interface Lesson {
 interface Exercise {
   id: string;
   type: string;
-  promptCyrillic: string;
-  promptLatin: string;
-  promptTranslationRu: string;
-  promptTranslationEn: string;
+  status: string;
   order: number;
-  choices: Array<{ id: string; text: string; textRu: string; isCorrect: boolean; order: number }>;
+  payload: ExercisePayload;
+  validationIssues: string[];
 }
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -36,7 +46,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   } catch {
     notFound();
   }
-  const templates: ExerciseTemplate[] = await fetchAdmin('/admin/exercise-templates', {
+  const templates: ExerciseTemplateSummary[] = await fetchAdmin('/admin/exercise-templates', {
     redirectOnError: false,
   });
 
@@ -49,6 +59,8 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
         <h1 className="text-2xl font-bold">
           {lesson.title} / {lesson.titleLatin}
         </h1>
+        <StatusBadge status={lesson.status} />
+        <ContentPublishButton resourceUrl={`/admin/lessons/${lesson.id}`} status={lesson.status} />
       </div>
 
       <div className="bg-white p-6 rounded-xl border border-gray-200 mb-6">
@@ -65,49 +77,62 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
             <dt className="text-gray-500">XP Reward</dt>
             <dd className="font-medium">{lesson.xpReward}</dd>
           </div>
+          <div>
+            <dt className="text-gray-500">Min published exercises</dt>
+            <dd className="font-medium">{lesson.minExercises ?? 0}</dd>
+          </div>
         </dl>
         <EditLessonForm lesson={lesson} />
       </div>
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Exercises ({lesson.exercises?.length || 0})</h2>
-        <div className="flex items-center gap-4">
-          <UploadExercisesCsv lessonId={lesson.id} templates={templates} />
-          <CreateExerciseForm lessonId={lesson.id} templates={templates} />
-        </div>
+        <UploadExercisesCsv lessonId={lesson.id} />
+      </div>
+
+      <div className="mb-6">
+        <CreateExerciseForm lessonId={lesson.id} templates={templates} />
       </div>
 
       <div className="space-y-4">
         {lesson.exercises?.map((exercise) => {
-          const template = getTemplate(templates, exercise.type);
+          const config = getEditorConfig(exercise.type);
+          const preview = payloadPreview(exercise.payload, exercise.type);
           return (
-          <div key={exercise.id} className="bg-white p-6 rounded-xl border border-gray-200">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <p className="font-medium">{exercise.promptCyrillic} / {exercise.promptLatin}</p>
-                <p className="text-xs text-gray-500">
-                  RU: {exercise.promptTranslationRu} • EN: {exercise.promptTranslationEn}
-                </p>
-                <p className="text-xs text-gray-400">Type: {exercise.type} • Order: {exercise.order}</p>
-              </div>
-              <DeleteButton url={`/admin/exercises/${exercise.id}`} label="Delete" />
-            </div>
-            <div className="space-y-1 mb-2">
-              {exercise.choices
-                .sort((a, b) => a.order - b.order)
-                .map((choice) => (
-                  <EditChoiceForm
-                    key={choice.id}
-                    choice={choice}
-                    exerciseId={exercise.id}
-                    totalChoices={exercise.choices.length}
-                    template={template}
+            <div key={exercise.id} className="bg-white p-6 rounded-xl border border-gray-200">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 font-medium">
+                      {config?.label ?? exercise.type}
+                    </span>
+                    <StatusBadge status={exercise.status} />
+                  </div>
+                  <p className="font-medium">{preview.title}</p>
+                  <p className="text-xs text-gray-500">{preview.subtitle}</p>
+                  <p className="text-xs text-gray-400">Order: {exercise.order}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ContentPublishButton
+                    resourceUrl={`/admin/exercises/${exercise.id}`}
+                    status={exercise.status}
                   />
-                ))}
+                  <DeleteButton url={`/admin/exercises/${exercise.id}`} label="Delete" />
+                </div>
+              </div>
+
+              {exercise.validationIssues?.length > 0 && (
+                <div className="mb-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2">
+                  {exercise.validationIssues.map((issue, i) => (
+                    <p key={i} className="text-xs text-amber-700">
+                      ⚠ {issue}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              <EditExerciseForm exercise={exercise} />
             </div>
-            <AddChoiceForm exerciseId={exercise.id} nextOrder={exercise.choices.length + 1} template={template} />
-            <EditExerciseForm exercise={exercise} template={template} />
-          </div>
           );
         })}
         {!lesson.exercises?.length && (

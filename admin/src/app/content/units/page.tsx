@@ -2,7 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import Link from 'next/link';
 import { CreateUnitForm } from '@/components/forms/create-unit-form';
 import { UploadUnitsCsv } from '@/components/forms/upload-units-csv';
-import { DeleteButton } from '@/components/forms/admin-forms';
+import { DeleteButton, ContentPublishButton, StatusBadge } from '@/components/forms/admin-forms';
 
 interface Unit {
   id: string;
@@ -10,6 +10,7 @@ interface Unit {
   titleLatin: string;
   titleTranslationRu: string;
   titleTranslationEn: string;
+  status: string;
   order: number;
 }
 
@@ -45,6 +46,7 @@ export default async function UnitsPage({ searchParams }: { searchParams: Promis
               <th className="text-left px-4 py-3 font-medium text-gray-500">Latin</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation RU</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Status</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
@@ -56,6 +58,12 @@ export default async function UnitsPage({ searchParams }: { searchParams: Promis
                 <td className="px-4 py-3 text-gray-600">{unit.titleLatin}</td>
                 <td className="px-4 py-3 text-gray-600">{unit.titleTranslationRu}</td>
                 <td className="px-4 py-3 text-gray-600">{unit.titleTranslationEn}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={unit.status} />
+                    <ContentPublishButton resourceUrl={`/admin/units/${unit.id}`} status={unit.status} />
+                  </div>
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <Link href={`/content/units/${unit.id}`} className="text-indigo-600 hover:underline">
