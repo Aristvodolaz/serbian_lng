@@ -69,6 +69,8 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
           lessonId,
           promptCyrillic: row.promptCyrillic.trim(),
         };
+        const type = row.type?.trim();
+        if (type) exercise.type = type;
         const latin = row.promptLatin?.trim();
         const ru = row.promptTranslationRu?.trim();
         const en = row.promptTranslationEn?.trim();

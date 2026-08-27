@@ -1,3 +1,6 @@
 # Claude Code local/session artifacts — machine-specific, not project content
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+
+# TypeScript incremental build cache
+*.tsbuildinfo

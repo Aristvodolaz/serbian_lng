@@ -12,6 +12,7 @@ import { ExerciseChoice } from './exercise-choice.entity';
 
 export enum ExerciseType {
   TRANSLATE_CHOICE = 'translate_choice',
+  FILL_BLANK = 'fill_blank',
 }
 
 @Entity('exercises')

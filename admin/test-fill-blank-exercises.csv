@@ -1,0 +1,4 @@
+type,promptCyrillic,promptLatin,promptTranslationRu,promptTranslationEn,choice1Text,choice1TextRu,choice1Correct,choice2Text,choice2TextRu,choice2Correct,choice3Text,choice3TextRu,choice3Correct,choice4Text,choice4TextRu,choice4Correct
+fill_blank,Пијем ___ ујутру.,Pijem ___ ujutru.,Я пью ___ утром.,I drink ___ in the morning.,чај,чай,1,шума,лес,0,ђак,ученик,0,њива,поле,0
+fill_blank,Она је лепа ___,Ona je lepa ___,Она красивая ___,She is a beautiful ___,жена,женщина,1,шума,лес,0,чај,чай,0,џем,джем,0
+fill_blank,Ми шетамо кроз ___,Mi šetamo kroz ___,Мы гуляем через ___,We walk through the ___,шума,лес,1,њива,поле,0,чај,чай,0,џем,джем,0
