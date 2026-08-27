@@ -11,6 +11,7 @@
     "start:prod": "node dist/main.js",
     "swagger:generate": "ts-node -r tsconfig-paths/register src/generate-swagger.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts",
+    "migration:baseline": "ts-node -r tsconfig-paths/register src/database/baseline.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/database/data-source.ts",
     "migration:show": "typeorm-ts-node-commonjs migration:show -d src/database/data-source.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

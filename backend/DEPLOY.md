@@ -44,11 +44,18 @@ When updating an existing deployment whose schema has changed, run the migration
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d postgres
+
+# Existing DBs were created by TYPEORM_SYNCHRONIZE and have no migration
+# history — record the migrations already reflected in the schema as applied,
+# so migration:run only applies what's actually missing.
+docker compose -f docker-compose.prod.yml run --rm app \
+  node dist/database/baseline.js
+
 docker compose -f docker-compose.prod.yml run --rm app \
   node node_modules/typeorm/cli.js migration:run -d dist/database/data-source.js
 ```
 
-(The `npm run migration:run` script uses `typeorm-ts-node-commonjs`, which needs ts-node — not installed in the production image. Use the compiled CLI above.)
+(The `npm run migration:run`/`migration:baseline` scripts use `typeorm-ts-node-commonjs`/ts-node, which are not installed in the production image — use the compiled `dist/` scripts above.)
 
 The current schema migration (`1790000000000-ContentPayloadSchema`) is intentionally destructive: it converts the old `translate_choice`/`fill_blank` exercise types to the payload model (existing exercise content becomes empty drafts) and drops the `exercise_choices` table. Users, lessons and units are preserved.
 
