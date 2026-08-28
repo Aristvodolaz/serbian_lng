@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { WordStatusButton, StatusBadge } from '@/components/forms/admin-forms';
 import { attributeLabel, WordAttributeField, WordAttributes } from '@/lib/word-attributes';
 import { useAttributeLang } from '@/lib/attribute-lang';
@@ -37,6 +38,7 @@ export function WordsTable({
   attributes: WordAttributes;
 }) {
   const { lang } = useAttributeLang();
+  const router = useRouter();
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -60,7 +62,14 @@ export function WordsTable({
         </thead>
         <tbody>
           {words.map((word) => (
-            <tr key={word.id} className="border-b border-gray-100 hover:bg-gray-50">
+            <tr
+              key={word.id}
+              className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+              onClick={(e) => {
+                if ((e.target as HTMLElement).closest('a, button')) return;
+                router.push(`/content/words/${word.id}`);
+              }}
+            >
               <td className="px-4 py-3 font-medium">{word.cyrillic}</td>
               <td className="px-4 py-3 text-gray-600">{word.latin}</td>
               <td className="px-4 py-3 text-gray-600">{word.translationRu}</td>
