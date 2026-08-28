@@ -29,13 +29,18 @@ interface Lesson {
   exercises?: Exercise[];
 }
 
+interface ValidationIssue {
+  field: string;
+  message: string;
+}
+
 interface Exercise {
   id: string;
   type: string;
   status: string;
   order: number;
   payload: ExercisePayload;
-  validationIssues: string[];
+  validationIssues: ValidationIssue[];
 }
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -125,7 +130,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
                 <div className="mb-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2">
                   {exercise.validationIssues.map((issue, i) => (
                     <p key={i} className="text-xs text-amber-700">
-                      ⚠ {issue}
+                      ⚠ {issue.message}
                     </p>
                   ))}
                 </div>
