@@ -52,10 +52,20 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
           const exampleRu = row.exampleTranslationRu?.trim();
           const exampleEn = row.exampleTranslationEn?.trim();
           const audio = row.audioUrl?.trim();
+          const partOfSpeech = row.partOfSpeech?.trim();
+          const gender = row.gender?.trim();
+          const number = row.number?.trim();
+          const declension = row.declension?.trim();
+          const conjugation = row.conjugation?.trim();
           if (exampleCy) word.exampleCyrillic = exampleCy;
           if (exampleRu) word.exampleTranslationRu = exampleRu;
           if (exampleEn) word.exampleTranslationEn = exampleEn;
           if (audio) word.audioUrl = audio;
+          if (partOfSpeech) word.partOfSpeech = partOfSpeech;
+          if (gender) word.gender = gender;
+          if (number) word.number = number;
+          if (declension) word.declension = declension;
+          if (conjugation) word.conjugation = conjugation;
           return word;
         });
 
