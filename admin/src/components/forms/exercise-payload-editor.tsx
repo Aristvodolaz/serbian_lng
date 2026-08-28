@@ -120,7 +120,27 @@ export function ExercisePayloadEditor({ config, payload, onChange }: Props) {
                   <span className="text-xs text-gray-500 whitespace-nowrap">Answer {i + 1}</span>
                   <WordPicker
                     value={a.wordId ? { id: a.wordId } : null}
-                    onChange={(w) => updateAnswer(i, { wordId: w ? w.id : null })}
+                    onChange={(w) => {
+                      if (!w) {
+                        updateAnswer(i, { wordId: null });
+                        return;
+                      }
+                      // Pull dictionary data into empty answer fields; the word
+                      // is the source of truth, inline fields stay as fallback.
+                      const map: Record<string, string | null | undefined> = {
+                        srCyr: w.cyrillic,
+                        srLat: w.latin,
+                        ru: w.translationRu,
+                        en: w.translationEn,
+                      };
+                      const patch: Record<string, unknown> = { wordId: w.id };
+                      const current = answers[i] as unknown as Record<string, unknown>;
+                      for (const f of config.answerFields) {
+                        const val = map[f.key];
+                        if (val && !current[f.key]) patch[f.key] = val;
+                      }
+                      updateAnswer(i, patch);
+                    }}
                   />
                   <div className="ml-auto flex items-center gap-1">
                     <button
