@@ -9,6 +9,8 @@ import {
   normalizePayload,
 } from '@/lib/exercise-templates';
 import { ExercisePayloadEditor } from './exercise-payload-editor';
+import { WordAttributes } from '@/lib/word-attributes';
+import { AttributeLangToggle, useAttributeLang } from '@/lib/attribute-lang';
 
 export interface ExerciseTemplateSummary {
   type: string;
@@ -449,24 +451,9 @@ export function EditExerciseForm({
 
 // ── Edit Word Form ───────────────────────────────────────────
 
-const PART_OF_SPEECH_OPTIONS = [
-  'noun',
-  'verb',
-  'adjective',
-  'adverb',
-  'pronoun',
-  'preposition',
-  'conjunction',
-  'particle',
-  'interjection',
-  'numeral',
-];
-
-const GENDER_OPTIONS = ['m', 'f', 'n'];
-const NUMBER_OPTIONS = ['singular', 'plural'];
-
 export function EditWordForm({
   word,
+  attributes,
 }: {
   word: {
     id: string;
@@ -486,7 +473,9 @@ export function EditWordForm({
     imageUrl?: string | null;
     status?: string;
   };
+  attributes: WordAttributes;
 }) {
+  const { lang } = useAttributeLang();
   return (
     <form
       onSubmit={async (e) => {
@@ -526,6 +515,9 @@ export function EditWordForm({
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
+        <div className="ml-auto">
+          <AttributeLangToggle />
+        </div>
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Cyrillic</label>
@@ -558,24 +550,23 @@ export function EditWordForm({
       <div className="grid grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Part of speech</label>
-          <input
+          <select
             name="partOfSpeech"
-            list="part-of-speech-options"
             defaultValue={word.partOfSpeech || ''}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-          />
-          <datalist id="part-of-speech-options">
-            {PART_OF_SPEECH_OPTIONS.map((p) => (
-              <option key={p} value={p} />
+          >
+            <option value="">—</option>
+            {attributes.partOfSpeech.map((o) => (
+              <option key={o.value} value={o.value}>{lang === 'ru' ? o.ru : o.en}</option>
             ))}
-          </datalist>
+          </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
           <select name="gender" defaultValue={word.gender || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
             <option value="">—</option>
-            {GENDER_OPTIONS.map((g) => (
-              <option key={g} value={g}>{g}</option>
+            {attributes.gender.map((o) => (
+              <option key={o.value} value={o.value}>{lang === 'ru' ? o.ru : o.en}</option>
             ))}
           </select>
         </div>
@@ -583,8 +574,8 @@ export function EditWordForm({
           <label className="block text-sm font-medium text-gray-700 mb-1">Number</label>
           <select name="number" defaultValue={word.number || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
             <option value="">—</option>
-            {NUMBER_OPTIONS.map((n) => (
-              <option key={n} value={n}>{n}</option>
+            {attributes.number.map((o) => (
+              <option key={o.value} value={o.value}>{lang === 'ru' ? o.ru : o.en}</option>
             ))}
           </select>
         </div>
@@ -592,11 +583,21 @@ export function EditWordForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Declension</label>
-          <input name="declension" defaultValue={word.declension || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+          <select name="declension" defaultValue={word.declension || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+            <option value="">—</option>
+            {attributes.declension.map((o) => (
+              <option key={o.value} value={o.value}>{lang === 'ru' ? o.ru : o.en}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Conjugation</label>
-          <input name="conjugation" defaultValue={word.conjugation || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+          <select name="conjugation" defaultValue={word.conjugation || ''} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+            <option value="">—</option>
+            {attributes.conjugation.map((o) => (
+              <option key={o.value} value={o.value}>{lang === 'ru' ? o.ru : o.en}</option>
+            ))}
+          </select>
         </div>
       </div>
       <div>

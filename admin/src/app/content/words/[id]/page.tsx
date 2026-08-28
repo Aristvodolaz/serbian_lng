@@ -2,6 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { EditWordForm } from '@/components/forms/admin-forms';
+import { WordAttributes } from '@/lib/word-attributes';
 
 interface Word {
   id: string;
@@ -30,6 +31,9 @@ export default async function WordDetailPage({ params }: { params: Promise<{ id:
   } catch {
     notFound();
   }
+  const attributes: WordAttributes = await fetchAdmin('/admin/word-attributes', {
+    redirectOnError: false,
+  });
 
   return (
     <div>
@@ -41,7 +45,7 @@ export default async function WordDetailPage({ params }: { params: Promise<{ id:
       </div>
 
       <div className="bg-white p-6 rounded-xl border border-gray-200 max-w-2xl">
-        <EditWordForm word={word} />
+        <EditWordForm word={word} attributes={attributes} />
       </div>
     </div>
   );

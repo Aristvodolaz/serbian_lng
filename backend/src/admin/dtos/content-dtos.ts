@@ -6,6 +6,7 @@ import { IsArray, IsBoolean, IsInt, IsObject, IsOptional, IsString, Min, MinLeng
 import { Type } from 'class-transformer';
 import { ContentStatus } from '../../common/enums/content-status.enum';
 import { EXERCISE_TYPES, ValidationIssue } from '../../content/exercise-types';
+import { WordAttributeOption } from '../word-attributes';
 import { PaginationDto } from './pagination.dto';
 
 // ── Exercise payload / validation ─────────────────────────────
@@ -485,6 +486,27 @@ export class UpdateWordDto {
   @ApiPropertyOptional({ enum: ContentStatus })
   @IsOptional()
   status?: ContentStatus;
+}
+
+// ── Word attribute dictionary ────────────────────────────────
+
+export class WordAttributeOptionDto implements WordAttributeOption {
+  @ApiProperty() value: string;
+  @ApiProperty() ru: string;
+  @ApiProperty() en: string;
+}
+
+export class WordAttributesResponseDto {
+  @ApiProperty({ type: [WordAttributeOptionDto] })
+  partOfSpeech: WordAttributeOption[];
+  @ApiProperty({ type: [WordAttributeOptionDto] })
+  gender: WordAttributeOption[];
+  @ApiProperty({ type: [WordAttributeOptionDto] })
+  number: WordAttributeOption[];
+  @ApiProperty({ type: [WordAttributeOptionDto] })
+  declension: WordAttributeOption[];
+  @ApiProperty({ type: [WordAttributeOptionDto] })
+  conjugation: WordAttributeOption[];
 }
 
 // ── Bulk DTOs ─────────────────────────────────────────────────

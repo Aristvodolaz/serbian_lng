@@ -43,6 +43,7 @@ import {
   UpdateUnitDto,
   UpdateWordDto,
   WordAdminResponseDto,
+  WordAttributesResponseDto,
 } from './dtos/content-dtos';
 
 @ApiTags('admin')
@@ -305,6 +306,12 @@ export class AdminController {
   @Post('words/bulk')
   bulkCreateWords(@Body() dto: { words: CreateWordDto[] }): Promise<{ created: number }> {
     return this.adminService.bulkCreateWords(dto.words);
+  }
+
+  @Get('word-attributes')
+  @ApiOkResponse({ type: WordAttributesResponseDto })
+  getWordAttributes(): WordAttributesResponseDto {
+    return this.adminService.getWordAttributes();
   }
 
   @Get('words/:id')

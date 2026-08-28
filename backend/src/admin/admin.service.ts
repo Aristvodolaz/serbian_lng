@@ -18,6 +18,12 @@ import {
   validateExercisePayload,
   EXERCISE_TYPE_REGISTRY,
 } from '../content/exercise-types';
+import {
+  WordAttributeField,
+  WordAttributeOption,
+  getWordAttributesResponse,
+  validateWordAttributes,
+} from './word-attributes';
 import { collectWordIds, exercisePreview } from '../content/exercise-resolver';
 import { PaginationDto, PaginatedResponse } from './dtos/pagination.dto';
 import {
@@ -423,6 +429,10 @@ export class AdminService {
     }));
   }
 
+  getWordAttributes(): Record<WordAttributeField, WordAttributeOption[]> {
+    return getWordAttributesResponse();
+  }
+
   async listExercises(
     query: ListExercisesQueryDto,
   ): Promise<PaginatedResponse<AdminExerciseListItemDto>> {
@@ -671,6 +681,10 @@ export class AdminService {
   }
 
   async createWord(dto: CreateWordDto): Promise<WordAdminResponseDto> {
+    const problems = validateWordAttributes(dto);
+    if (problems.length > 0) {
+      throw new BadRequestException({ message: 'Invalid word attributes', problems });
+    }
     const word = this.wordRepo.create({
       cyrillic: dto.cyrillic,
       latin: dto.latin,
@@ -692,6 +706,16 @@ export class AdminService {
   }
 
   async bulkCreateWords(words: CreateWordDto[]): Promise<{ created: number; updated: number }> {
+    const problems: string[] = [];
+    words.forEach((dto, index) => {
+      for (const p of validateWordAttributes(dto)) {
+        problems.push(`words[${index}].${p}`);
+      }
+    });
+    if (problems.length > 0) {
+      throw new BadRequestException({ message: 'Invalid word attributes', problems });
+    }
+
     let created = 0;
     let updated = 0;
 
@@ -748,6 +772,10 @@ export class AdminService {
   }
 
   async updateWord(wordId: string, dto: UpdateWordDto): Promise<WordAdminResponseDto> {
+    const problems = validateWordAttributes(dto);
+    if (problems.length > 0) {
+      throw new BadRequestException({ message: 'Invalid word attributes', problems });
+    }
     const word = await this.wordRepo.findOne({ where: { id: wordId } });
     if (!word) throw new NotFoundException('Word not found');
     Object.assign(word, dto);
