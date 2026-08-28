@@ -38,7 +38,7 @@ curl http://localhost:3000/health
 
 ## 4. Run the schema migration
 
-Nothing is seeded anymore — content is authored through the admin panel (`admin/`) and CSV uploads, so a first deploy against an empty database needs no content step. `TYPEORM_SYNCHRONIZE=true` (from `.env`) creates the schema on first boot.
+Nothing is seeded anymore — content is authored through the admin panel (`admin/`) and CSV uploads, so a first deploy against an empty database needs no content step. On an empty database TypeORM synchronize creates the schema (that's the one case `TYPEORM_SYNCHRONIZE=true` is for); once a schema is migrated, prod runs with `TYPEORM_SYNCHRONIZE=false` and all schema changes ship as migrations below.
 
 When updating an existing deployment whose schema has changed, run the migration **before** the new app starts, so the new build never boots with synchronize enabled against the old schema:
 
@@ -57,7 +57,7 @@ docker compose -f docker-compose.prod.yml run --rm app \
 
 (The `npm run migration:run`/`migration:baseline` scripts use `typeorm-ts-node-commonjs`/ts-node, which are not installed in the production image — use the compiled `dist/` scripts above.)
 
-The current schema migration (`1790000000000-ContentPayloadSchema`) is intentionally destructive: it converts the old `translate_choice`/`fill_blank` exercise types to the payload model (existing exercise content becomes empty drafts) and drops the `exercise_choices` table. Users, lessons and units are preserved.
+The current schema migration (`1790000000000-ContentPayloadSchema`) is intentionally destructive: it converts the old `translate_choice`/`fill_blank` exercise types to the payload model (existing exercise content becomes empty drafts) and drops the `exercise_choices` table. Users, lessons and units are preserved. Two follow-ups ship with it: `1791000000000-BackfillExerciseType` (legacy NULL types → `translation_choice`, then `SET NOT NULL`) and `1792000000000-AlignVarcharColumns` (drops the explicit `(255)` length the migration added, matching the entities so synchronize stops trying to recreate those columns).
 
 > **Admin access.** The admin user is only ever created by the old seed script, which has been removed. On the *existing* deployment the admin row is already in the database and survives the migration — **do not** wipe the `pgdata` volume, or the admin (and all registered users) are gone with no way to recreate them.
 
@@ -89,5 +89,5 @@ docker compose -f docker-compose.prod.yml ps
 
 ## Before this handles real user data
 
-- `TYPEORM_SYNCHRONIZE=true` auto-creates tables from entities — convenient for a first deploy, but it can silently alter/drop columns on a schema change. Switch to TypeORM migrations before this is load-bearing.
+- Schema is migration-managed and prod runs with `TYPEORM_SYNCHRONIZE=false` — synchronize must not run against a migrated schema (it tried to recreate the migrated varchar columns and crash-looped the app; see `1792000000000-AlignVarcharColumns`). All schema changes ship as TypeORM migrations.
 - Postgres data lives in the `pgdata` Docker volume with no automated backup — set one up (e.g. `pg_dump` on a cron) before relying on this for real users.
