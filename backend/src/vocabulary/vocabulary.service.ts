@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Word } from './entities/word.entity';
 import { UserWordProgress, WordProgressStatus } from './entities/user-word-progress.entity';
 import { ReviewWordResponseDto } from './dto/review-word-response.dto';
 import { ReviewResult } from './dto/submit-review.dto';
 import { SubmitReviewResponseDto } from './dto/submit-review-response.dto';
+import { WordPublicDto, WordsListResponseDto } from './dto/word-public.dto';
+import { getWordAttributesResponse } from '../admin/word-attributes';
+import { ContentStatus } from '../common/enums/content-status.enum';
 import { BadgesService } from '../badges/badges.service';
 import { User } from '../users/entities/user.entity';
 
@@ -100,6 +103,52 @@ export class VocabularyService {
       newBadges,
     };
   }
+
+  async searchWords(
+    search?: string,
+    limit = 50,
+    offset = 0,
+  ): Promise<WordsListResponseDto> {
+    const where = search
+      ? [
+          { status: ContentStatus.PUBLISHED, cyrillic: ILike(`%${search}%`) },
+          { status: ContentStatus.PUBLISHED, latin: ILike(`%${search}%`) },
+          { status: ContentStatus.PUBLISHED, translationRu: ILike(`%${search}%`) },
+          { status: ContentStatus.PUBLISHED, translationEn: ILike(`%${search}%`) },
+        ]
+      : { status: ContentStatus.PUBLISHED };
+    const [words, total] = await this.wordRepository.findAndCount({
+      where,
+      order: { cyrillic: 'ASC' },
+      skip: offset,
+      take: limit,
+    });
+    return { items: words.map(toPublicDto), total };
+  }
+
+  wordAttributes(): ReturnType<typeof getWordAttributesResponse> {
+    return getWordAttributesResponse();
+  }
+}
+
+function toPublicDto(word: Word): WordPublicDto {
+  return {
+    id: word.id,
+    cyrillic: word.cyrillic,
+    latin: word.latin,
+    translationRu: word.translationRu,
+    translationEn: word.translationEn,
+    exampleCyrillic: word.exampleCyrillic,
+    exampleTranslationRu: word.exampleTranslationRu,
+    exampleTranslationEn: word.exampleTranslationEn,
+    audioUrl: word.audioUrl,
+    partOfSpeech: word.partOfSpeech,
+    gender: word.gender,
+    number: word.number,
+    declension: word.declension,
+    conjugation: word.conjugation,
+    imageUrl: word.imageUrl,
+  };
 }
 
 function toDto(word: Word, status: WordProgressStatus): ReviewWordResponseDto {
