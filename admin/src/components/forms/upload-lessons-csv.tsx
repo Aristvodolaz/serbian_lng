@@ -12,7 +12,13 @@ function getToken(): string | undefined {
     ?.split('=')[1];
 }
 
-export function UploadLessonsCsv({ unitId }: { unitId: string }) {
+export function UploadLessonsCsv({
+  unitId,
+  unitTitle,
+}: {
+  unitId: string;
+  unitTitle: string;
+}) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +45,11 @@ export function UploadLessonsCsv({ unitId }: { unitId: string }) {
       }
 
       const lessons = data
-        .filter((row: any) => row.title?.trim())
+        .filter(
+          (row: any) =>
+            row.title?.trim() &&
+            (!unitTitle || !row.unitTitle?.trim() || row.unitTitle.trim() === unitTitle),
+        )
         .map((row: any) => {
           const lesson: any = {
             unitId,
@@ -75,9 +85,11 @@ export function UploadLessonsCsv({ unitId }: { unitId: string }) {
       }
 
       const response = await res.json();
-      setResult(
-        `Uploaded ${lessons.length} lessons: ${response.created} created, ${response.updated} updated`,
-      );
+      const totalWithTitle = data.filter((row: any) => row.title?.trim()).length;
+      const skipped = totalWithTitle - lessons.length;
+      let msg = `Uploaded ${lessons.length} lessons: ${response.created} created, ${response.updated} updated`;
+      if (skipped > 0) msg += ` | ${skipped} rows skipped (other unit)`;
+      setResult(msg);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       setResult(`Error: ${err instanceof Error ? err.message : 'Failed to parse CSV'}`);

@@ -77,7 +77,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Lessons</h2>
         <div className="flex items-center gap-4">
-          <UploadLessonsCsv unitId={unit.id} />
+          <UploadLessonsCsv unitId={unit.id} unitTitle={unit.titleCyrillic} />
           <CreateLessonForm unitId={unit.id} />
         </div>
       </div>

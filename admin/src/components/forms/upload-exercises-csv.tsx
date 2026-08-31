@@ -19,12 +19,41 @@ function makeId(): string {
   return `ans-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }
 
-interface Choice {
-  text: string;
-  textRu?: string;
+interface Word {
+  id: string;
+  cyrillic: string;
+  latin: string;
+  translationRu: string;
+  translationEn: string;
+  audioUrl?: string | null;
+  imageUrl?: string | null;
 }
 
-export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
+// Deterministic distractors: the 3 words that follow the correct word in the
+// sorted word list (cyclically), so the same CSV always produces the same set.
+function pickDistractors(pool: Word[], correctId: string, count: number): Word[] {
+  if (pool.length <= 1) return [];
+  const index = pool.findIndex((w) => w.id === correctId);
+  const start = index < 0 ? 0 : index + 1;
+  const picked: Word[] = [];
+  for (let step = 0; step < pool.length && picked.length < count; step++) {
+    const candidate = pool[(start + step) % pool.length];
+    if (candidate.id !== correctId && !picked.some((p) => p.id === candidate.id)) {
+      picked.push(candidate);
+    }
+  }
+  return picked;
+}
+
+export function UploadExercisesCsv({
+  lessonId,
+  lessonTitle,
+  unitId,
+}: {
+  lessonId: string;
+  lessonTitle: string;
+  unitId: string;
+}) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +68,7 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
     setResult('');
 
     try {
+      const token = getToken();
       const text = await file.text();
       const { data, errors } = Papa.parse(text, {
         header: true,
@@ -50,13 +80,43 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
         throw new Error('CSV parse error: ' + errors[0].message);
       }
 
+      // Resolve the current lesson's unit cyrillic title so rows from another
+      // unit with the same lesson title (e.g. "Бројеви" in both Бројеви and
+      // Време) are not imported.
+      const unitRes = await fetch(`${BACKEND_URL}/admin/units/${unitId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!unitRes.ok) throw new Error(`Failed to load unit (${unitRes.status})`);
+      const unit = (await unitRes.json()) as { titleCyrillic?: string };
+      const unitTitleCyr = unit?.titleCyrillic;
+
+      // All words → cyrillic→word map (for wordId/audio/image) and a sorted
+      // array (for deterministic distractors).
+      const words = await fetchAllWords(token);
+      const byCyr = new Map(words.map((w) => [w.cyrillic, w]));
+      const sorted = [...words].sort((a, b) => a.cyrillic.localeCompare(b.cyrillic));
+
       const exercises: Array<{ lessonId: string; type: string; payload: unknown }> = [];
       const warnings: string[] = [];
+      let skippedOtherLesson = 0;
 
       for (let i = 0; i < data.length; i++) {
         const row = data[i] as Record<string, string>;
-        const promptCyrillic = row.promptCyrillic?.trim();
-        if (!promptCyrillic) continue;
+        const cyrillic = row.cyrillic?.trim();
+        if (!cyrillic) continue;
+
+        if (lessonTitle && row.lessonTitle?.trim() && row.lessonTitle.trim() !== lessonTitle) {
+          skippedOtherLesson++;
+          continue;
+        }
+        if (
+          unitTitleCyr &&
+          row.unitTitle?.trim() &&
+          row.unitTitle.trim() !== unitTitleCyr
+        ) {
+          skippedOtherLesson++;
+          continue;
+        }
 
         const type = TYPE_ALIASES[row.type?.trim() || 'translation_choice'];
         if (!type) {
@@ -64,73 +124,96 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
           continue;
         }
 
-        const choices: Choice[] = [];
-        for (let c = 1; c <= 4; c++) {
-          const choiceText = row[`choice${c}Text`]?.trim();
-          if (!choiceText) continue;
-          const choice: Choice = { text: choiceText };
-          const textRu = row[`choice${c}TextRu`]?.trim();
-          if (textRu) choice.textRu = textRu;
-          choices.push(choice);
+        const word = byCyr.get(cyrillic);
+        if (!word) {
+          warnings.push(`Row ${i + 2}: word "${cyrillic}" not found in dictionary — no wordId/audio/image linked`);
         }
 
-        if (choices.length === 0) {
-          warnings.push(`Row ${i + 2}: no choices found, skipped`);
+        const latin = row.latin?.trim() || '';
+        const rowRu = row.translationRu?.trim();
+        const rowEn = row.translationEn?.trim();
+        const audioUrl = row.audioUrl?.trim() || word?.audioUrl || null;
+        const imageUrl = row.imageUrl?.trim() || word?.imageUrl || null;
+
+        const distractors = pickDistractors(sorted, word?.id ?? '', 3);
+        if (distractors.length < 3) {
+          warnings.push(`Row ${i + 2}: not enough words for distractors, skipped`);
           continue;
         }
-        let correctIndex = -1;
-        for (let c = 1; c <= 4; c++) {
-          if (row[`choice${c}Correct`] === '1' || row[`choice${c}Correct`] === 'true') {
-            correctIndex = c - 1;
-            break;
-          }
-        }
-        if (correctIndex < 0) {
-          warnings.push(`Row ${i + 2}: no correct answer marked, defaulting to first`);
-          correctIndex = 0;
-        }
 
-        const answers = choices.map((choice) => {
-          const answer: Record<string, string> = { id: makeId() };
-          if (type === 'fill_word') {
-            answer.srCyr = choice.text;
-          } else {
-            answer.en = choice.text;
-            if (choice.textRu) answer.ru = choice.textRu;
-          }
-          return answer;
-        });
-
-        const base = {
-          srCyr: promptCyrillic,
-          srLat: row.promptLatin?.trim() || undefined,
-          ru: row.promptTranslationRu?.trim() || undefined,
-          en: row.promptTranslationEn?.trim() || undefined,
-        };
+        const correctAnswerId = makeId();
+        const answers =
+          type === 'fill_word'
+            ? [
+                {
+                  id: correctAnswerId,
+                  wordId: word?.id ?? null,
+                  srCyr: cyrillic,
+                  srLat: latin,
+                  ru: word?.translationRu || rowRu || null,
+                  en: word?.translationEn || rowEn || null,
+                  audioUrl,
+                },
+                ...distractors.map((d) => ({
+                  id: makeId(),
+                  wordId: d.id,
+                  srCyr: d.cyrillic,
+                  srLat: d.latin,
+                  ru: d.translationRu || null,
+                  en: d.translationEn || null,
+                  audioUrl: d.audioUrl || null,
+                })),
+              ]
+            : [
+                {
+                  id: correctAnswerId,
+                  wordId: word?.id ?? null,
+                  en: word?.translationEn || rowEn || null,
+                  ru: word?.translationRu || rowRu || null,
+                },
+                ...distractors.map((d) => ({
+                  id: makeId(),
+                  wordId: d.id,
+                  en: d.translationEn || null,
+                  ru: d.translationRu || null,
+                })),
+              ];
 
         const payload =
           type === 'fill_word'
             ? {
-                sentence: { srCyr: base.srCyr, srLat: base.srLat, ru: base.ru, en: base.en },
+                sentence: {
+                  srCyr: row.sentenceCyrillic?.trim() || null,
+                  srLat: row.sentenceLatin?.trim() || null,
+                  ru: row.sentenceTranslationRu?.trim() || null,
+                  en: row.sentenceTranslationEn?.trim() || null,
+                },
                 answers,
-                correctAnswerId: answers[correctIndex].id,
-                settings: { shuffleOptions: true, showSentenceTranslation: true, playAudio: false },
+                correctAnswerId,
+                settings: { shuffleOptions: true, showSentenceTranslation: true, playAudio: true },
               }
             : {
-                question: { srCyr: base.srCyr, srLat: base.srLat, ru: base.ru, en: base.en },
+                question: {
+                  wordId: word?.id ?? null,
+                  srCyr: cyrillic,
+                  srLat: latin,
+                  ru: rowRu || null,
+                  en: rowEn || null,
+                  audioUrl,
+                  imageUrl,
+                },
                 answers,
-                correctAnswerId: answers[correctIndex].id,
-                settings: { shuffleOptions: true, showImage: false, playAudio: true },
+                correctAnswerId,
+                settings: { shuffleOptions: true, showImage: true, playAudio: true },
               };
 
         exercises.push({ lessonId, type, payload });
       }
 
       if (exercises.length === 0) {
-        throw new Error('No valid data rows found in CSV');
+        throw new Error('No valid data rows found in CSV for this lesson');
       }
 
-      const token = getToken();
       const res = await fetch(`${BACKEND_URL}/admin/exercises/bulk`, {
         method: 'POST',
         headers: {
@@ -147,6 +230,7 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
 
       const response = await res.json();
       let msg = `Uploaded ${exercises.length} exercises: ${response.created} created, ${response.updated} updated`;
+      if (skippedOtherLesson > 0) msg += ` | ${skippedOtherLesson} rows skipped (other lesson)`;
       if (warnings.length > 0) msg += ` | Warnings: ${warnings.join('; ')}`;
       setResult(msg);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -179,6 +263,23 @@ export function UploadExercisesCsv({ lessonId }: { lessonId: string }) {
       )}
     </div>
   );
+}
+
+async function fetchAllWords(token: string | undefined): Promise<Word[]> {
+  const words: Word[] = [];
+  let page = 1;
+  let totalPages = 1;
+  do {
+    const res = await fetch(`${BACKEND_URL}/admin/words?page=${page}&limit=100`, {
+      headers: { Authorization: token ? `Bearer ${token}` : '' },
+    });
+    if (!res.ok) throw new Error(`Failed to load words (${res.status})`);
+    const body = await res.json();
+    words.push(...((body.data ?? []) as Word[]));
+    totalPages = body.totalPages ?? 1;
+    page += 1;
+  } while (page <= totalPages);
+  return words;
 }
 
 function getToken(): string | undefined {

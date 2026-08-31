@@ -92,7 +92,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Exercises ({lesson.exercises?.length || 0})</h2>
-        <UploadExercisesCsv lessonId={lesson.id} />
+        <UploadExercisesCsv lessonId={lesson.id} lessonTitle={lesson.title} unitId={lesson.unitId} />
       </div>
 
       <div className="mb-6">
