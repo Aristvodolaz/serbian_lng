@@ -2,7 +2,7 @@ import { fetchAdmin } from '@/lib/api';
 import Link from 'next/link';
 import { CreateUnitForm } from '@/components/forms/create-unit-form';
 import { UploadUnitsCsv } from '@/components/forms/upload-units-csv';
-import { DeleteButton, ContentPublishButton, StatusBadge } from '@/components/forms/admin-forms';
+import { DeleteButton, ContentPublishButton, StatusBadge, PublishAllUnitsButton } from '@/components/forms/admin-forms';
 
 interface Unit {
   id: string;
@@ -32,6 +32,7 @@ export default async function UnitsPage({ searchParams }: { searchParams: Promis
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Units</h1>
         <div className="flex items-center gap-4">
+          <PublishAllUnitsButton />
           <UploadUnitsCsv />
           <CreateUnitForm />
         </div>

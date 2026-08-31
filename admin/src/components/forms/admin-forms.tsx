@@ -34,6 +34,8 @@ export function StatusBadge({ status }: { status: string }) {
 }
 
 // Publish/unpublish for units, lessons and exercises (POST /:id/publish|unpublish).
+// Units and lessons cascade: the response carries a report of what was published
+// and what was skipped, shown as an alert before reloading.
 export function ContentPublishButton({ resourceUrl, status }: { resourceUrl: string; status: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -54,6 +56,8 @@ export function ContentPublishButton({ resourceUrl, status }: { resourceUrl: str
             });
             const data = await res.json().catch(() => null);
             if (!res.ok) throw new Error(data?.message || 'Failed');
+            const summary = publishReport(data);
+            if (summary) alert(summary);
             window.location.reload();
           } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed');
@@ -68,6 +72,101 @@ export function ContentPublishButton({ resourceUrl, status }: { resourceUrl: str
         }`}
       >
         {busy ? '…' : published ? 'Unpublish' : 'Publish'}
+      </button>
+      {error && <span className="text-xs text-red-600">{error}</span>}
+    </span>
+  );
+}
+
+// Renders a cascade-publish report into an alert string; returns null when the
+// response carries no report (e.g. a plain exercise publish).
+function publishReport(data: any): string | null {
+  if (!data || !Array.isArray(data.skipped)) return null;
+  const parts: string[] = [];
+  if (typeof data.publishedLessons === 'number') parts.push(`${data.publishedLessons} lessons`);
+  if (typeof data.publishedExercises === 'number') parts.push(`${data.publishedExercises} exercises`);
+  const skipped: { kind: string; id: string; reason: string; detail?: string }[] = data.skipped;
+  if (skipped.length) parts.push(`skipped: ${skipped.length}`);
+  if (!skipped.length) return parts.length ? `Published: ${parts.join(', ')}` : null;
+  const lines = skipped.map(
+    (s) => `• ${s.kind} ${s.id} — ${s.reason}${s.detail ? `: ${s.detail}` : ''}`,
+  );
+  return `Published: ${parts.join(', ')}\n\nSkipped:\n${lines.join('\n')}`;
+}
+
+// Bulk-publishes every draft unit, cascading into their lessons and exercises.
+export function PublishAllUnitsButton() {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  return (
+    <span className="inline-flex items-center gap-2">
+      <button
+        type="button"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setError('');
+          try {
+            const res = await adminFetch('/admin/units/publish-all', {
+              method: 'POST',
+              body: '{}',
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok) throw new Error(data?.message || 'Failed');
+            const p = data?.published ?? {};
+            const parts = [`${p.units ?? 0} units`, `${p.lessons ?? 0} lessons`, `${p.exercises ?? 0} exercises`];
+            const skipped = Array.isArray(data?.skipped) ? data.skipped.length : 0;
+            alert(
+              `Published: ${parts.join(', ')}${skipped ? `\n\nSkipped: ${skipped}` : ''}`,
+            );
+            window.location.reload();
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed');
+          } finally {
+            setBusy(false);
+          }
+        }}
+        className="px-3 py-1.5 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 whitespace-nowrap"
+      >
+        {busy ? '…' : 'Publish All Units'}
+      </button>
+      {error && <span className="text-xs text-red-600">{error}</span>}
+    </span>
+  );
+}
+
+// Bulk-publishes every draft word in the dictionary.
+export function PublishAllWordsButton() {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  return (
+    <span className="inline-flex items-center gap-2">
+      <button
+        type="button"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setError('');
+          try {
+            const res = await adminFetch('/admin/words/publish-all', {
+              method: 'POST',
+              body: '{}',
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok) throw new Error(data?.message || 'Failed');
+            alert(`Published: ${data?.published ?? 0} words`);
+            window.location.reload();
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed');
+          } finally {
+            setBusy(false);
+          }
+        }}
+        className="px-3 py-1.5 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 whitespace-nowrap"
+      >
+        {busy ? '…' : 'Publish All Words'}
       </button>
       {error && <span className="text-xs text-red-600">{error}</span>}
     </span>

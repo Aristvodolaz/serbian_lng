@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CreateWordForm } from '@/components/forms/create-word-form';
 import { UploadWordsCsv } from '@/components/forms/upload-words-csv';
 import { WordsTable } from '@/components/words-table';
+import { PublishAllWordsButton } from '@/components/forms/admin-forms';
 import { AttributeLangToggle } from '@/lib/attribute-lang';
 import { WordAttributes } from '@/lib/word-attributes';
 
@@ -58,6 +59,7 @@ export default async function WordsPage({
             {words.total} total, page {words.page}/{words.totalPages}
           </span>
           <AttributeLangToggle />
+          <PublishAllWordsButton />
           <UploadWordsCsv unitId={sp.unitId} />
           <CreateWordForm />
         </div>

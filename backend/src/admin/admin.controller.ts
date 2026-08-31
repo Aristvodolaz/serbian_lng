@@ -35,8 +35,12 @@ import {
   ExerciseAdminResponseDto,
   ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
+  LessonPublishResultDto,
   ListExercisesQueryDto,
+  PublishAllResultDto,
+  PublishWordsResultDto,
   UnitAdminResponseDto,
+  UnitPublishResultDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
@@ -125,10 +129,17 @@ export class AdminController {
   }
 
   @Post('units/:id/publish')
+  @ApiOkResponse({ type: UnitPublishResultDto })
   publishUnit(
     @Param('id', ParseUUIDPipe) unitId: string,
-  ): Promise<UnitAdminResponseDto> {
+  ): Promise<UnitPublishResultDto> {
     return this.adminService.publishUnit(unitId);
+  }
+
+  @Post('units/publish-all')
+  @ApiOkResponse({ type: PublishAllResultDto })
+  publishAllUnits(): Promise<PublishAllResultDto> {
+    return this.adminService.publishAllUnits();
   }
 
   @Post('units/:id/unpublish')
@@ -186,9 +197,10 @@ export class AdminController {
   }
 
   @Post('lessons/:id/publish')
+  @ApiOkResponse({ type: LessonPublishResultDto })
   publishLesson(
     @Param('id', ParseUUIDPipe) lessonId: string,
-  ): Promise<LessonAdminResponseDto> {
+  ): Promise<LessonPublishResultDto> {
     return this.adminService.publishLesson(lessonId);
   }
 
@@ -306,6 +318,12 @@ export class AdminController {
   @Post('words/bulk')
   bulkCreateWords(@Body() dto: { words: CreateWordDto[] }): Promise<{ created: number }> {
     return this.adminService.bulkCreateWords(dto.words);
+  }
+
+  @Post('words/publish-all')
+  @ApiOkResponse({ type: PublishWordsResultDto })
+  publishAllWords(): Promise<PublishWordsResultDto> {
+    return this.adminService.publishAllWords();
   }
 
   @Get('word-attributes')

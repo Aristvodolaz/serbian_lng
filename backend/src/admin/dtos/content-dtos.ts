@@ -664,3 +664,43 @@ export class LessonCompletionDto {
   @ApiProperty() uniqueUsers: number;
   @ApiProperty() completionRate: number;
 }
+
+// ── Publish results ────────────────────────────────────────────
+
+export class PublishIssueDto {
+  @ApiProperty({ enum: ['unit', 'lesson', 'exercise', 'word'] })
+  kind: 'unit' | 'lesson' | 'exercise' | 'word';
+  @ApiProperty() id: string;
+  @ApiProperty({ enum: ['validation', 'min_exercises', 'min_lessons'] }) reason: string;
+  @ApiProperty({ required: false }) detail?: string;
+}
+
+export class LessonPublishResultDto {
+  @ApiProperty({ type: LessonAdminResponseDto }) lesson: LessonAdminResponseDto;
+  @ApiProperty() publishedExercises: number;
+  @ApiProperty({ type: [PublishIssueDto] }) skipped: PublishIssueDto[];
+}
+
+export class UnitPublishResultDto {
+  @ApiProperty({ type: UnitAdminResponseDto }) unit: UnitAdminResponseDto;
+  @ApiProperty() publishedLessons: number;
+  @ApiProperty() publishedExercises: number;
+  @ApiProperty({ type: [PublishIssueDto] }) skipped: PublishIssueDto[];
+}
+
+export class PublishAllResultDto {
+  @ApiProperty({
+    type: 'object',
+    properties: {
+      units: { type: 'number' },
+      lessons: { type: 'number' },
+      exercises: { type: 'number' },
+    },
+  })
+  published: { units: number; lessons: number; exercises: number };
+  @ApiProperty({ type: [PublishIssueDto] }) skipped: PublishIssueDto[];
+}
+
+export class PublishWordsResultDto {
+  @ApiProperty() published: number;
+}

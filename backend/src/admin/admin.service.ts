@@ -46,8 +46,13 @@ import {
   ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
   LessonCompletionDto,
+  LessonPublishResultDto,
   ListExercisesQueryDto,
+  PublishAllResultDto,
+  PublishIssueDto,
+  PublishWordsResultDto,
   UnitAdminResponseDto,
+  UnitPublishResultDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
@@ -491,24 +496,28 @@ export class AdminService {
     return this.mapExercise(exercise);
   }
 
-  async publishLesson(lessonId: string): Promise<LessonAdminResponseDto> {
+  async publishLesson(lessonId: string): Promise<LessonPublishResultDto> {
     const lesson = await this.lessonRepo.findOne({
       where: { id: lessonId },
       relations: { exercises: true },
     });
     if (!lesson) throw new NotFoundException('Lesson not found');
 
-    const publishedExercises = lesson.exercises.filter(
-      (e) => e.status === ContentStatus.PUBLISHED,
-    );
-    if (publishedExercises.length < lesson.minExercises) {
+    const skipped: PublishIssueDto[] = [];
+    const publishedExercises = await this.publishLessonExercises(lesson, skipped);
+
+    if (publishedExercises < lesson.minExercises) {
+      const skippedIds = skipped.length
+        ? ` (skipped: ${skipped.map((s) => s.id).join(', ')})`
+        : '';
       throw new BadRequestException(
-        `Lesson needs at least ${lesson.minExercises} published exercises, has ${publishedExercises.length}`,
+        `Lesson needs at least ${lesson.minExercises} published exercises, has ${publishedExercises}${skippedIds}`,
       );
     }
+
     lesson.status = ContentStatus.PUBLISHED;
     await this.lessonRepo.save(lesson);
-    return this.mapLesson(lesson);
+    return { lesson: this.mapLesson(lesson), publishedExercises, skipped };
   }
 
   async unpublishLesson(lessonId: string): Promise<LessonAdminResponseDto> {
@@ -519,20 +528,137 @@ export class AdminService {
     return this.mapLesson(lesson);
   }
 
-  async publishUnit(unitId: string): Promise<UnitAdminResponseDto> {
+  async publishUnit(unitId: string): Promise<UnitPublishResultDto> {
     const unit = await this.unitRepo.findOne({
       where: { id: unitId },
-      relations: { lessons: true },
+      relations: { lessons: { exercises: true } },
     });
     if (!unit) throw new NotFoundException('Unit not found');
 
-    const publishedLessons = unit.lessons.filter((l) => l.status === ContentStatus.PUBLISHED);
-    if (publishedLessons.length === 0) {
+    const skipped: PublishIssueDto[] = [];
+    const { publishedLessons, publishedExercises } = await this.publishUnitLessons(
+      unit.lessons,
+      skipped,
+    );
+
+    if (publishedLessons === 0) {
       throw new BadRequestException('Unit needs at least one published lesson');
     }
     unit.status = ContentStatus.PUBLISHED;
     await this.unitRepo.save(unit);
-    return this.mapUnit(unit);
+    return {
+      unit: this.mapUnitWithLessons(unit, unit.lessons),
+      publishedLessons,
+      publishedExercises,
+      skipped,
+    };
+  }
+
+  async publishAllUnits(): Promise<PublishAllResultDto> {
+    const units = await this.unitRepo.find({
+      relations: { lessons: { exercises: true } },
+      order: { order: 'ASC' },
+    });
+
+    const skipped: PublishIssueDto[] = [];
+    let publishedUnits = 0;
+    let publishedLessons = 0;
+    let publishedExercises = 0;
+
+    for (const unit of units) {
+      if (unit.status === ContentStatus.PUBLISHED) continue;
+
+      const result = await this.publishUnitLessons(unit.lessons, skipped);
+      if (result.publishedLessons === 0) {
+        skipped.push({
+          kind: 'unit',
+          id: unit.id,
+          reason: 'min_lessons',
+          detail: 'needs at least one published lesson',
+        });
+        continue;
+      }
+      unit.status = ContentStatus.PUBLISHED;
+      await this.unitRepo.save(unit);
+      publishedUnits++;
+      publishedLessons += result.publishedLessons;
+      publishedExercises += result.publishedExercises;
+    }
+
+    return {
+      published: { units: publishedUnits, lessons: publishedLessons, exercises: publishedExercises },
+      skipped,
+    };
+  }
+
+  async publishAllWords(): Promise<PublishWordsResultDto> {
+    const result = await this.wordRepo
+      .createQueryBuilder()
+      .update(Word)
+      .set({ status: ContentStatus.PUBLISHED })
+      .where('status = :status', { status: ContentStatus.DRAFT })
+      .execute();
+    return { published: result.affected ?? 0 };
+  }
+
+  /// Best-effort: publishes every valid draft exercise of a lesson, records
+  /// validation failures in `skipped`. Returns the total count now published.
+  private async publishLessonExercises(
+    lesson: Lesson,
+    skipped: PublishIssueDto[],
+  ): Promise<number> {
+    let published = 0;
+    for (const exercise of lesson.exercises) {
+      if (exercise.status === ContentStatus.PUBLISHED) {
+        published++;
+        continue;
+      }
+      const issues = validateExercisePayload(exercise.type, exercise.payload);
+      if (issues.length > 0) {
+        skipped.push({
+          kind: 'exercise',
+          id: exercise.id,
+          reason: 'validation',
+          detail: issues.map((i) => `${i.field}: ${i.message}`).join('; '),
+        });
+        continue;
+      }
+      exercise.status = ContentStatus.PUBLISHED;
+      await this.exerciseRepo.save(exercise);
+      published++;
+    }
+    return published;
+  }
+
+  /// Cascades `publishLessonExercises` into every lesson of a unit, publishing
+  /// each lesson that reaches its exercise minimum. Mutates `skipped` in place.
+  private async publishUnitLessons(
+    lessons: Lesson[],
+    skipped: PublishIssueDto[],
+  ): Promise<{ publishedLessons: number; publishedExercises: number }> {
+    let publishedLessons = 0;
+    let publishedExercises = 0;
+    for (const lesson of lessons) {
+      if (lesson.status === ContentStatus.PUBLISHED) {
+        publishedLessons++;
+        continue;
+      }
+      const lessonExercises = await this.publishLessonExercises(lesson, skipped);
+      publishedExercises += lessonExercises;
+      if (lessonExercises < lesson.minExercises) {
+        skipped.push({
+          kind: 'lesson',
+          id: lesson.id,
+          reason: 'min_exercises',
+          detail: `needs at least ${lesson.minExercises} published exercises, has ${lessonExercises}`,
+        });
+        continue;
+      }
+      lesson.status = ContentStatus.PUBLISHED;
+      await this.lessonRepo.save(lesson);
+      publishedLessons++;
+    }
+    return { publishedLessons, publishedExercises };
   }
 
   async unpublishUnit(unitId: string): Promise<UnitAdminResponseDto> {
