@@ -71,6 +71,48 @@ export function resolveExercisePayload(
  * anti-cheat `correctAnswerId` removed.
  */
 export function toPublicPayload(payload: ExercisePayload): Record<string, unknown> {
-  const { correctAnswerId: _correctAnswerId, ...rest } = payload;
+  const { correctAnswerId, ...rest } = payload;
+  if ('sentence' in payload && correctAnswerId) {
+    const sentence = payload.sentence;
+    // An author-baked blank (`____`) wins over derived blanking.
+    const alreadyBlanked =
+      (sentence.srCyr ?? '').includes(BLANK_TOKEN) ||
+      (sentence.srLat ?? '').includes(BLANK_TOKEN);
+    if (!alreadyBlanked) {
+      const correct = payload.answers.find((a) => a.id === correctAnswerId);
+      if (correct) {
+        return {
+          ...rest,
+          sentence: {
+            ...sentence,
+            srCyr: blankWord(sentence.srCyr, correct.srCyr),
+            srLat: blankWord(sentence.srLat, correct.srLat),
+            ru: blankWord(sentence.ru, correct.ru),
+            en: blankWord(sentence.en, correct.en),
+          },
+        };
+      }
+    }
+  }
   return rest as unknown as Record<string, unknown>;
+}
+
+/** The visual gap left where the missing word should go in a fill_word sentence. */
+const BLANK_TOKEN = '____';
+
+/**
+ * Replaces the first whole-word, case-insensitive occurrence of `word` in
+ * `sentence` with the blank token. Returns the sentence unchanged when the
+ * word is not found — e.g. the sentence carries an inflected form of it
+ * (`шуму` for `шума`), in which case the blank has to be authored directly
+ * into the sentence.
+ */
+function blankWord(
+  sentence: string | undefined | null,
+  word: string | undefined | null,
+): string | undefined | null {
+  if (!sentence || !word) return sentence;
+  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`(?<![\\p{L}])${escaped}(?![\\p{L}])`, 'iu');
+  return sentence.replace(re, BLANK_TOKEN);
 }
