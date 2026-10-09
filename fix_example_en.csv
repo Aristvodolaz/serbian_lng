@@ -1,0 +1,105 @@
+cyrillic,latin,translationRu,translationEn,exampleCyrillic,exampleTranslationRu,exampleTranslationEn
+име,ime,имя,name,Моје име је Марта.,Как тебя зовут?,My name is Marta.
+зовати се,zovati se,зоваться,to be called,Зовем се Ана.,Как тебя зовут?,I am called Ana.
+мој,moj,мой,my,Ово је мој стан.,Это мой дом.,This is my apartment.
+твој,tvoj,твой,your,Где је твоја књига?,Где твой брат?,Where is your book?
+ја,ja,я,I,Ја сам из Русије.,Я учу сербский.,I am from Russia.
+ти,ti,ты,you,Ти си мој пријатељ.,Ты говоришь по-сербски?,You are my friend.
+он,on,он,he,Он је висок.,Он работает в школе.,He is tall.
+она,ona,она,she,Она је млада.,Она читает книгу.,She is young.
+ми,mi,мы,we,Ми живимо у Београду.,Мы живём в Белграде.,We live in Belgrade.
+српски,srpski,сербский,Serbian,Српски је леп језик.,Сербский — красивый язык.,Serbian is a beautiful language.
+језик,jezik,язык,language,Учиш ли српски језик?,Я учу новый язык.,Are you learning Serbian?
+говорити,govoriti,говорить,to speak,Она добро говори српски.,Я хочу говорить по-сербски.,She speaks Serbian well.
+град,grad,город,city,Београд је велики град.,Белград — большой город.,Belgrade is a big city.
+земља,zemlja,страна,country,Србија је мала земља.,Сербия — красивая страна.,Serbia is a small country.
+главни,glavni,главный,main,Главни град је Београд.,Белград — главный город.,The capital is Belgrade.
+пријатељ,prijatelj,друг,,Мој пријатељ живи у Новом Саду.,Он мой друг.,My friend lives in Novi Sad.
+хвала,hvala,спасибо,thanks,Хвала на помоћи.,Спасибо за помощь.,Thanks for the help.
+живети,živeti,жить,to live,Ја живим у Београду.,Я живу в Белграде.,I live in Belgrade.
+стан,stan,квартира,apartment,Наш стан је мали.,Квартира небольшая.,Our apartment is small.
+улица,ulica,улица,street,Улица је дуга.,Улица длинная.,The street is long.
+зграда,zgrada,здание,building,Зграда има пет спратова.,Здание старое.,The building has five floors.
+радити,raditi,работать,to work,Ја радим од јутра до вечери.,Он работает в больнице.,I work from morning to evening.
+посао,posao,работа,job,Имам добар посао.,У неё хорошая работа.,I have a good job.
+школа,škola,школа,school,Школа је близу дома.,Школа рядом с домом.,The school is near home.
+ученик,učenik,ученик,school student,Он је ученик осмог разреда.,Ученик отвечает на вопрос.,He is an eighth-grade student.
+студент,student,студент,university student,Она је студентка права.,Студент читает книгу.,She is a law student.
+наставник,nastavnik,учитель,teacher,Наш наставник је млад.,Учитель пишет на доске.,Our teacher is young.
+лекар,lekar,врач,doctor,Лектор је у болници.,Врач осмотрел пациента.,The doctor is in the hospital.
+болница,bolnica,больница,hospital,Болница је далеко.,Больница в центре города.,The hospital is far away.
+инжењер,inženjer,инженер,engineer,Мој отац је инжењер.,Инженер строит мост.,My father is an engineer.
+сусед,susjed,сосед,neighbor,Наш сусед је добар човек.,Сосед пришёл в гости.,Our neighbor is a good man.
+дом,dom,дом,home,Наш дом је нов.,Дом стоит на холме.,Our home is new.
+широк,širok,широкий,wide,Река је широка.,Река широкая.,The river is wide.
+дуг,dug,долгий,long,Он има велики дуг.,Дорога длинная.,He has a big debt.
+млад,mlad,молодой,young,Млади човек је висок.,Молодой человек читает.,The young man is tall.
+стар,star,старый,old,Стар човек спава.,Старый человек сидит на скамье.,The old man is sleeping.
+висок,visok,высокий,tall,Она је висока.,Дерево высокое.,She is tall.
+низак,nizak,низкий,short,Он је низак.,Столик низкий.,He is short.
+добар,dobar,хороший,good,Ово је добар дан.,Он хороший человек.,This is a good day.
+лош,loš,плохой,bad,Ово је лош дан.,Погода плохая.,This is a bad day.
+нов,nov,новый,new,Нов ауто је скуп.,Новый дом красивый.,A new car is expensive.
+велики,veliki,большой,big,Велики град има много људи.,Большой город шумный.,A big city has many people.
+мали,mali,маленький,small,Мали стан је јефтин.,Маленький ребёнок спит.,A small apartment is cheap.
+леп,lep,красивый,beautiful,Леп дан за шетњу.,Красивый закат.,A beautiful day for a walk.
+човек,čovek,человек,person,Он је добар човек.,Человек идёт по улице.,He is a good man.
+дан,dan,день,day,Овај дан је слободан.,Сегодня хороший день.,This day is a day off.
+боја,boja,цвет,color,Плава је моја омилјена боја.,Какой твой любимый цвет?,Blue is my favorite color.
+црвен,crven,красный,red,Црвена боја ми се свиђа.,Красный цвет — мой любимый.,I like the color red.
+плав,plav,синий,blue,Плаво небо је лепо.,Небо синее.,The blue sky is beautiful.
+зелен,zelen,зелёный,green,Зелено воће је кисело.,Трава зелёная.,Green fruit is sour.
+тешко,teško,трудно,difficult,Ово је тешко питање.,Экзамен был трудным.,This is a difficult question.
+понедељак,ponedeljak,понедельник,Monday,Данас је понедељак.,Понедельник — первый день.,Today is Monday.
+уторак,utorak,вторник,Tuesday,Сутра је уторак.,Во вторник у меня встреча.,Tomorrow is Tuesday.
+среда,sreda,среда,Wednesday,Среда је мој омиљени дан.,В среду я иду в школу.,Wednesday is my favorite day.
+четвртак,četvrtak,четверг,Thursday,Четвртак је дан за куповину.,В четверг мы едем в гости.,Thursday is a day for shopping.
+петак,petak,пятница,Friday,Петак је крај недели.,Пятница — последний рабочий день.,Friday is the end of the week.
+субота,subota,суббота,Saturday,Субота је слободан дан.,В субботу я отдыхаю.,Saturday is a day off.
+недеља,nedelja,воскресенье,Sunday,Недеља је слободан дан.,В воскресенье я сплю допоздна.,Sunday is a day off.
+јутро,jutro,утро,morning,Јутро је хладно.,Утро — лучшее время.,The morning is cold.
+подне,podne,полдень,noon,Сад је подне.,В полдень жарко.,It's noon now.
+попладне,popodne,день,afternoon,У попладне идем у парк.,Днём мы гуляли в парке.,In the afternoon I'm going to the park.
+сат,sat,час,,Сат је на зиду.,Сколько часов?,The clock is on the wall.
+минута,minuta,минута,minute,Чекajте пет минута.,Подожди одну минуту.,Wait five minutes.
+данас,danas,сегодня,,Данас је леп дан.,Сегодня хороший день.,Today is a beautiful day.
+сутра,sutra,завтра,,Сутра идем на посао.,Завтра мы поедем в Белград.,Tomorrow I'm going to work.
+јуче,juče,вчера,yesterday,Јуче је био петак.,Вчера я был в школе.,Yesterday was Friday.
+месец,mesec,месяц,month,Овај месец је март.,Месяц пролетел быстро.,This month is March.
+годинa,godina,год,year,Она има двадесет година.,Год длится двенадцать месяцев.,She is twenty years old.
+увек,uvek,всегда,always,Ја увек пијem кафу.,Я всегда учу слова.,I always drink coffee.
+понекад,ponekad,иногда,sometimes,Понекад читам књигу.,Иногда я хожу в кино.,Sometimes I read a book.
+нула,nula,ноль,zero,Вани је нула степени.,Ноль градусов по Цельсию.,It's zero degrees outside.
+два,dva,два,,Два сата су дуги.,Два стула стоят у стола.,Two hours is a long time.
+четири,cetiri,четыре,four,Четири дана до викенда.,Четыре сезона в году.,Four days until the weekend.
+пет,pet,пять,,"Пет минута, молим.",Пять минут — это мало.,"Five minutes, please."
+шест,šest,шесть,,Шест сати ујутру.,Шесть книг на полке.,It's six in the morning.
+седам,sedam,семь,seven,Седам ујутру је рано.,Семь дней в неделе.,Seven in the morning is early.
+осам,osam,восемь,eight,Осам сати ујутру идем на посао.,Восемь часов — время подъёма.,I go to work at eight in the morning.
+девет,devet,девять,nine,У девет идем у кинo.,Девять месяцев — это долго.,At nine I'm going to the cinema.
+десет,deset,десять,,Десет минута чекања.,Десять учеников в классе.,Ten minutes of waiting.
+будити се,buditi se,просыпаться,to wake up,Будим се у седам.,Я просыпаюсь рано.,I wake up at seven.
+рано,rano,рано,early,Устајем рано.,Рано утром я пью кофе.,I get up early.
+касно,kasno,поздно,late,Она је дошла касно.,Я лёг поздно.,She came late.
+брзо,brzo,быстро,fast,Он говори брзо.,Он бежит быстро.,He speaks fast.
+споро,sporo,медленно,slowly,Воз иде споро.,Черепашка движется медленно.,The train is going slowly.
+ноћас,noćas,сегодня ночью,tonight,Ноћас је хладно.,Сегодня ночью будет дождь.,It's cold tonight.
+време,vreme,время; погода,time; weather,Време је лепo.,Какое сегодня время?,The weather is beautiful.
+сада,sada,сейчас,now,Сад сам слободан.,Сейчас я учу сербский.,I'm free now.
+јануар,januar,январь,January,Јануар је хладан.,Январь — первый месяц.,January is cold.
+фебруар,februar,февраль,February,У фебруару је хладно.,Февраль — самый короткий месяц.,It's cold in February.
+март,mart,март,March,Март је први проleћни месец.,В марте начинается весна.,March is the first month of spring.
+април,april,апрель,April,Април је леп месец.,Апрель — тёплый месяц.,April is a beautiful month.
+мај,maj,май,May,У мају је топло.,В мае всё цветёт.,It's warm in May.
+јун,jun,июнь,June,У јуну је вруће.,Июнь — начало лета.,It's hot in June.
+јул,jul,июль,July,Јул је најтоплији месец.,Июль — жаркий месяц.,July is the hottest month.
+август,avgust,август,August,Август је месец одмора.,В августе мы отдыхаем.,August is the month of rest.
+септембар,septembar,сентябрь,September,У септембру почиње школа.,В сентябре начинается школа.,School starts in September.
+октобар,oktobar,октябрь,October,У октобру је хладно.,Октябрь — золотая осень.,It's cold in October.
+новембар,novembar,ноябрь,November,Новембар је хладан.,Ноябрь — холодный месяц.,November is cold.
+децембар,decembar,декабрь,December,У децембру је мој рођендан.,Декабрь — праздничный месяц.,My birthday is in December.
+рођендан,rođendan,день рождения,birthday,Мој рођендан је у мају.,День рождения — весёлый праздник.,My birthday is in May.
+зима,zima,зима,winter,Зима је хладна.,Зима — холодное время года.,Winter is cold.
+лето,leto,лето,summer,Лето је топло.,Лето — время отпусков.,Summer is warm.
+проleће,proleće,весна,spring,Проleће је лепo.,Весна — время цветов.,Spring is beautiful.
+јесен,jesen,осень,autumn,Јесен је хладна.,Осень — листья желтеют.,Autumn is cold.

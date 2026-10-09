@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mock-backend",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/tmp/claude/rece-mock.js"],
+      "port": 3000
+    },
+    {
+      "name": "admin-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/zgonnikova.a/Desktop/serbian_lng/admin", "run", "dev", "--", "-p", "3002"],
+      "port": 3002
+    },
+    {
+      "name": "mock-verify",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/tmp/claude/rece-mock.js", "3100"],
+      "port": 3100
+    },
+    {
+      "name": "admin-verify",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/zgonnikova.a/Desktop/serbian_lng/admin", "run", "dev", "--", "-p", "3102"],
+      "port": 3102
+    }
+  ]
+}

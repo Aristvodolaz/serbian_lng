@@ -1,0 +1,101 @@
+cyrillic,latin,translationRu,translationEn,partOfSpeech,gender,number,declension,conjugation,exampleCyrillic,exampleTranslationRu,exampleTranslationEn
+одмах,odmah,сразу,right away,adverb,,,,,Одмах ћу доћи.,Я сейчас приду.,I will come right away.
+касније,kasnije,позже,later,adverb,,,,,Видимо се касније.,Увидимся позже.,See you later.
+раније,ranije,раньше,earlier,adverb,,,,,Раније сам овде живео.,Раньше я жил здесь.,I used to live here earlier.
+ускоро,uskoro,скоро,soon,adverb,,,,,Ускоро ћемо путовати.,Скоро мы поедем путешествовать.,We will travel soon.
+прекосутра,prekosutra,послезавтра,the day after tomorrow,adverb,,,,,Прекосутра је мој рођендан.,Послезавтра мой день рождения.,My birthday is the day after tomorrow.
+прекјуче,prekjuče,позавчера,the day before yesterday,adverb,,,,,Прекјуче је падала киша.,Позавчера шёл дождь.,It rained the day before yesterday.
+увече,uveče,вечером,in the evening,adverb,,,,,Увече гледамо филм.,Вечером мы смотрим фильм.,We watch a film in the evening.
+ујутру,ujutru,утром,in the morning,adverb,,,,,Ујутру пијем кафу.,Утром я пью кофе.,I drink coffee in the morning.
+ноћу,noću,ночью,at night,adverb,,,,,Ноћу је тихо у граду.,Ночью в городе тихо.,The city is quiet at night.
+јутрос,jutros,сегодня утром,this morning,adverb,,,,,Јутрос сам спавао дуго.,Сегодня утром я долго спал.,I slept long this morning.
+вечерас,večeras,сегодня вечером,this evening,adverb,,,,,Вечерас идемо у биоскоп.,Сегодня вечером мы идём в кино.,We are going to the cinema this evening.
+тада,tada,тогда,then,adverb,,,,,Тада сам био мали.,Тогда я был маленьким.,I was small then.
+стално,stalno,постоянно,constantly,adverb,,,,,Он стално прича.,Он постоянно говорит.,He talks constantly.
+недавно,nedavno,недавно,recently,adverb,,,,,Недавно сам купио стан.,Недавно я купил квартиру.,I recently bought an apartment.
+управо,upravo,только что,just now,adverb,,,,,Управо сам стигао.,Я только что приехал.,I have just arrived.
+дуго,dugo,долго,a long time,adverb,,,,,Чекали смо дуго.,Мы долго ждали.,We waited a long time.
+кратко,kratko,кратко,briefly,adverb,,,,,Причај кратко и јасно.,Говори кратко и ясно.,Speak briefly and clearly.
+тренутно,trenutno,сейчас,currently,adverb,,,,,Тренутно радим у банци.,Сейчас я работаю в банке.,I currently work at a bank.
+горе,gore,наверху,upstairs,adverb,,,,,Кључ је горе на столу.,Ключ наверху на столе.,The key is up on the table.
+доле,dole,внизу,downstairs,adverb,,,,,Ауто је доле испред зграде.,Машина внизу перед зданием.,The car is down in front of the building.
+лево,levo,слева,on the left,adverb,,,,,Скрени лево на углу.,Поверни налево на углу.,Turn left at the corner.
+десно,desno,справа,on the right,adverb,,,,,Пошта је десно од парка.,Почта справа от парка.,The post office is to the right of the park.
+близу,blizu,близко,near,adverb,,,,,Школа је близу куће.,Школа близко от дома.,The school is near my house.
+далеко,daleko,далеко,far,adverb,,,,,Аеродром је далеко од града.,Аэропорт далеко от города.,The airport is far from the city.
+напољу,napolju,снаружи,outside,adverb,,,,,Деца се играју напољу.,Дети играют на улице.,The children are playing outside.
+унутра,unutra,внутри,inside,adverb,,,,,Уђи унутра и биће ти топло.,Зайди внутрь и тебе будет тепло.,Come inside and you will be warm.
+свуда,svuda,везде,everywhere,adverb,,,,,Свуда је било снега.,Везде был снег.,There was snow everywhere.
+нигде,nigde,нигде,nowhere,adverb,,,,,Нигде не могу да га нађем.,Нигде не могу его найти.,I cannot find it anywhere.
+негде,negde,где-то,somewhere,adverb,,,,,Негде сам изгубио кључеве.,Где-то я потерял ключи.,I lost my keys somewhere.
+куда,kuda,куда,where to,adverb,,,,,Куда идеш овог лета?,Куда ты едешь этим летом?,Where are you going this summer?
+ту,tu,туда,right there,adverb,,,,,Стави књигу ту.,Положи книгу туда.,Put the book right there.
+овамо,ovamo,сюда,this way,adverb,,,,,Дођи овамо и седи.,Иди сюда и сядь.,Come here and sit.
+онамо,onamo,туда,over there,adverb,,,,,Онамо је стари мост.,Там старый мост.,The old bridge is over there.
+споља,spolja,снаружи,from outside,adverb,,,,,Споља је кућа плава.,Снаружи дом синий.,The house is blue on the outside.
+изнутра,iznutra,изнутри,from inside,adverb,,,,,Изнутра је кућа топла.,Внутри дом тёплый.,The house is warm inside.
+одозго,odozgo,сверху,from above,adverb,,,,,Гледамо град одозго.,Мы смотрим на город сверху.,We look at the city from above.
+одоздо,odozdo,снизу,from below,adverb,,,,,Зграда је лепа одоздо.,Здание красиво снизу.,The building looks nice from below.
+напред,napred,вперёд,forward,adverb,,,,,Иди напред два корака.,Иди вперёд два шага.,Step forward two steps.
+назад,nazad,назад,back,adverb,,,,,Врати се назад до куће.,Вернись назад до дома.,Come back to the house.
+дома,doma,домой,home,adverb,,,,,Идем дома после посла.,Иду домой после работы.,I am going home after work.
+овуда,ovuda,этой дорогой,this way,adverb,,,,,Овуда пролази аутобус.,Здесь ходит автобус.,The bus passes this way.
+напоље,napolje,наружу,outwards,adverb,,,,,Изађи напоље на ваздух.,Выйди на улицу подышать.,Go outside for some air.
+лоше,loše,плохо,badly,adverb,,,,,Он лоше вози аутомобил.,Он плохо водит машину.,He drives badly.
+полако,polako,медленно,slowly,adverb,,,,,Говори полако јер те не разумем.,Говори медленно потому что я тебя не понимаю.,Speak slowly because I do not understand you.
+лако,lako,легко,easily,adverb,,,,,Овај задатак је лако решити.,Эту задачу легко решить.,This task is easy to solve.
+гласно,glasno,громко,loudly,adverb,,,,,Немој тако гласно причати.,Не говори так громко.,Do not speak so loudly.
+тихо,tiho,тихо,quietly,adverb,,,,,Говори тихо у библиотеци.,Говори тихо в библиотеке.,Speak quietly in the library.
+лепо,lepo,красиво,nicely,adverb,,,,,Она лепо пева.,Она красиво поёт.,She sings beautifully.
+пажљиво,pažljivo,внимательно,carefully,adverb,,,,,Слушај пажљиво упутство.,Внимательно слушай инструкцию.,Listen to the instructions carefully.
+јасно,jasno,ясно,clearly,adverb,,,,,Објасни јасно своје питање.,Объясни ясно свой вопрос.,Explain your question clearly.
+тачно,tačno,точно,exactly,adverb,,,,,Он је тачно одговорио на питање.,Он точно ответил на вопрос.,He answered the question correctly.
+погрешно,pogrešno,неправильно,wrongly,adverb,,,,,Погрешно си разумео реченицу.,Ты неправильно понял предложение.,You understood the sentence wrongly.
+заједно,zajedno,вместе,together,adverb,,,,,Учимо српски заједно.,Мы учим сербский вместе.,We study Serbian together.
+мирно,mirno,спокойно,calmly,adverb,,,,,Седи мирно и слушај.,Сиди спокойно и слушай.,Sit still and listen.
+изненада,iznenada,внезапно,suddenly,adverb,,,,,Изненада је почела киша.,Внезапно начался дождь.,Suddenly it started to rain.
+озбиљно,ozbiljno,серьёзно,seriously,adverb,,,,,Прими овај посао озбиљно.,Отнесись к этой работе серьёзно.,Take this job seriously.
+весело,veselo,весело,cheerfully,adverb,,,,,Деца се весело смеју.,Дети весело смеются.,The children laugh cheerfully.
+љубазно,ljubazno,вежливо,kindly,adverb,,,,,Питај љубазно за помоћ.,Вежливо попроси о помощи.,Ask for help kindly.
+стрпљиво,strpljivo,терпеливо,patiently,adverb,,,,,Чекај стрпљиво свој ред.,Терпеливо жди своей очереди.,Wait patiently for your turn.
+уредно,uredno,аккуратно,neatly,adverb,,,,,Пиши уредно у свесци.,Пиши аккуратно в тетради.,Write neatly in the notebook.
+срећно,srećno,счастливо,happily,adverb,,,,,Живео је срећно до краја.,Он жил счастливо до конца.,He lived happily to the end.
+слободно,slobodno,свободно,freely,adverb,,,,,Питај слободно кад нешто не знаш.,Спрашивай смело когда чего-то не знаешь.,Feel free to ask when you do not know something.
+једноставно,jednostavno,просто,simply,adverb,,,,,Реци ми једноставно истину.,Скажи мне просто правду.,Just tell me the truth simply.
+коначно,konačno,наконец,finally,adverb,,,,,Коначно смо стигли кући.,Наконец мы добрались домой.,We finally arrived home.
+веома,veoma,очень,very,adverb,,,,,Филм је веома занимљив.,Фильм очень интересный.,The film is very interesting.
+врло,vrlo,очень,very,adverb,,,,,Врло је хладно напољу.,Очень холодно на улице.,It is very cold outside.
+мало,malo,немного,a little,adverb,,,,,Чекај мало овде.,Подожди немного здесь.,Wait a little here.
+сасвим,sasvim,совсем,completely,adverb,,,,,Сасвим сам заборавио твоје име.,Я совсем забыл твоё имя.,I completely forgot your name.
+скоро,skoro,почти,almost,adverb,,,,,Скоро смо стигли до града.,Мы почти добрались до города.,We almost reached the city.
+довољно,dovoljno,достаточно,enough,adverb,,,,,Имамо довољно времена за кафу.,У нас достаточно времени на кофе.,We have enough time for coffee.
+превише,previše,слишком,too much,adverb,,,,,Ова торба је превише тешка.,Эта сумка слишком тяжёлая.,This bag is too heavy.
+јако,jako,очень,really,adverb,,,,,Јако ми се свиђа ова песма.,Мне очень нравится эта песня.,I really like this song.
+потпуно,potpuno,полностью,completely,adverb,,,,,Потпуно се слажем са тобом.,Я полностью согласен с тобой.,I completely agree with you.
+толико,toliko,так,so much,adverb,,,,,Нисам толико уморан данас.,Я не так устал сегодня.,I am not so tired today.
+углавном,uglavnom,в основном,mostly,adverb,,,,,Углавном пијем чај ујутру.,В основном утром я пью чай.,I mostly drink tea in the morning.
+наравно,naravno,конечно,of course,adverb,,,,,Наравно да ћу доћи.,Конечно я приду.,Of course I will come.
+сигурно,sigurno,наверняка,surely,adverb,,,,,Сигурно ће доћи на време.,Он наверняка придёт вовремя.,He will surely come on time.
+можда,možda,может быть,maybe,adverb,,,,,Можда ће сутра бити сунчано.,Может быть завтра будет солнечно.,Maybe tomorrow will be sunny.
+вероватно,verovatno,вероятно,probably,adverb,,,,,Вероватно је већ код куће.,Вероятно он уже дома.,He is probably already home.
+стварно,stvarno,действительно,really,adverb,,,,,Стварно си добар пријатељ.,Ты действительно хороший друг.,You are really a good friend.
+заиста,zaista,поистине,truly,adverb,,,,,Заиста је леп дан за шетњу.,Действительно прекрасный день для прогулки.,It is truly a nice day for a walk.
+свакако,svakako,обязательно,certainly,adverb,,,,,Свакако ћемо се видети сутра.,Обязательно увидимся завтра.,We will certainly meet tomorrow.
+дефинитивно,definitivno,определённо,definitely,adverb,,,,,Овај план је дефинитивно добар.,Этот план определённо хорош.,This plan is definitely good.
+ипак,ipak,всё же,nevertheless,adverb,,,,,Ипак сам дошао на састанак.,Всё же я пришёл на встречу.,I came to the meeting after all.
+обично,obično,обычно,usually,adverb,,,,,Обично устајем у седам.,Обычно я встаю в семь.,I usually get up at seven.
+ретко,retko,редко,rarely,adverb,,,,,Ретко гледам телевизију.,Я редко смотрю телевизор.,I rarely watch TV.
+прво,prvo,сначала,first,adverb,,,,,Прво идемо у продавницу.,Сначала мы идём в магазин.,First we go to the store.
+затим,zatim,затем,then,adverb,,,,,Затим ћемо попити кафу.,Затем мы выпьем кофе.,Then we will drink coffee.
+онда,onda,потом,then,adverb,,,,,Онда ћу ти све објаснити.,Тогда я тебе всё объясню.,Then I will explain everything to you.
+најзад,najzad,наконец,at last,adverb,,,,,Најзад смо завршили посао.,Наконец мы закончили работу.,We finished the work at last.
+поново,ponovo,снова,again,adverb,,,,,Морам поново прочитати текст.,Я должен перечитать текст.,I have to read the text again.
+потом,potom,потом,afterwards,adverb,,,,,Потом смо отишли кући.,Потом мы пошли домой.,Afterwards we went home.
+редовно,redovno,регулярно,regularly,adverb,,,,,Вежбај редовно сваког јутра.,Занимайся регулярно каждое утро.,Exercise regularly every morning.
+зашто,zašto,почему,why,adverb,,,,,Зашто си данас тужан?,Почему ты сегодня грустный?,Why are you sad today?
+како,kako,как,how,adverb,,,,,Како си дошао до куће?,Как ты добрался до дома?,How did you get home?
+колико,koliko,сколько,how much,adverb,,,,,Колико кошта ова торба?,Сколько стоит эта сумка?,How much does this bag cost?
+где,gde,где,where,adverb,,,,,Где је најближа апотека?,Где ближайшая аптека?,Where is the nearest pharmacy?
+када,kada,когда,when,adverb,,,,,Када почиње час српског?,Когда начинается урок сербского?,When does the Serbian lesson start?
+откуд,otkud,откуда,from where,adverb,,,,,Откуд ти ова идеја?,Откуда у тебя эта идея?,Where did you get this idea?
+докле,dokle,до каких пор,how long,adverb,,,,,Докле ћеш остати у Београду?,До каких пор ты останешься в Белграде?,How long will you stay in Belgrade?

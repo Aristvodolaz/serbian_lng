@@ -1,0 +1,101 @@
+cyrillic,latin,translationRu,translationEn,partOfSpeech,gender,number,declension,conjugation,exampleCyrillic,exampleTranslationRu,exampleTranslationEn
+лак,lak,лёгкий,easy,adjective,m,singular,,,Овај тест је лак.,Этот тест лёгкий.,This test is easy.
+кратак,kratak,короткий,short,adjective,m,singular,,,Филм је кратак.,Фильм короткий.,The film is short.
+дебео,debeo,толстый,fat; thick,adjective,m,singular,,,Ова књига је дебела.,Эта книга толстая.,This book is thick.
+мршав,mršav,худой,thin,adjective,m,singular,,,Мој брат је мршав.,Мой брат худой.,My brother is thin.
+спор,spor,медленный,slow,adjective,m,singular,,,Овај воз је спор.,Этот поезд медленный.,This train is slow.
+ружан,ružan,некрасивый,ugly,adjective,m,singular,,,Ова зграда је ружна.,Это здание некрасивое.,This building is ugly.
+тужан,tužan,грустный,sad,adjective,m,singular,,,Он је тужан данас.,Он грустный сегодня.,He is sad today.
+сиромашан,siromašan,бедный,poor,adjective,m,singular,,,Та породица је сиромашна.,Та семья бедная.,That family is poor.
+болестан,bolestan,больной,sick,adjective,m,singular,,,Моја мама је болесна.,Моя мама больна.,My mom is sick.
+уморан,umoran,усталый,tired,adjective,m,singular,,,Вечерас сам уморан.,Сегодня вечером я устал.,I am tired tonight.
+одморан,odmoran,отдохнувший,rested,adjective,m,singular,,,Јутрос сам одморан.,Сегодня утром я отдохнувший.,I am rested this morning.
+диван,divan,чудесный,wonderful,adjective,m,singular,,,Ово је диван дан.,Это чудесный день.,This is a wonderful day.
+занимљив,zanimljiv,интересный,interesting,adjective,m,singular,,,Та књига је занимљива.,Та книга интересная.,That book is interesting.
+досадан,dosadan,скучный,boring,adjective,m,singular,,,Овај филм је досадан.,Этот фильм скучный.,This film is boring.
+смешан,smešan,смешной,funny,adjective,m,singular,,,Ова прича је смешна.,Эта история смешная.,This story is funny.
+озбиљан,ozbiljan,серьёзный,serious,adjective,m,singular,,,Он је озбиљан човек.,Он серьёзный человек.,He is a serious man.
+чудан,čudan,странный,strange,adjective,m,singular,,,То је чудно.,Это странно.,That is strange.
+црн,crn,чёрный,black,adjective,m,singular,,,Имам црну торбу.,У меня чёрная сумка.,I have a black bag.
+бео,beo,белый,white,adjective,m,singular,,,Она носи белу хаљину.,Она носит белое платье.,She wears a white dress.
+жут,žut,жёлтый,yellow,adjective,m,singular,,,Ово је жути аутобус.,Это жёлтый автобус.,This is a yellow bus.
+браон,braon,коричневый,brown,adjective,m,singular,,,Имам браон пса.,У меня коричневая собака.,I have a brown dog.
+сив,siv,серый,gray,adjective,m,singular,,,Небо је сиво.,Небо серое.,The sky is gray.
+љубичаст,ljubičast,фиолетовый,purple,adjective,m,singular,,,Ово је љубичасти цвет.,Это фиолетовый цветок.,This is a purple flower.
+наранџаст,narandžast,оранжевый,orange,adjective,m,singular,,,Она пије наранџасти сок.,Она пьёт апельсиновый сок.,She drinks orange juice.
+розе,roze,розовый,pink,adjective,m,singular,,,Ово је розе хаљина.,Это розовое платье.,This is a pink dress.
+златан,zlatan,золотой,golden,adjective,m,singular,,,Носи златни сат.,Он носит золотые часы.,He wears a golden watch.
+сребрн,srebrn,серебряный,silver,adjective,m,singular,,,То је сребрна кашика.,Это серебряная ложка.,That is a silver spoon.
+мек,mek,мягкий,soft,adjective,m,singular,,,Овај хлеб је мек.,Этот хлеб мягкий.,This bread is soft.
+тврд,tvrd,твёрдый,hard,adjective,m,singular,,,Овај кревет је тврд.,Эта кровать жёсткая.,This bed is hard.
+свеж,svež,свежий,fresh,adjective,m,singular,,,Воће је свеже.,Фрукты свежие.,The fruit is fresh.
+сладак,sladak,сладкий,sweet,adjective,m,singular,,,Ова торта је слатка.,Этот торт сладкий.,This cake is sweet.
+слан,slan,солёный,salty,adjective,m,singular,,,Ова супа је слана.,Этот суп солёный.,This soup is salty.
+кисео,kiseo,кислый,sour,adjective,m,singular,,,Ови лимуни су кисели.,Эти лимоны кислые.,These lemons are sour.
+горак,gorak,горький,bitter,adjective,m,singular,,,Ова кафа је горка.,Этот кофе горький.,This coffee is bitter.
+љут,ljut,острый (о еде),spicy,adjective,m,singular,,,Овај сос је љут.,Этот соус острый.,This sauce is spicy.
+згодан,zgodan,симпатичный,handsome,adjective,m,singular,,,Он је згодан момак.,Он симпатичный парень.,He is a handsome guy.
+глуп,glup,глупый,stupid,adjective,m,singular,,,То је глупо питање.,Это глупый вопрос.,That is a stupid question.
+љубазан,ljubazan,вежливый,kind,adjective,m,singular,,,Продавац је љубазан.,Продавец вежливый.,The seller is kind.
+стрпљив,strpljiv,терпеливый,patient,adjective,m,singular,,,Мој учитељ је стрпљив.,Мой учитель терпеливый.,My teacher is patient.
+нервозан,nervozan,нервный,nervous,adjective,m,singular,,,Он је нервозан данас.,Он нервничает сегодня.,He is nervous today.
+срамежљив,sramežljiv,застенчивый,shy,adjective,m,singular,,,Моја сестра је срамежљива.,Моя сестра застенчивая.,My sister is shy.
+дружељубив,druželjubiv,общительный,sociable,adjective,m,singular,,,Он је веома дружељубив.,Он очень общительный.,He is very sociable.
+весео,veseo,весёлый,cheerful,adjective,m,singular,,,Деца су весела.,Дети весёлые.,The children are cheerful.
+миран,miran,спокойный,calm,adjective,m,singular,,,Море је мирно.,Море спокойное.,The sea is calm.
+храбар,hrabar,храбрый,brave,adjective,m,singular,,,Он је храбар војник.,Он храбрый солдат.,He is a brave soldier.
+вредан,vredan,трудолюбивый,hardworking,adjective,m,singular,,,Моја сестра је вредна.,Моя сестра трудолюбивая.,My sister is hardworking.
+лењ,lenj,ленивый,lazy,adjective,m,singular,,,Мачка је лења.,Кошка ленивая.,The cat is lazy.
+поштен,pošten,честный,honest,adjective,m,singular,,,Он је поштен човек.,Он честный человек.,He is an honest man.
+искрен,iskren,искренний,sincere,adjective,m,singular,,,Твој одговор је искрен.,Твой ответ искренний.,Your answer is sincere.
+тачан,tačan,точный,punctual,adjective,m,singular,,,Аутобус је тачан.,Автобус пунктуальный.,The bus is punctual.
+руски,ruski,русский,Russian,adjective,m,singular,,,Он учи руски језик.,Он учит русский язык.,He studies the Russian language.
+енглески,engleski,английский,English,adjective,m,singular,,,Она говори енглески.,Она говорит по-английски.,She speaks English.
+немачки,nemački,немецкий,German,adjective,m,singular,,,То је немачки ауто.,Это немецкая машина.,That is a German car.
+француски,francuski,французский,French,adjective,m,singular,,,Волим француску кухињу.,Я люблю французскую кухню.,I love French cuisine.
+италијански,italijanski,итальянский,Italian,adjective,m,singular,,,Ово је италијански филм.,Это итальянский фильм.,This is an Italian film.
+шпански,španski,испанский,Spanish,adjective,m,singular,,,Она учи шпански.,Она учит испанский.,She studies Spanish.
+грчки,grčki,греческий,Greek,adjective,m,singular,,,Ово је грчки ресторан.,Это греческий ресторан.,This is a Greek restaurant.
+кинески,kineski,китайский,Chinese,adjective,m,singular,,,Ово је кинески чај.,Это китайский чай.,This is Chinese tea.
+амерички,američki,американский,American,adjective,m,singular,,,Он је амерички глумац.,Он американский актёр.,He is an American actor.
+јапански,japanski,японский,Japanese,adjective,m,singular,,,То је јапански аутомобил.,Это японский автомобиль.,That is a Japanese car.
+сунчан,sunčan,солнечный,sunny,adjective,m,singular,,,Данас је сунчан дан.,Сегодня солнечный день.,Today is a sunny day.
+облачан,oblačan,облачный,cloudy,adjective,m,singular,,,Јутро је облачно.,Утро облачное.,The morning is cloudy.
+кишовит,kišovit,дождливый,rainy,adjective,m,singular,,,Овај месец је кишовит.,Этот месяц дождливый.,This month is rainy.
+ветровит,vetrovit,ветреный,windy,adjective,m,singular,,,Овај град је ветровит.,Этот город ветреный.,This city is windy.
+снежан,snežan,снежный,snowy,adjective,m,singular,,,Ово је снежна зима.,Это снежная зима.,This is a snowy winter.
+светао,svetao,светлый,bright,adjective,m,singular,,,Соба је светла.,Комната светлая.,The room is bright.
+таман,taman,тёмный,dark,adjective,m,singular,,,Соба је тамна.,Комната тёмная.,The room is dark.
+магловит,maglovit,туманный,foggy,adjective,m,singular,,,Јутро је магловито.,Утро туманное.,The morning is foggy.
+први,prvi,первый,first,adjective,m,singular,,,Ово је мој први дан.,Это мой первый день.,This is my first day.
+последњи,poslednji,последний,last,adjective,m,singular,,,То је последњи аутобус.,Это последний автобус.,That is the last bus.
+следећи,sledeći,следующий,next,adjective,m,singular,,,Следећа станица је моја.,Следующая остановка моя.,The next stop is mine.
+исти,isti,тот же самый,same,adjective,m,singular,,,Ми смо из истог града.,Мы из одного города.,We are from the same city.
+други,drugi,второй,second,adjective,m,singular,,,Ово је други спрат.,Это второй этаж.,This is the second floor.
+самосталан,samostalan,самостоятельный,independent,adjective,m,singular,,,Она је самостална девојка.,Она самостоятельная девушка.,She is an independent girl.
+слободан,slobodan,свободный,free,adjective,m,singular,,,Вечерас сам слободан.,Сегодня вечером я свободен.,I am free tonight.
+заузет,zauzet,занятый,busy,adjective,m,singular,,,Он је јако заузет.,Он очень занят.,He is very busy.
+заједнички,zajednički,общий,common,adjective,m,singular,,,Имамо заједничке пријатеље.,У нас общие друзья.,We have common friends.
+цео,ceo,целый,whole,adjective,m,singular,,,Читао сам цео дан.,Я читал весь день.,I read the whole day.
+претходни,prethodni,предыдущий,previous,adjective,m,singular,,,Ово је претходна станица.,Это предыдущая остановка.,This is the previous stop.
+будући,budući,будущий,future,adjective,m,singular,,,То је будући план.,Это будущий план.,That is a future plan.
+довољан,dovoljan,достаточный,enough,adjective,m,singular,,,Немам довољно новца.,У меня недостаточно денег.,I don't have enough money.
+потребан,potreban,нужный,necessary,adjective,m,singular,,,Потребна ми је помоћ.,Мне нужна помощь.,I need help.
+важан,važan,важный,important,adjective,m,singular,,,Ово је важан састанак.,Это важная встреча.,This is an important meeting.
+користан,koristan,полезный,useful,adjective,m,singular,,,Ова апликација је корисна.,Это приложение полезное.,This app is useful.
+удобан,udoban,удобный,comfortable,adjective,m,singular,,,Ова столица је удобна.,Этот стул удобный.,This chair is comfortable.
+модеран,moderan,современный,modern,adjective,m,singular,,,То је модеран град.,Это современный город.,That is a modern city.
+практичан,praktičan,практичный,practical,adjective,m,singular,,,Ова торба је практична.,Эта сумка практичная.,This bag is practical.
+жедан,žedan,испытывающий жажду,thirsty,adjective,m,singular,,,Ја сам жедан.,Я хочу пить.,I am thirsty.
+сит,sit,сытый,full,adjective,m,singular,,,Ја сам сит.,Я сыт.,I am full.
+округао,okrugao,круглый,round,adjective,m,singular,,,Сто је округао.,Стол круглый.,The table is round.
+чврст,čvrst,прочный,firm,adjective,m,singular,,,Овај сто је чврст.,Этот стол прочный.,This table is firm.
+нежан,nežan,нежный,gentle,adjective,m,singular,,,Она је нежна мајка.,Она нежная мать.,She is a gentle mother.
+задовољан,zadovoljan,довольный,satisfied,adjective,m,singular,,,Ја сам задовољан послом.,Я доволен работой.,I am satisfied with my work.
+пажљив,pažljiv,внимательный,attentive,adjective,m,singular,,,Он је пажљив возач.,Он внимательный водитель.,He is an attentive driver.
+опасан,opasan,опасный,dangerous,adjective,m,singular,,,Ова улица је опасна.,Эта улица опасная.,This street is dangerous.
+пријатан,prijatan,приятный,pleasant,adjective,m,singular,,,Вече је пријатно.,Вечер приятный.,The evening is pleasant.
+јасан,jasan,ясный,clear,adjective,m,singular,,,Одговор је јасан.,Ответ ясный.,The answer is clear.
+далек,dalek,далёкий,far,adjective,m,singular,,,Мој град је далек.,Мой город далеко.,My city is far away.
+близак,blizak,близкий,near,adjective,m,singular,,,Ово је близак пријатељ.,Это близкий друг.,This is a close friend.
+безбедан,bezbedan,безопасный,safe,adjective,m,singular,,,Ово је безбедан град.,Это безопасный город.,This is a safe city.

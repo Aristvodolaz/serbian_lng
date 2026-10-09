@@ -1,0 +1,579 @@
+type,unitTitle,lessonTitle,cyrillic,latin,translationRu,translationEn,audioUrl,imageUrl,sentenceCyrillic,sentenceLatin,sentenceTranslationRu,sentenceTranslationEn
+translation_choice,Писмо,Писмо,ђак,đak,ученик,pupil / student,,,,,,
+fill_word,Писмо,Писмо,ђак,đak,ученик,pupil / student,,,Ђак учи лекцију.,Đak uči lekciju.,Ученик учит урок.,The pupil studies the lesson.
+translation_choice,Писмо,Писмо,жена,žena,женщина,woman,,,,,,
+fill_word,Писмо,Писмо,жена,žena,женщина,woman,,,Жена чита књигу.,Žena čita knjigu.,Женщина читает книгу.,The woman is reading a book.
+translation_choice,Писмо,Писмо,љубав,ljubav,любов,love,,,,,,
+fill_word,Писмо,Писмо,љубав,ljubav,любов,love,,,Љубав је лепо осећање.,Ljubav je lepo osećanje.,Любовь — прекрасное чувство.,Love is a beautiful feeling.
+translation_choice,Писмо,Писмо,њива,njiva,поле,field,,,,,,
+fill_word,Писмо,Писмо,њива,njiva,поле,field,,,Њива је пуна пшенице.,Njiva je puna pšenice.,Поле полно пшеницы.,The field is full of wheat.
+translation_choice,Писмо,Писмо,ћирилица,ćirilica,кириллица,Cyrillic script,,,,,,
+fill_word,Писмо,Писмо,ћирилица,ćirilica,кириллица,Cyrillic script,,,Ћирилица је старо писмо.,Ćirilica je staro pismo.,Кириллица — древняя письменность.,Cyrillic is an old script.
+translation_choice,Писмо,Писмо,чај,čaj,чай,tea,,,,,,
+fill_word,Писмо,Писмо,чај,čaj,чай,tea,,,Пијем топли чај.,Pijem topli čaj.,Я пью горячий чай.,I'm drinking hot tea.
+translation_choice,Писмо,Писмо,џем,džem,джем,jam,,,,,,
+fill_word,Писмо,Писмо,џем,džem,джем,jam,,,Мажем џем на хлеб.,Mažem džem na hleb.,Я намазываю джем на хлеб.,I spread jam on bread.
+translation_choice,Писмо,Писмо,шума,šuma,лес,forest,,,,,,
+fill_word,Писмо,Писмо,шума,šuma,лес,forest,,,Шетамо кроз ____.,Šetamo kroz ____.,Мы гуляем по лесу.,We're walking through the forest.
+translation_choice,Писмо,Лажни пријатељи,пас,pas,собака,dog,,,,,,
+fill_word,Писмо,Лажни пријатељи,пас,pas,собака,dog,,,Пас трчи у парку.,Pas trči u parku.,Собака бежит в парке.,The dog runs in the park.
+translation_choice,Писмо,Лажни пријатељи,рука,ruka,рука,hand / arm,,,,,,
+fill_word,Писмо,Лажни пријатељи,рука,ruka,рука,hand / arm,,,Опери ____ пре јела.,Operi ____ pre jela.,Вымой руки перед едой.,Wash your hands before eating.
+translation_choice,Писмо,Лажни пријатељи,нос,nos,нос,nose,,,,,,
+fill_word,Писмо,Лажни пријатељи,нос,nos,нос,nose,,,Има мали нос.,Ima mali nos.,У него маленький нос.,He has a small nose.
+translation_choice,Писмо,Лажни пријатељи,уста,usta,рот,mouth,,,,,,
+fill_word,Писмо,Лажни пријатељи,уста,usta,рот,mouth,,,Отвори уста /  молим те.,Otvori usta /  molim te.,Открой рот /  пожалуйста.,Open your mouth /  please.
+translation_choice,Писмо,Лажни пријатељи,хлад,hlad,прохлада; тень,coolness / shade,,,,,,
+fill_word,Писмо,Лажни пријатељи,хлад,hlad,прохлада; тень,coolness / shade,,,Седимо у ____ дрвета.,Sedimo u ____ drveta.,Мы сидим в тени дерева.,We sit in the shade of the tree.
+translation_choice,Писмо,Лажни пријатељи,коса,kosa,волосы,hair,,,,,,
+fill_word,Писмо,Лажни пријатељи,коса,kosa,волосы,hair,,,Има дугу ____.,Ima dugu ____.,У неё длинные волосы.,She has long hair.
+translation_choice,Писмо,Лажни пријатељи,дете,dete,ребёнок,child,,,,,,
+fill_word,Писмо,Лажни пријатељи,дете,dete,ребёнок,child,,,Дете игра у парку.,Dete igra u parku.,Ребёнок играет в парке.,The child plays in the park.
+translation_choice,Писмо,Лажни пријатељи,врат,vrat,шея,neck,,,,,,
+fill_word,Писмо,Лажни пријатељи,врат,vrat,шея,neck,,,Боли ме врат.,Boli me vrat.,У меня болит шея.,My neck hurts.
+translation_choice,Писмо,Лажни пријатељи,сто,sto,сто,hundred,,,,,,
+fill_word,Писмо,Лажни пријатељи,сто,sto,сто,hundred,,,Књига кошта сто динара.,Knjiga košta sto dinara.,Книга стоит сто динаров.,The book costs one hundred dinars.
+translation_choice,Писмо,Лажни пријатељи,земља,zemlja,страна,country,,,,,,
+fill_word,Писмо,Лажни пријатељи,земља,zemlja,страна,country,,,Ово је моја земља.,Ovo je moja zemlja.,Это моя страна.,This is my country.
+translation_choice,Поздрави,Поздрави,здраво,zdravo,привет,hello,,,,,,
+fill_word,Поздрави,Поздрави,здраво,zdravo,привет,hello,,,Здраво /  како си?,Zdravo /  kako si?,Привет /  как дела?,Hello /  how are you?
+translation_choice,Поздрави,Поздрави,довиђења,doviđenja,до свидания,goodbye,,,,,,
+fill_word,Поздрави,Поздрави,довиђења,doviđenja,до свидания,goodbye,,,Довиђења /  видимо се сутра.,Doviđenja /  vidimo se sutra.,До свидания /  увидимся завтра.,Goodbye /  see you tomorrow.
+translation_choice,Поздрави,Поздрави,пријатно,prijatno,приятного,have a nice time,,,,,,
+fill_word,Поздрави,Поздрави,пријатно,prijatno,приятного,have a nice time,,,Пријатно вече!,Prijatno veče!,Приятного вечера!,Have a nice evening!
+translation_choice,Поздрави,Поздрави,ћао,ćao,пока привет,bye hi,,,,,,
+fill_word,Поздрави,Поздрави,ћао,ćao,пока привет,bye hi,,,Ћао до сутра!,Ćao do sutra!,Пока до завтра!,Bye until tomorrow!
+translation_choice,Поздрави,Поздрави,срећно,srećno,счастливо,happily,,,,,,
+fill_word,Поздрави,Поздрави,срећно,srećno,счастливо,happily,,,Живео је срећно до краја.,Živeo je srećno do kraja.,Он жил счастливо до конца.,He lived happily to the end.
+translation_choice,Поздрави,Поздрави,како,kako,как,how,,,,,,
+fill_word,Поздрави,Поздрави,како,kako,как,how,,,Како си дошао до куће?,Kako si došao do kuće?,Как ты добрался до дома?,How did you get home?
+translation_choice,Поздрави,Поздрави,ноћ,noć,ночь,night,,,,,,
+fill_word,Поздрави,Поздрави,ноћ,noć,ночь,night,,,____ је тихо.,____ je tiho.,Ночью тихо.,It's quiet at night.
+translation_choice,Поздрави,Поздрави,добро,dobro,хорошо,well,,,,,,
+fill_word,Поздрави,Поздрави,добро,dobro,хорошо,well,,,Добро говорим српски.,Dobro govorim srpski.,Я хорошо говорю по-сербски.,I speak Serbian well.
+translation_choice,Поздрави,Поздрави,поздравити,pozdraviti,поздороваться,to greet,,,,,,
+fill_word,Поздрави,Поздрави,поздравити,pozdraviti,поздороваться,to greet,,,____ комшију.,____ komšiju.,Я здороваюсь с соседом.,I greet the neighbor.
+translation_choice,Поздрави,Поздрави,видети,videti,видеть,to see,,,,,,
+fill_word,Поздрави,Поздрави,видети,videti,видеть,to see,,,____ птицу на небу.,____ pticu na nebu.,Я вижу птицу в небе.,I see a bird in the sky.
+translation_choice,Поздрави,Учтивост,хвала,hvala,спасибо,thank you,,,,,,
+fill_word,Поздрави,Учтивост,хвала,hvala,спасибо,thank you,,,Хвала на помоћи.,Hvala na pomoći.,Спасибо за помощь.,Thanks for the help.
+translation_choice,Поздрави,Учтивост,молим,molim,пожалуйста,please / you're welcome,,,,,,
+fill_word,Поздрави,Учтивост,молим,molim,пожалуйста,please / you're welcome,,,Молим /  изволите.,Molim /  izvolite.,Пожалуйста /  извольте.,Please /  here you go.
+translation_choice,Поздрави,Учтивост,изволите,izvolite,прошу,here you go / please,,,,,,
+fill_word,Поздрави,Учтивост,изволите,izvolite,прошу,here you go / please,,,Изволите /  седите.,Izvolite /  sedite.,Пожалуйста /  садитесь.,Here you go /  have a seat.
+translation_choice,Поздрави,Учтивост,извините,izvinite,извините,excuse me,,,,,,
+fill_word,Поздрави,Учтивост,извините,izvinite,извините,excuse me,,,Извините можете да ми помогнете?,Izvinite možete da mi pomognete?,Извините можете мне помочь?,Excuse me can you help me?
+translation_choice,Поздрави,Учтивост,ајде,ajde,давай,let's go,,,,,,
+fill_word,Поздрави,Учтивост,ајде,ajde,давай,let's go,,,Ајде да идемо заједно.,Ajde da idemo zajedno.,Давай пойдём вместе.,Let's go together.
+translation_choice,Поздрави,Учтивост,браво,bravo,браво,well done,,,,,,
+fill_word,Поздрави,Учтивост,браво,bravo,браво,well done,,,Браво за твој одговор!,Bravo za tvoj odgovor!,Браво за твой ответ!,Bravo for your answer!
+translation_choice,Поздрави,Учтивост,љубазно,ljubazno,вежливо,kindly,,,,,,
+fill_word,Поздрави,Учтивост,љубазно,ljubazno,вежливо,kindly,,,Питај љубазно за помоћ.,Pitaj ljubazno za pomoć.,Вежливо попроси о помощи.,Ask for help kindly.
+translation_choice,Поздрави,Учтивост,позвати,pozvati,позвать,to invite,,,,,,
+fill_word,Поздрави,Учтивост,позвати,pozvati,позвать,to invite,,,____ пријатеље на вечеру.,____ prijatelje na večeru.,Я приглашаю друзей на ужин.,I invite friends to dinner.
+translation_choice,Поздрави,Учтивост,разговарати,razgovarati,разговаривать,to converse,,,,,,
+fill_word,Поздрави,Учтивост,разговарати,razgovarati,разговаривать,to converse,,,____ о послу.,____ o poslu.,Мы разговариваем о работе.,We talk about work.
+translation_choice,Поздрави,Представљање,име,ime,имя,name,,,,,,
+fill_word,Поздрави,Представљање,име,ime,имя,name,,,Како ти је име?,Kako ti je ime?,Как тебя зовут?,What is your name?
+translation_choice,Поздрави,Представљање,одакле,odakle,откуда,from where,,,,,,
+fill_word,Поздрави,Представљање,одакле,odakle,откуда,from where,,,Одакле си ти?,Odakle si ti?,Откуда ты?,Where are you from?
+translation_choice,Поздрави,Представљање,пријатељ,prijatelj,друг,friend,,,,,,
+fill_word,Поздрави,Представљање,пријатељ,prijatelj,друг,friend,,,Он је мој пријатељ.,On je moj prijatelj.,Он мой друг.,He is my friend.
+translation_choice,Поздрави,Представљање,звати,zvati,звать,to call,,,,,,
+fill_word,Поздрави,Представљање,звати,zvati,звать,to call,,,____ те увече.,____ te uveče.,Я звоню тебе вечером.,I call you in the evening.
+translation_choice,Поздрави,Представљање,година,godina,год,year,,,,,,
+fill_word,Поздрави,Представљање,година,godina,год,year,,,Учим се већ ____ дана.,Učim se već ____ dana.,Я учусь уже год.,I have been studying for a year.
+translation_choice,Поздрави,Представљање,из,iz,из,from,,,,,,
+fill_word,Поздрави,Представљање,из,iz,из,from,,,Пијем чај из велике шоље.,Pijem čaj iz velike šolje.,Я пью чай из большой чашки.,I drink tea from a big cup.
+translation_choice,Поздрави,Представљање,мој,moj,мой,my,,,,,,
+fill_word,Поздрави,Представљање,мој,moj,мой,my,,,Ово је ____ књига.,Ovo je ____ knjiga.,Это моя книга.,This is my book.
+translation_choice,Поздрави,Представљање,твој,tvoj,твой,your,,,,,,
+fill_word,Поздрави,Представљање,твој,tvoj,твой,your,,,Где је ____ сестра?,Gde je ____ sestra?,Где твоя сестра?,Where is your sister?
+translation_choice,Поздрави,Представљање,живети,živeti,жить,to live,,,,,,
+fill_word,Поздрави,Представљање,живети,živeti,жить,to live,,,____ у Србији.,____ u Srbiji.,Я живу в Сербии.,I live in Serbia.
+translation_choice,Породица,Породица,мајка,majka,мать,mother,,,,,,
+fill_word,Породица,Породица,мајка,majka,мать,mother,,,Моја мајка кува ручак.,Moja majka kuva ručak.,Моя мама готовит обед.,My mother is cooking lunch.
+translation_choice,Породица,Породица,отац,otac,отец,father,,,,,,
+fill_word,Породица,Породица,отац,otac,отец,father,,,Мој отац ради у граду.,Moj otac radi u gradu.,Мой отец работает в городе.,My father works in the city.
+translation_choice,Породица,Породица,сестра,sestra,сестра,sister,,,,,,
+fill_word,Породица,Породица,сестра,sestra,сестра,sister,,,Моја сестра студира.,Moja sestra studira.,Моя сестра учится.,My sister is a student.
+translation_choice,Породица,Породица,брат,brat,брат,brother,,,,,,
+fill_word,Породица,Породица,брат,brat,брат,brother,,,Мој брат игра фудбал.,Moj brat igra fudbal.,Мой брат играет в футбол.,My brother plays football.
+translation_choice,Породица,Породица,деда,deda,дедушка,grandfather,,,,,,
+fill_word,Породица,Породица,деда,deda,дедушка,grandfather,,,Деда прича приче.,Deda priča priče.,Дедушка рассказывает сказки.,Grandfather tells stories.
+translation_choice,Породица,Породица,баба,baba,бабушка,grandmother,,,,,,
+fill_word,Породица,Породица,баба,baba,бабушка,grandmother,,,Баба пече колаче.,Baba peče kolače.,Бабушка печёт печенье.,Grandmother bakes cookies.
+translation_choice,Породица,Породица,син,sin,сын,son,,,,,,
+fill_word,Породица,Породица,син,sin,сын,son,,,Имам једног ____.,Imam jednog ____.,У меня один сын.,I have one son.
+translation_choice,Породица,Породица,ћерка,ćerka,дочь,daughter,,,,,,
+fill_word,Породица,Породица,ћерка,ćerka,дочь,daughter,,,Моја ћерка иде у школу.,Moja ćerka ide u školu.,Моя дочь ходит в школу.,My daughter goes to school.
+translation_choice,Породица,Породица,беба,beba,младенец,baby,,,,,,
+fill_word,Породица,Породица,беба,beba,младенец,baby,,,Беба спава.,Beba spava.,Младенец спит.,The baby is sleeping.
+translation_choice,Породица,Породица,породица,porodica,семья,family,,,,,,
+fill_word,Породица,Породица,породица,porodica,семья,family,,,Волим своју ____.,Volim svoju ____.,Я люблю свою семью.,I love my family.
+translation_choice,Породица,Кућа,кућа,kuća,дом,house,,,,,,
+fill_word,Породица,Кућа,кућа,kuća,дом,house,,,Наша кућа је велика.,Naša kuća je velika.,Наш дом большой.,Our house is big.
+translation_choice,Породица,Кућа,соба,soba,комната,room,,,,,,
+fill_word,Породица,Кућа,соба,soba,комната,room,,,Моја соба је чиста.,Moja soba je čista.,Моя комната чистая.,My room is clean.
+translation_choice,Породица,Кућа,врата,vrata,дверь,door,,,,,,
+fill_word,Породица,Кућа,врата,vrata,дверь,door,,,Затвори врата /  молим те.,Zatvori vrata /  molim te.,Закрой дверь.,Close the door /  please.
+translation_choice,Породица,Кућа,прозор,prozor,окно,window,,,,,,
+fill_word,Породица,Кућа,прозор,prozor,окно,window,,,Отвори прозор.,Otvori prozor.,Открой окно.,Open the window.
+translation_choice,Породица,Кућа,зид,zid,стена,wall,,,,,,
+fill_word,Породица,Кућа,зид,zid,стена,wall,,,Слика виси на ____.,Slika visi na ____.,Картина висит на стене.,The picture hangs on the wall.
+translation_choice,Породица,Кућа,кров,krov,крыша,roof,,,,,,
+fill_word,Породица,Кућа,кров,krov,крыша,roof,,,Кућа има црвен кров.,Kuća ima crven krov.,У дома красная крыша.,The house has a red roof.
+translation_choice,Породица,Кућа,кухиња,kuhinja,кухня,kitchen,,,,,,
+fill_word,Породица,Кућа,кухиња,kuhinja,кухня,kitchen,,,Вечерамо у ____.,Večeramo u ____.,Мы ужинаем на кухне.,We have dinner in the kitchen.
+translation_choice,Породица,Кућа,купатило,kupatilo,ванная,bathroom,,,,,,
+fill_word,Породица,Кућа,купатило,kupatilo,ванная,bathroom,,,Купатило је чисто.,Kupatilo je čisto.,Ванная комната чистая.,The bathroom is clean.
+translation_choice,Породица,Кућа,кревет,krevet,кровать,bed,,,,,,
+fill_word,Породица,Кућа,кревет,krevet,кровать,bed,,,Спавам у великом ____.,Spavam u velikom ____.,Я сплю на большой кровати.,I sleep in a big bed.
+translation_choice,Породица,Кућа,столица,stolica,стул,chair,,,,,,
+fill_word,Породица,Кућа,столица,stolica,стул,chair,,,Седи на ____.,Sedi na ____.,Он сидит на стуле.,He sits on a chair.
+translation_choice,Храна,Храна,хлеб,hleb,хлеб,bread,,,,,,
+fill_word,Храна,Храна,хлеб,hleb,хлеб,bread,,,Купио сам свеж хлеб.,Kupio sam svež hleb.,Я купил свежий хлеб.,I bought fresh bread.
+translation_choice,Храна,Храна,вода,voda,вода,water,,,,,,
+fill_word,Храна,Храна,вода,voda,вода,water,,,Дај ми чашу ____.,Daj mi čašu ____.,Дай мне стакан воды.,Give me a glass of water.
+translation_choice,Храна,Храна,јабука,jabuka,яблоко,apple,,,,,,
+fill_word,Храна,Храна,јабука,jabuka,яблоко,apple,,,Једем ____ сваки дан.,Jedem ____ svaki dan.,Я ем яблоко каждый день.,I eat an apple every day.
+translation_choice,Храна,Храна,месо,meso,мясо,meat,,,,,,
+fill_word,Храна,Храна,месо,meso,мясо,meat,,,Волим печено месо.,Volim pečeno meso.,Я люблю жареное мясо.,I like roasted meat.
+translation_choice,Храна,Храна,кафа,kafa,кофе,coffee,,,,,,
+fill_word,Храна,Храна,кафа,kafa,кофе,coffee,,,Пијем ____ ујутру.,Pijem ____ ujutru.,Я пью кофе по утрам.,I drink coffee in the morning.
+translation_choice,Храна,Храна,со,so,соль,salt,,,,,,
+fill_word,Храна,Храна,со,so,соль,salt,,,Додај мало ____.,Dodaj malo ____.,Добавь немного соли.,Add a bit of salt.
+translation_choice,Храна,Храна,сир,sir,сыр,cheese,,,,,,
+fill_word,Храна,Храна,сир,sir,сыр,cheese,,,Купио сам сир на пијаци.,Kupio sam sir na pijaci.,Я купил сыр на рынке.,I bought cheese at the market.
+translation_choice,Храна,Храна,јаје,jaje,яйцо,egg,,,,,,
+fill_word,Храна,Храна,јаје,jaje,яйцо,egg,,,Једем јаје за доручак.,Jedem jaje za doručak.,Я ем яйцо на завтрак.,I eat an egg for breakfast.
+translation_choice,Храна,Храна,риба,riba,рыба,fish,,,,,,
+fill_word,Храна,Храна,риба,riba,рыба,fish,,,Риба је укусна.,Riba je ukusna.,Рыба вкусная.,The fish is delicious.
+translation_choice,Храна,Храна,супа,supa,суп,soup,,,,,,
+fill_word,Храна,Храна,супа,supa,суп,soup,,,Скувао сам ____.,Skuvao sam ____.,Я сварил суп.,I cooked soup.
+translation_choice,Храна,У ресторану,ручак,ručak,обед,lunch,,,,,,
+fill_word,Храна,У ресторану,ручак,ručak,обед,lunch,,,Ручак је готов.,Ručak je gotov.,Обед готов.,Lunch is ready.
+translation_choice,Храна,У ресторану,рачун,račun,счёт,bill,,,,,,
+fill_word,Храна,У ресторану,рачун,račun,счёт,bill,,,Молим вас /  рачун.,Molim vas /  račun.,Принесите счёт /  пожалуйста.,The bill /  please.
+translation_choice,Храна,У ресторану,укусно,ukusno,вкусно,delicious,,,,,,
+fill_word,Храна,У ресторану,укусно,ukusno,вкусно,delicious,,,Ово је веома укусно.,Ovo je veoma ukusno.,Еда очень вкусная.,This is very delicious.
+translation_choice,Храна,У ресторану,конобар,konobar,официант,waiter,,,,,,
+fill_word,Храна,У ресторану,конобар,konobar,официант,waiter,,,Конобар доноси кафу.,Konobar donosi kafu.,Официант приносит кофе.,The waiter brings coffee.
+translation_choice,Храна,У ресторану,кувар,kuvar,повар,cook,,,,,,
+fill_word,Храна,У ресторану,кувар,kuvar,повар,cook,,,Кувар припрема јело.,Kuvar priprema jelo.,Повар готовит блюдо.,The cook prepares the dish.
+translation_choice,Храна,У ресторану,наручити,naručiti,заказать,to order,,,,,,
+fill_word,Храна,У ресторану,наручити,naručiti,заказать,to order,,,____ кафу и колаче.,____ kafu i kolače.,Мы заказываем кофе и пирожные.,We order coffee and pastries.
+translation_choice,Храна,У ресторану,послужити,poslužiti,подать,to serve,,,,,,
+fill_word,Храна,У ресторану,послужити,poslužiti,подать,to serve,,,____ госте кафом.,____ goste kafom.,Я угощаю гостей кофе.,I serve the guests coffee.
+translation_choice,Храна,У ресторану,пробати,probati,пробовать,to try,,,,,,
+fill_word,Храна,У ресторану,пробати,probati,пробовать,to try,,,____ ново јело.,____ novo jelo.,Я пробую новое блюдо.,I try a new dish.
+translation_choice,Храна,У ресторану,платити,platiti,платить,to pay,,,,,,
+fill_word,Храна,У ресторану,платити,platiti,платить,to pay,,,____ рачун.,____ račun.,Я плачу по счёту.,I pay the bill.
+translation_choice,Храна,У ресторану,вечерати,večerati,ужинать,to have dinner,,,,,,
+fill_word,Храна,У ресторану,вечерати,večerati,ужинать,to have dinner,,,____ заједно.,____ zajedno.,Мы ужинаем вместе.,We have dinner together.
+translation_choice,Храна,Пића,вода,voda,вода,water,,,,,,
+fill_word,Храна,Пића,вода,voda,вода,water,,,Пијем пуно ____.,Pijem puno ____.,Я пью много воды.,I drink a lot of water.
+translation_choice,Храна,Пића,кафа,kafa,кофе,coffee,,,,,,
+fill_word,Храна,Пића,кафа,kafa,кофе,coffee,,,Пијем ____ ујутру.,Pijem ____ ujutru.,Я пью кофе утром.,I drink coffee in the morning.
+translation_choice,Храна,Пића,чај,čaj,чай,tea,,,,,,
+fill_word,Храна,Пића,чај,čaj,чай,tea,,,Волим чај са лимуном.,Volim čaj sa limunom.,Я люблю чай с лимоном.,I like tea with lemon.
+translation_choice,Храна,Пића,млеко,mleko,молоко,milk,,,,,,
+fill_word,Храна,Пића,млеко,mleko,молоко,milk,,,Пијем млеко свако јутро.,Pijem mleko svako jutro.,Я пью молоко каждое утро.,I drink milk every morning.
+translation_choice,Храна,Пића,јогурт,jogurt,йогурт,yogurt,,,,,,
+fill_word,Храна,Пића,јогурт,jogurt,йогурт,yogurt,,,Јогурт је здрав.,Jogurt je zdrav.,Йогурт полезен.,Yogurt is healthy.
+translation_choice,Храна,Пића,шећер,šećer,сахар,sugar,,,,,,
+fill_word,Храна,Пића,шећер,šećer,сахар,sugar,,,Не пијем кафу са ____.,Ne pijem kafu sa ____.,Я не пью кофе с сахаром.,I don't drink coffee with sugar.
+translation_choice,Храна,Пића,пити,piti,пить,to drink,,,,,,
+fill_word,Храна,Пића,пити,piti,пить,to drink,,,____ воду.,____ vodu.,Я пью воду.,I drink water.
+translation_choice,Храна,Пића,жедан,žedan,испытывающий жажду,thirsty,,,,,,
+fill_word,Храна,Пића,жедан,žedan,испытывающий жажду,thirsty,,,Ја сам жедан.,Ja sam žedan.,Я хочу пить.,I am thirsty.
+translation_choice,Храна,Пића,топао,topao,тёплый,warm,,,,,,
+fill_word,Храна,Пића,топао,topao,тёплый,warm,,,Свиђа ми се ____ море.,Sviđa mi se ____ more.,Мне нравится тёплое море.,I like the warm sea.
+translation_choice,Храна,Пића,врућ,vruć,горячий,hot,,,,,,
+fill_word,Храна,Пића,врућ,vruć,горячий,hot,,,Кафа је ____.,Kafa je ____.,Кофе горячий.,The coffee is hot.
+translation_choice,Храна,Воће и поврће,воће,voće,фрукты,fruit,,,,,,
+fill_word,Храна,Воће и поврће,воће,voće,фрукты,fruit,,,Воће је здраво.,Voće je zdravo.,Фрукты полезны.,Fruit is healthy.
+translation_choice,Храна,Воће и поврће,поврће,povrće,овощи,vegetables,,,,,,
+fill_word,Храна,Воће и поврће,поврће,povrće,овощи,vegetables,,,Једем много ____.,Jedem mnogo ____.,Я ем много овощей.,I eat a lot of vegetables.
+translation_choice,Храна,Воће и поврће,јабука,jabuka,яблоко,apple,,,,,,
+fill_word,Храна,Воће и поврће,јабука,jabuka,яблоко,apple,,,Јабука је црвена.,Jabuka je crvena.,Яблоко красное.,The apple is red.
+translation_choice,Храна,Воће и поврће,кромпир,krompir,картофель,potato,,,,,,
+fill_word,Храна,Воће и поврће,кромпир,krompir,картофель,potato,,,Волим печени кромпир.,Volim pečeni krompir.,Я люблю печёный картофель.,I like baked potatoes.
+translation_choice,Храна,Воће и поврће,парадајз,paradajz,помидор,tomato,,,,,,
+fill_word,Храна,Воће и поврће,парадајз,paradajz,помидор,tomato,,,Парадајз је црвен.,Paradajz je crven.,Помидор красный.,The tomato is red.
+translation_choice,Храна,Воће и поврће,јагода,jagoda,клубника,strawberry,,,,,,
+fill_word,Храна,Воће и поврће,јагода,jagoda,клубника,strawberry,,,____ су слатке.,____ su slatke.,Клубника сладкая.,Strawberries are sweet.
+translation_choice,Храна,Воће и поврће,сладак,sladak,сладкий,sweet,,,,,,
+fill_word,Храна,Воће и поврће,сладак,sladak,сладкий,sweet,,,Ова торта је ____.,Ova torta je ____.,Этот торт сладкий.,This cake is sweet.
+translation_choice,Храна,Воће и поврће,кисео,kiseo,кислый,sour,,,,,,
+fill_word,Храна,Воће и поврће,кисео,kiseo,кислый,sour,,,Ови лимуни су ____.,Ovi limuni su ____.,Эти лимоны кислые.,These lemons are sour.
+translation_choice,Храна,Воће и поврће,свеж,svež,свежий,fresh,,,,,,
+fill_word,Храна,Воће и поврће,свеж,svež,свежий,fresh,,,Воће је ____.,Voće je ____.,Фрукты свежие.,The fruit is fresh.
+translation_choice,Храна,Воће и поврће,купити,kupiti,купить,to buy,,,,,,
+fill_word,Храна,Воће и поврће,купити,kupiti,купить,to buy,,,____ сам хлеб.,____ sam hleb.,Я купил хлеб.,I bought bread.
+translation_choice,Бројеви,Бројеви,један,jedan,один,one,,,,,,
+fill_word,Бројеви,Бројеви,један,jedan,один,one,,,Имам један брат.,Imam jedan brat.,У меня один брат.,I have one brother.
+translation_choice,Бројеви,Бројеви,два,dva,два,two,,,,,,
+fill_word,Бројеви,Бројеви,два,dva,два,two,,,Два пута дневно.,Dva puta dnevno.,Два раза в день.,Twice a day.
+translation_choice,Бројеви,Бројеви,пет,pet,пять,five,,,,,,
+fill_word,Бројеви,Бројеви,пет,pet,пять,five,,,Пет минута пешке.,Pet minuta peške.,Пять минут пешком.,Five minutes on foot.
+translation_choice,Бројеви,Бројеви,шест,šest,шесть,six,,,,,,
+fill_word,Бројеви,Бројеви,шест,šest,шесть,six,,,Имам шест књига.,Imam šest knjiga.,У меня шесть книг.,I have six books.
+translation_choice,Бројеви,Бројеви,десет,deset,десять,ten,,,,,,
+fill_word,Бројеви,Бројеви,десет,deset,десять,ten,,,Десет прстију на рукама.,Deset prstiju na rukama.,Десять пальцев на руках.,Ten fingers on the hands.
+translation_choice,Бројеви,Бројеви,сто,sto,сто,hundred,,,,,,
+fill_word,Бројеви,Бројеви,сто,sto,сто,hundred,,,Сто динара.,Sto dinara.,Сто динаров.,A hundred dinars.
+translation_choice,Бројеви,Бројеви,једанаест,jedanaest,одиннадцать,eleven,,,,,,
+fill_word,Бројеви,Бројеви,једанаест,jedanaest,одиннадцать,eleven,,,Час почиње у једанаест сати.,Čas počinje u jedanaest sati.,Урок начинается в одиннадцать часов.,The lesson starts at eleven o'clock.
+translation_choice,Бројеви,Бројеви,дванаест,dvanaest,двенадцать,twelve,,,,,,
+fill_word,Бројеви,Бројеви,дванаест,dvanaest,двенадцать,twelve,,,Имам дванаест година.,Imam dvanaest godina.,Мне двенадцать лет.,I am twelve years old.
+translation_choice,Путовање,Путовање,станица,stanica,станция,station,,,,,,
+fill_word,Путовање,Путовање,станица,stanica,станция,station,,,Станица је близу.,Stanica je blizu.,Станция рядом.,The station is close.
+translation_choice,Путовање,Путовање,аеродром,aerodrom,аэропорт,airport,,,,,,
+fill_word,Путовање,Путовање,аеродром,aerodrom,аэропорт,airport,,,Идемо на аеродром.,Idemo na aerodrom.,Мы едем в аэропорт.,We're going to the airport.
+translation_choice,Путовање,Путовање,путовање,putovanje,путешествие,journey / trip,,,,,,
+fill_word,Путовање,Путовање,путовање,putovanje,путешествие,journey / trip,,,Пријатно путовање!,Prijatno putovanje!,Счастливого пути!,Have a nice trip!
+translation_choice,Путовање,Путовање,карта,karta,билет,ticket,,,,,,
+fill_word,Путовање,Путовање,карта,karta,билет,ticket,,,Купио сам ____ за воз.,Kupio sam ____ za voz.,Я купил билет на поезд.,I bought a train ticket.
+translation_choice,Путовање,Путовање,путовати,putovati,путешествовать,to travel,,,,,,
+fill_word,Путовање,Путовање,путовати,putovati,путешествовать,to travel,,,Ми ____ у Србију.,Mi ____ u Srbiju.,Мы путешествуем в Сербию.,We travel to Serbia.
+translation_choice,Путовање,Путовање,возач,vozač,водитель,driver,,,,,,
+fill_word,Путовање,Путовање,возач,vozač,водитель,driver,,,Возач вози аутобус.,Vozač vozi autobus.,Водитель ведёт автобус.,The driver drives the bus.
+translation_choice,Путовање,Путовање,пут,put,дорога,road / way,,,,,,
+fill_word,Путовање,Путовање,пут,put,дорога,road / way,,,Пут је дуг.,Put je dug.,Дорога длинная.,The road is long.
+translation_choice,Путовање,Путовање,ићи,ići,идти,to go,,,,,,
+fill_word,Путовање,Путовање,ићи,ići,идти,to go,,,____ у школу.,____ u školu.,Я иду в школу.,I am going to school.
+translation_choice,Путовање,Путовање,отићи,otići,уйти/уехать,to leave,,,,,,
+fill_word,Путовање,Путовање,отићи,otići,уйти/уехать,to leave,,,Ми ____ кући после школе.,Mi ____ kući posle škole.,Мы идём домой после школы.,We go home after school.
+translation_choice,Путовање,Путовање,доћи,doći,приходить,to come,,,,,,
+fill_word,Путовање,Путовање,доћи,doći,приходить,to come,,,____ сутра код мене.,____ sutra kod mene.,Приходи завтра ко мне.,Come to my place tomorrow.
+translation_choice,Путовање,На граници,хотел,hotel,отель,hotel,,,,,,
+fill_word,Путовање,На граници,хотел,hotel,отель,hotel,,,Резервисао сам хотел.,Rezervisao sam hotel.,Я забронировал отель.,I booked a hotel.
+translation_choice,Путовање,На граници,пасош,pasoš,паспорт,passport,,,,,,
+fill_word,Путовање,На граници,пасош,pasoš,паспорт,passport,,,Понесите пасош.,Ponesite pasoš.,Возьмите паспорт.,Bring your passport.
+translation_choice,Путовање,На граници,виза,viza,виза,visa,,,,,,
+fill_word,Путовање,На граници,виза,viza,виза,visa,,,Треба ми виза за путовање.,Treba mi viza za putovanje.,Виза нужна для поездки.,I need a visa to travel.
+translation_choice,Путовање,На граници,кофер,kofer,чемодан,suitcase,,,,,,
+fill_word,Путовање,На граници,кофер,kofer,чемодан,suitcase,,,Спаковао сам кофер.,Spakovao sam kofer.,Я собрал чемодан.,I packed my suitcase.
+translation_choice,Путовање,На граници,излаз,izlaz,выход,exit,,,,,,
+fill_word,Путовање,На граници,излаз,izlaz,выход,exit,,,Излаз је лево.,Izlaz je levo.,Выход слева.,The exit is on the left.
+translation_choice,Путовање,На граници,спаковати,spakovati,упаковать,to pack,,,,,,
+fill_word,Путовање,На граници,спаковати,spakovati,упаковать,to pack,,,____ кофер за пут.,____ kofer za put.,Я собираю чемодан в дорогу.,I pack the suitcase for the trip.
+translation_choice,Путовање,На граници,чекати,čekati,ждать,to wait,,,,,,
+fill_word,Путовање,На граници,чекати,čekati,ждать,to wait,,,____ аутобус.,____ autobus.,Я жду автобус.,I wait for the bus.
+translation_choice,Путовање,На граници,носити,nositi,носить,to carry,,,,,,
+fill_word,Путовање,На граници,носити,nositi,носить,to carry,,,____ торбу у руци.,____ torbu u ruci.,Я несу сумку в руке.,I carry the bag in my hand.
+translation_choice,Путовање,На граници,улазити,ulaziti,входить,to enter,,,,,,
+fill_word,Путовање,На граници,улазити,ulaziti,входить,to enter,,,____ у зграду.,____ u zgradu.,Я вхожу в здание.,I enter the building.
+translation_choice,Путовање,Транспорт,воз,voz,поезд,train,,,,,,
+fill_word,Путовање,Транспорт,воз,voz,поезд,train,,,Воз стиже касно.,Voz stiže kasno.,Поезд прибывает поздно.,The train arrives late.
+translation_choice,Путовање,Транспорт,аутобус,autobus,автобус,bus,,,,,,
+fill_word,Путовање,Транспорт,аутобус,autobus,автобус,bus,,,Аутобус полази у седам.,Autobus polazi u sedam.,Автобус отправляется в семь.,The bus leaves at seven.
+translation_choice,Путовање,Транспорт,авион,avion,самолёт,plane,,,,,,
+fill_word,Путовање,Транспорт,авион,avion,самолёт,plane,,,Авион лети високо.,Avion leti visoko.,Самолёт летит высоко.,The plane flies high.
+translation_choice,Путовање,Транспорт,трамвај,tramvaj,трамвай,tram,,,,,,
+fill_word,Путовање,Транспорт,трамвај,tramvaj,трамвай,tram,,,Трамвај иде до центра.,Tramvaj ide do centra.,Трамвай идёт до центра.,The tram goes to the center.
+translation_choice,Путовање,Транспорт,такси,taksi,такси,taxi,,,,,,
+fill_word,Путовање,Транспорт,такси,taksi,такси,taxi,,,Узео сам такси.,Uzeo sam taksi.,Я взял такси.,I took a taxi.
+translation_choice,Путовање,Транспорт,бицикл,bicikl,велосипед,bicycle,,,,,,
+fill_word,Путовање,Транспорт,бицикл,bicikl,велосипед,bicycle,,,Вози бицикл.,Vozi bicikl.,Он ездит на велосипеде.,He rides a bicycle.
+translation_choice,Путовање,Транспорт,метро,metro,метро,metro / subway,,,,,,
+fill_word,Путовање,Транспорт,метро,metro,метро,metro / subway,,,Метро је брзо.,Metro je brzo.,Метро быстрое.,The metro is fast.
+translation_choice,Путовање,Транспорт,брод,brod,корабль,ship,,,,,,
+fill_word,Путовање,Транспорт,брод,brod,корабль,ship,,,Брод плови по мору.,Brod plovi po moru.,Корабль плывёт по морю.,The ship sails the sea.
+translation_choice,Путовање,Транспорт,возити,voziti,водить машину,to drive,,,,,,
+fill_word,Путовање,Транспорт,возити,voziti,водить машину,to drive,,,Она ____ ауто.,Ona ____ auto.,Она водит машину.,She drives a car.
+translation_choice,Путовање,Транспорт,летети,leteti,лететь,to fly,,,,,,
+fill_word,Путовање,Транспорт,летети,leteti,лететь,to fly,,,Птица ____ високо.,Ptica ____ visoko.,Птица летит высоко.,The bird flies high.
+translation_choice,Путовање,У граду,парк,park,парк,park,,,,,,
+fill_word,Путовање,У граду,парк,park,парк,park,,,Шетамо кроз парк.,Šetamo kroz park.,Мы гуляем по парку.,We walk through the park.
+translation_choice,Путовање,У граду,мост,most,мост,bridge,,,,,,
+fill_word,Путовање,У граду,мост,most,мост,bridge,,,Мост је преко реке.,Most je preko reke.,Мост через реку.,The bridge is over the river.
+translation_choice,Путовање,У граду,црква,crkva,церковь,church,,,,,,
+fill_word,Путовање,У граду,црква,crkva,церковь,church,,,Црква је стара.,Crkva je stara.,Церковь старая.,The church is old.
+translation_choice,Путовање,У граду,музеј,muzej,музей,museum,,,,,,
+fill_word,Путовање,У граду,музеј,muzej,музей,museum,,,Музеј је отворен.,Muzej je otvoren.,Музей открыт.,The museum is open.
+translation_choice,Путовање,У граду,библиотека,biblioteka,библиотека,library,,,,,,
+fill_word,Путовање,У граду,библиотека,biblioteka,библиотека,library,,,Читам у ____.,Čitam u ____.,Я читаю в библиотеке.,I read at the library.
+translation_choice,Путовање,У граду,апотека,apoteka,аптека,pharmacy,,,,,,
+fill_word,Путовање,У граду,апотека,apoteka,аптека,pharmacy,,,Апотека ради до осам.,Apoteka radi do osam.,Аптека работает до восьми.,The pharmacy is open until eight.
+translation_choice,Путовање,У граду,продавница,prodavnica,магазин,shop,,,,,,
+fill_word,Путовање,У граду,продавница,prodavnica,магазин,shop,,,Идем у ____.,Idem u ____.,Я иду в магазин.,I'm going to the shop.
+translation_choice,Путовање,У граду,пошта,pošta,почта,post office,,,,,,
+fill_word,Путовање,У граду,пошта,pošta,почта,post office,,,Пошта је близу.,Pošta je blizu.,Почта рядом.,The post office is nearby.
+translation_choice,Путовање,У граду,питати,pitati,спрашивать,to ask,,,,,,
+fill_word,Путовање,У граду,питати,pitati,спрашивать,to ask,,,Она ____ за цену.,Ona ____ za cenu.,Она спрашивает о цене.,She asks about the price.
+translation_choice,Путовање,У граду,тражити,tražiti,искать,to look for,,,,,,
+fill_word,Путовање,У граду,тражити,tražiti,искать,to look for,,,____ кључеве.,____ ključeve.,Я ищу ключи.,I am looking for the keys.
+translation_choice,Људи,Заменице,ја,ja,я,I,,,,,,
+fill_word,Људи,Заменице,ја,ja,я,I,,,Ја сам из Русије.,Ja sam iz Rusije.,Я из России.,I am from Russia.
+translation_choice,Људи,Заменице,ти,ti,ты,you,,,,,,
+fill_word,Људи,Заменице,ти,ti,ты,you,,,Ти си мој пријатељ.,Ti si moj prijatelj.,Ты мой друг.,You are my friend.
+translation_choice,Људи,Заменице,он,on,он,he,,,,,,
+fill_word,Људи,Заменице,он,on,он,he,,,Он је висок.,On je visok.,Он высокий.,He is tall.
+translation_choice,Људи,Заменице,она,ona,она,she,,,,,,
+fill_word,Људи,Заменице,она,ona,она,she,,,Она је млада.,Ona je mlada.,Она молодая.,She is young.
+translation_choice,Људи,Заменице,ми,mi,мы,we,,,,,,
+fill_word,Људи,Заменице,ми,mi,мы,we,,,Ми живимо у Београду.,Mi živimo u Beogradu.,Мы живём в Белграде.,We live in Belgrade.
+translation_choice,Људи,Заменице,зовати се,zovati se,зоваться,to be called,,,,,,
+fill_word,Људи,Заменице,зовати се,zovati se,зоваться,to be called,,,____ се Ана.,____ se Ana.,Меня зовут Ана.,I am called Ana.
+translation_choice,Људи,Заменице,мој,moj,мой,my,,,,,,
+fill_word,Људи,Заменице,мој,moj,мой,my,,,Ово је мој стан.,Ovo je moj stan.,Это моя квартира.,This is my apartment.
+translation_choice,Људи,Заменице,твој,tvoj,твой,your,,,,,,
+fill_word,Људи,Заменице,твој,tvoj,твой,your,,,Где је ____ књига?,Gde je ____ knjiga?,Где твоя книга?,Where is your book?
+translation_choice,Људи,Град и посао,град,grad,город,city,,,,,,
+fill_word,Људи,Град и посао,град,grad,город,city,,,Београд је велики град.,Beograd je veliki grad.,Белград — большой город.,Belgrade is a big city.
+translation_choice,Људи,Град и посао,земља,zemlja,страна,country,,,,,,
+fill_word,Људи,Град и посао,земља,zemlja,страна,country,,,Србија је мала земља.,Srbija je mala zemlja.,Сербия — маленькая страна.,Serbia is a small country.
+translation_choice,Људи,Град и посао,главни,glavni,главный,main,,,,,,
+fill_word,Људи,Град и посао,главни,glavni,главный,main,,,Главни град је Београд.,Glavni grad je Beograd.,Столица — Белград.,The capital is Belgrade.
+translation_choice,Људи,Град и посао,живети,živeti,жить,to live,,,,,,
+fill_word,Људи,Град и посао,живети,živeti,жить,to live,,,Ја ____ у Београду.,Ja ____ u Beogradu.,Я живу в Белграде.,I live in Belgrade.
+translation_choice,Људи,Град и посао,стан,stan,квартира,apartment,,,,,,
+fill_word,Људи,Град и посао,стан,stan,квартира,apartment,,,Наш стан је мали.,Naš stan je mali.,Наша квартира маленькая.,Our apartment is small.
+translation_choice,Људи,Град и посао,улица,ulica,улица,street,,,,,,
+fill_word,Људи,Град и посао,улица,ulica,улица,street,,,Улица је дуга.,Ulica je duga.,Улица длинная.,The street is long.
+translation_choice,Људи,Град и посао,зграда,zgrada,здание,building,,,,,,
+fill_word,Људи,Град и посао,зграда,zgrada,здание,building,,,Зграда има пет спратова.,Zgrada ima pet spratova.,В здании пять этажей.,The building has five floors.
+translation_choice,Људи,Град и посао,радити,raditi,работать,to work,,,,,,
+fill_word,Људи,Град и посао,радити,raditi,работать,to work,,,Ја ____ од јутра до вечери.,Ja ____ od jutra do večeri.,Я работаю с утра до вечера.,I work from morning to evening.
+translation_choice,Људи,Град и посао,посао,posao,работа,job,,,,,,
+fill_word,Људи,Град и посао,посао,posao,работа,job,,,Имам добар посао.,Imam dobar posao.,У меня хорошая работа.,I have a good job.
+translation_choice,Људи,Школа и људи,српски,srpski,сербский,Serbian,,,,,,
+fill_word,Људи,Школа и људи,српски,srpski,сербский,Serbian,,,Српски је леп језик.,Srpski je lep jezik.,Сербский — красивый язык.,Serbian is a beautiful language.
+translation_choice,Људи,Школа и људи,језик,jezik,язык,language,,,,,,
+fill_word,Људи,Школа и људи,језик,jezik,язык,language,,,Учиш ли српски језик?,Učiš li srpski jezik?,Ты учишь сербский язык?,Are you learning Serbian?
+translation_choice,Људи,Школа и људи,говорити,govoriti,говорить,to speak,,,,,,
+fill_word,Људи,Школа и људи,говорити,govoriti,говорить,to speak,,,Она добро ____ српски.,Ona dobro ____ srpski.,Она хорошо говорит по-сербски.,She speaks Serbian well.
+translation_choice,Људи,Школа и људи,школа,škola,школа,school,,,,,,
+fill_word,Људи,Школа и људи,школа,škola,школа,school,,,Школа је близу дома.,Škola je blizu doma.,Школа рядом с домом.,The school is near home.
+translation_choice,Људи,Школа и људи,ученик,učenik,ученик,school student,,,,,,
+fill_word,Људи,Школа и људи,ученик,učenik,ученик,school student,,,Он је ученик осмог разреда.,On je učenik osmog razreda.,Он ученик восьмого класса.,He is an eighth-grade student.
+translation_choice,Људи,Школа и људи,студент,student,студент,university student,,,,,,
+fill_word,Људи,Школа и људи,студент,student,студент,university student,,,Она је ____ права.,Ona je ____ prava.,Она студентка юридического факультета.,She is a law student.
+translation_choice,Људи,Школа и људи,наставник,nastavnik,учитель,teacher,,,,,,
+fill_word,Људи,Школа и људи,наставник,nastavnik,учитель,teacher,,,Наш наставник је млад.,Naš nastavnik je mlad.,Наш учитель молодой.,Our teacher is young.
+translation_choice,Људи,Школа и људи,лекар,lekar,врач,doctor,,,,,,
+fill_word,Људи,Школа и људи,лекар,lekar,врач,doctor,,,Лекар је у болници.,Lekar je u bolnici.,Врач в больнице.,The doctor is in the hospital.
+translation_choice,Људи,Школа и људи,болница,bolnica,больница,hospital,,,,,,
+fill_word,Људи,Школа и људи,болница,bolnica,больница,hospital,,,Болница је далеко.,Bolnica je daleko.,Больница далеко.,The hospital is far away.
+translation_choice,Људи,Школа и људи,инжењер,inženjer,инженер,engineer,,,,,,
+fill_word,Људи,Школа и људи,инжењер,inženjer,инженер,engineer,,,Мој отац је инжењер.,Moj otac je inženjer.,Мой отец — инженер.,My father is an engineer.
+translation_choice,Људи,Школа и људи,сусед,susjed,сосед,neighbor,,,,,,
+fill_word,Људи,Школа и људи,сусед,susjed,сосед,neighbor,,,Наш сусед је добар човек.,Naš sused je dobar čovek.,Наш сосед — хороший человек.,Our neighbor is a good man.
+translation_choice,Људи,Школа и људи,дом,dom,дом,home,,,,,,
+fill_word,Људи,Школа и људи,дом,dom,дом,home,,,Наш дом је нов.,Naš dom je nov.,Наш дом новый.,Our home is new.
+translation_choice,Људи,Придеви,широк,širok,широкий,wide,,,,,,
+fill_word,Људи,Придеви,широк,širok,широкий,wide,,,Река је ____.,Reka je ____.,Река широкая.,The river is wide.
+translation_choice,Људи,Придеви,дуг,dug,долгий,long,,,,,,
+fill_word,Људи,Придеви,дуг,dug,долгий,long,,,Он има велики дуг.,On ima veliki dug.,У него большой долг.,He has a big debt.
+translation_choice,Људи,Придеви,млад,mlad,молодой,young,,,,,,
+fill_word,Људи,Придеви,млад,mlad,молодой,young,,,____ човек је висок.,____ čovek je visok.,Молодой человек высокий.,The young man is tall.
+translation_choice,Људи,Придеви,стар,star,старый,old,,,,,,
+fill_word,Људи,Придеви,стар,star,старый,old,,,Стар човек спава.,Star čovek spava.,Старик спит.,The old man is sleeping.
+translation_choice,Људи,Придеви,висок,visok,высокий,tall,,,,,,
+fill_word,Људи,Придеви,висок,visok,высокий,tall,,,Она је ____.,Ona je ____.,Она высокая.,She is tall.
+translation_choice,Људи,Придеви,низак,nizak,низкий,short,,,,,,
+fill_word,Људи,Придеви,низак,nizak,низкий,short,,,Он је низак.,On je nizak.,Он низкий.,He is short.
+translation_choice,Људи,Придеви,добар,dobar,хороший,good,,,,,,
+fill_word,Људи,Придеви,добар,dobar,хороший,good,,,Ово је добар дан.,Ovo je dobar dan.,Это хороший день.,This is a good day.
+translation_choice,Људи,Придеви,лош,loš,плохой,bad,,,,,,
+fill_word,Људи,Придеви,лош,loš,плохой,bad,,,Ово је лош дан.,Ovo je loš dan.,Это плохой день.,This is a bad day.
+translation_choice,Људи,Придеви,нов,nov,новый,new,,,,,,
+fill_word,Људи,Придеви,нов,nov,новый,new,,,Нов ауто је скуп.,Nov auto je skup.,Новая машина дорогая.,A new car is expensive.
+translation_choice,Људи,Придеви,велики,veliki,большой,big,,,,,,
+fill_word,Људи,Придеви,велики,veliki,большой,big,,,Велики град има много људи.,Veliki grad ima mnogo ljudi.,В большом городе много людей.,A big city has many people.
+translation_choice,Људи,Придеви,мали,mali,маленький,small,,,,,,
+fill_word,Људи,Придеви,мали,mali,маленький,small,,,Мали стан је јефтин.,Mali stan je jeftin.,Маленькая квартира дешёвая.,A small apartment is cheap.
+translation_choice,Људи,Придеви,леп,lep,красивый,beautiful,,,,,,
+fill_word,Људи,Придеви,леп,lep,красивый,beautiful,,,Леп дан за шетњу.,Lep dan za šetnju.,Красивый день для прогулки.,A beautiful day for a walk.
+translation_choice,Људи,Боје,човек,čovek,человек,person,,,,,,
+fill_word,Људи,Боје,човек,čovek,человек,person,,,Он је добар човек.,On je dobar čovek.,Он хороший человек.,He is a good man.
+translation_choice,Људи,Боје,дан,dan,день,day,,,,,,
+fill_word,Људи,Боје,дан,dan,день,day,,,Овај дан је слободан.,Ovaj dan je slobodan.,Этот день — выходной.,This day is a day off.
+translation_choice,Људи,Боје,боја,boja,цвет,color,,,,,,
+fill_word,Људи,Боје,боја,boja,цвет,color,,,Плава је моја омилјена боја.,Plava je moja omiljena boja.,Синий — мой любимый цвет.,Blue is my favorite color.
+translation_choice,Људи,Боје,црвен,crven,красный,red,,,,,,
+fill_word,Људи,Боје,црвен,crven,красный,red,,,____ боја ми се свиђа.,____ boja mi se sviđa.,Мне нравится красный цвет.,I like the color red.
+translation_choice,Људи,Боје,плав,plav,синий,blue,,,,,,
+fill_word,Људи,Боје,плав,plav,синий,blue,,,____ небо је лепо.,____ nebo je lepo.,Синее небо красивое.,The blue sky is beautiful.
+translation_choice,Људи,Боје,зелен,zelen,зелёный,green,,,,,,
+fill_word,Људи,Боје,зелен,zelen,зелёный,green,,,____ воће је кисело.,____ voće je kiselo.,Зелёные фрукты кислые.,Green fruit is sour.
+translation_choice,Људи,Боје,тешко,teško,трудно,difficult,,,,,,
+fill_word,Људи,Боје,тешко,teško,трудно,difficult,,,Ово је тешко питање.,Ovo je teško pitanje.,Это трудный вопрос.,This is a difficult question.
+translation_choice,Људи,Боје,црн,crn,чёрный,black,,,,,,
+fill_word,Људи,Боје,црн,crn,чёрный,black,,,Имам ____ торбу.,Imam ____ torbu.,У меня чёрная сумка.,I have a black bag.
+translation_choice,Људи,Боје,бео,beo,белый,white,,,,,,
+fill_word,Људи,Боје,бео,beo,белый,white,,,Она носи ____ хаљину.,Ona nosi ____ haljinu.,Она носит белое платье.,She wears a white dress.
+translation_choice,Људи,Боје,жут,žut,жёлтый,yellow,,,,,,
+fill_word,Људи,Боје,жут,žut,жёлтый,yellow,,,Ово је ____ аутобус.,Ovo je ____ autobus.,Это жёлтый автобус.,This is a yellow bus.
+translation_choice,Људи,Хобији,читати,čitati,читать,to read,,,,,,
+fill_word,Људи,Хобији,читати,čitati,читать,to read,,,____ књигу.,____ knjigu.,Я читаю книгу.,I am reading a book.
+translation_choice,Људи,Хобији,писати,pisati,писать,to write,,,,,,
+fill_word,Људи,Хобији,писати,pisati,писать,to write,,,____ писмо.,____ pismo.,Я пишу письмо.,I am writing a letter.
+translation_choice,Људи,Хобији,гледати,gledati,смотреть,to watch,,,,,,
+fill_word,Људи,Хобији,гледати,gledati,смотреть,to watch,,,____ филм.,____ film.,Мы смотрим фильм.,We are watching a film.
+translation_choice,Људи,Хобији,слушати,slušati,слушать,to listen,,,,,,
+fill_word,Људи,Хобији,слушати,slušati,слушать,to listen,,,____ радио.,____ radio.,Я слушаю радио.,I listen to the radio.
+translation_choice,Људи,Хобији,играти,igrati,играть,to play,,,,,,
+fill_word,Људи,Хобији,играти,igrati,играть,to play,,,Деца ____ у парку.,Deca ____ u parku.,Дети играют в парке.,The children play in the park.
+translation_choice,Људи,Хобији,шетати,šetati,гулять,to stroll,,,,,,
+fill_word,Људи,Хобији,шетати,šetati,гулять,to stroll,,,____ поред реке.,____ pored reke.,Я гуляю вдоль реки.,I walk along the river.
+translation_choice,Људи,Хобији,пливати,plivati,плавать,to swim,,,,,,
+fill_word,Људи,Хобији,пливати,plivati,плавать,to swim,,,____ у базену.,____ u bazenu.,Я плаваю в бассейне.,I swim in the pool.
+translation_choice,Људи,Хобији,књига,knjiga,книга,book,,,,,,
+fill_word,Људи,Хобији,књига,knjiga,книга,book,,,Читам интересантну ____.,Čitam interesantnu ____.,Я читаю интересную книгу.,I am reading an interesting book.
+translation_choice,Људи,Хобији,слободан,slobodan,свободный,free,,,,,,
+fill_word,Људи,Хобији,слободан,slobodan,свободный,free,,,Вечерас сам слободан.,Večeras sam slobodan.,Сегодня вечером я свободен.,I am free tonight.
+translation_choice,Људи,Хобији,занимљив,zanimljiv,интересный,interesting,,,,,,
+fill_word,Људи,Хобији,занимљив,zanimljiv,интересный,interesting,,,Та књига је ____.,Ta knjiga je ____.,Та книга интересная.,That book is interesting.
+translation_choice,Људи,Опис особе,паметан,pametan,умный,smart,,,,,,
+fill_word,Људи,Опис особе,паметан,pametan,умный,smart,,,Ти си паметан.,Ti si pametan.,Ты умный.,You are smart.
+translation_choice,Људи,Опис особе,љубазан,ljubazan,вежливый,kind,,,,,,
+fill_word,Људи,Опис особе,љубазан,ljubazan,вежливый,kind,,,Продавац је љубазан.,Prodavac je ljubazan.,Продавец вежливый.,The seller is kind.
+translation_choice,Људи,Опис особе,дебео,debeo,толстый,fat; thick,,,,,,
+fill_word,Људи,Опис особе,дебео,debeo,толстый,fat; thick,,,Ова књига је ____.,Ova knjiga je ____.,Эта книга толстая.,This book is thick.
+translation_choice,Људи,Опис особе,мршав,mršav,худой,thin,,,,,,
+fill_word,Људи,Опис особе,мршав,mršav,худой,thin,,,Мој брат је мршав.,Moj brat je mršav.,Мой брат худой.,My brother is thin.
+translation_choice,Људи,Опис особе,згодан,zgodan,симпатичный,handsome,,,,,,
+fill_word,Људи,Опис особе,згодан,zgodan,симпатичный,handsome,,,Он је згодан момак.,On je zgodan momak.,Он симпатичный парень.,He is a handsome guy.
+translation_choice,Људи,Опис особе,ружан,ružan,некрасивый,ugly,,,,,,
+fill_word,Људи,Опис особе,ружан,ružan,некрасивый,ugly,,,Ова зграда је ____.,Ova zgrada je ____.,Это здание некрасивое.,This building is ugly.
+translation_choice,Људи,Опис особе,коса,kosa,волосы,hair,,,,,,
+fill_word,Људи,Опис особе,коса,kosa,волосы,hair,,,Има дугу ____.,Ima dugu ____.,У неё длинные волосы.,She has long hair.
+translation_choice,Људи,Опис особе,око,oko,глаз,eye,,,,,,
+fill_word,Људи,Опис особе,око,oko,глаз,eye,,,Има плаве ____.,Ima plave ____.,У него голубые глаза.,He has blue eyes.
+translation_choice,Људи,Опис особе,лице,lice,лицо,face,,,,,,
+fill_word,Људи,Опис особе,лице,lice,лицо,face,,,Има лепо лице.,Ima lepo lice.,У неё красивое лицо.,She has a pretty face.
+translation_choice,Људи,Опис особе,изгледати,izgledati,выглядеть,to look,,,,,,
+fill_word,Људи,Опис особе,изгледати,izgledati,выглядеть,to look,,,Ти ____ уморно.,Ti ____ umorno.,Ты выглядишь усталым.,You look tired.
+translation_choice,Време,Дани недеље,понедељак,ponedeljak,понедельник,Monday,,,,,,
+fill_word,Време,Дани недеље,понедељак,ponedeljak,понедельник,Monday,,,Данас је понедељак.,Danas je ponedeljak.,Сегодня понедельник.,Today is Monday.
+translation_choice,Време,Дани недеље,уторак,utorak,вторник,Tuesday,,,,,,
+fill_word,Време,Дани недеље,уторак,utorak,вторник,Tuesday,,,Сутра је уторак.,Sutra je utorak.,Завтра вторник.,Tomorrow is Tuesday.
+translation_choice,Време,Дани недеље,среда,sreda,среда,Wednesday,,,,,,
+fill_word,Време,Дани недеље,среда,sreda,среда,Wednesday,,,Среда је мој омиљени дан.,Sreda je moj omiljeni dan.,Среда — мой любимый день.,Wednesday is my favorite day.
+translation_choice,Време,Дани недеље,четвртак,četvrtak,четверг,Thursday,,,,,,
+fill_word,Време,Дани недеље,четвртак,četvrtak,четверг,Thursday,,,Четвртак је дан за куповину.,Četvrtak je dan za kupovinu.,Четверг — день для покупок.,Thursday is a day for shopping.
+translation_choice,Време,Дани недеље,петак,petak,пятница,Friday,,,,,,
+fill_word,Време,Дани недеље,петак,petak,пятница,Friday,,,Петак је крај недели.,Petak je kraj nedeli.,Пятница — конец недели.,Friday is the end of the week.
+translation_choice,Време,Дани недеље,субота,subota,суббота,Saturday,,,,,,
+fill_word,Време,Дани недеље,субота,subota,суббота,Saturday,,,Субота је слободан дан.,Subota je slobodan dan.,Суббота — выходной день.,Saturday is a day off.
+translation_choice,Време,Дани недеље,недеља,nedelja,воскресенье,Sunday,,,,,,
+fill_word,Време,Дани недеље,недеља,nedelja,воскресенье,Sunday,,,Недеља је слободан дан.,Nedelja je slobodan dan.,Воскресенье — выходной день.,Sunday is a day off.
+translation_choice,Време,Дани недеље,прекосутра,prekosutra,послезавтра,the day after tomorrow,,,,,,
+fill_word,Време,Дани недеље,прекосутра,prekosutra,послезавтра,the day after tomorrow,,,Прекосутра је мој рођендан.,Prekosutra je moj rođendan.,Послезавтра мой день рождения.,My birthday is the day after tomorrow.
+translation_choice,Време,Месеци,јануар,januar,январь,January,,,,,,
+fill_word,Време,Месеци,јануар,januar,январь,January,,,Јануар је хладан.,Januar je hladan.,Январь холодный.,January is cold.
+translation_choice,Време,Месеци,фебруар,februar,февраль,February,,,,,,
+fill_word,Време,Месеци,фебруар,februar,февраль,February,,,У ____ је хладно.,U ____ je hladno.,В феврале холодно.,It's cold in February.
+translation_choice,Време,Месеци,март,mart,март,March,,,,,,
+fill_word,Време,Месеци,март,mart,март,March,,,Март је први пролећни месец.,Mart je prvi prolećni mesec.,Март — первый месяц весны.,March is the first month of spring.
+translation_choice,Време,Месеци,април,april,апрель,April,,,,,,
+fill_word,Време,Месеци,април,april,апрель,April,,,Април је леп месец.,April je lep mesec.,Апрель — красивый месяц.,April is a beautiful month.
+translation_choice,Време,Месеци,мај,maj,май,May,,,,,,
+fill_word,Време,Месеци,мај,maj,май,May,,,У ____ је топло.,U ____ je toplo.,В мае тепло.,It's warm in May.
+translation_choice,Време,Месеци,јун,jun,июнь,June,,,,,,
+fill_word,Време,Месеци,јун,jun,июнь,June,,,У ____ је вруће.,U ____ je vruće.,В июне жарко.,It's hot in June.
+translation_choice,Време,Месеци,јул,jul,июль,July,,,,,,
+fill_word,Време,Месеци,јул,jul,июль,July,,,Јул је најтоплији месец.,Jul je najtopliji mesec.,Июль — самый жаркий месяц.,July is the hottest month.
+translation_choice,Време,Месеци,август,avgust,август,August,,,,,,
+fill_word,Време,Месеци,август,avgust,август,August,,,Август је месец одмора.,Avgust je mesec odmora.,Август — месяц отдыха.,August is the month of rest.
+translation_choice,Време,Месеци,септембар,septembar,сентябрь,September,,,,,,
+fill_word,Време,Месеци,септембар,septembar,сентябрь,September,,,У ____ почиње школа.,U ____ počinje škola.,Школа начинается в сентябре.,School starts in September.
+translation_choice,Време,Месеци,октобар,oktobar,октябрь,October,,,,,,
+fill_word,Време,Месеци,октобар,oktobar,октябрь,October,,,У ____ је хладно.,U ____ je hladno.,В октябре холодно.,It's cold in October.
+translation_choice,Време,Месеци,новембар,novembar,ноябрь,November,,,,,,
+fill_word,Време,Месеци,новембар,novembar,ноябрь,November,,,Новембар је хладан.,Novembar je hladan.,Ноябрь холодный.,November is cold.
+translation_choice,Време,Месеци,децембар,decembar,декабрь,December,,,,,,
+fill_word,Време,Месеци,децембар,decembar,декабрь,December,,,У ____ је мој рођендан.,U ____ je moj rođendan.,Мой день рождения в декабре.,My birthday is in December.
+translation_choice,Време,Време у дану,јутро,jutro,утро,morning,,,,,,
+fill_word,Време,Време у дану,јутро,jutro,утро,morning,,,Јутро је хладно.,Jutro je hladno.,Утро холодное.,The morning is cold.
+translation_choice,Време,Време у дану,подне,podne,полдень,noon,,,,,,
+fill_word,Време,Време у дану,подне,podne,полдень,noon,,,Сад је подне.,Sad je podne.,Сейчас полдень.,It's noon now.
+translation_choice,Време,Време у дану,поподне,popodne,день,afternoon,,,,,,
+fill_word,Време,Време у дану,поподне,popodne,день,afternoon,,,У поподне идем у парк.,U popodne idem u park.,После обеда иду в парк.,In the afternoon I'm going to the park.
+translation_choice,Време,Време у дану,сат,sat,час,hour / clock,,,,,,
+fill_word,Време,Време у дану,сат,sat,час,hour / clock,,,Колико је ____?,Koliko je ____?,Который час?,What time is it?
+translation_choice,Време,Време у дану,минута,minuta,минута,minute,,,,,,
+fill_word,Време,Време у дану,минута,minuta,минута,minute,,,Чекајте пет минута.,Čekajte pet minuta.,Подожди пять минут.,Wait five minutes.
+translation_choice,Време,Време у дану,ноћас,noćas,сегодня ночью,tonight,,,,,,
+fill_word,Време,Време у дану,ноћас,noćas,сегодня ночью,tonight,,,Ноћас је хладно.,Noćas je hladno.,Сегодня ночью холодно.,It's cold tonight.
+translation_choice,Време,Време у дану,сада,sada,сейчас,now,,,,,,
+fill_word,Време,Време у дану,сада,sada,сейчас,now,,,____ сам слободан.,____ sam slobodan.,Сейчас я свободен.,I'm free now.
+translation_choice,Време,Време у дану,будити се,buditi se,просыпаться,to wake up,,,,,,
+fill_word,Време,Време у дану,будити се,buditi se,просыпаться,to wake up,,,____ се у седам.,____ se u sedam.,Я просыпаюсь в семь.,I wake up at seven.
+translation_choice,Време,Прилози за време,данас,danas,сегодня,today,,,,,,
+fill_word,Време,Прилози за време,данас,danas,сегодня,today,,,Данас је леп дан.,Danas je lep dan.,Сегодня красивый день.,Today is a beautiful day.
+translation_choice,Време,Прилози за време,сутра,sutra,завтра,tomorrow,,,,,,
+fill_word,Време,Прилози за време,сутра,sutra,завтра,tomorrow,,,Видимо се сутра.,Vidimo se sutra.,Увидимся завтра.,See you tomorrow.
+translation_choice,Време,Прилози за време,јуче,juče,вчера,yesterday,,,,,,
+fill_word,Време,Прилози за време,јуче,juče,вчера,yesterday,,,Јуче је био петак.,Juče je bio petak.,Вчера была пятница.,Yesterday was Friday.
+translation_choice,Време,Прилози за време,увек,uvek,всегда,always,,,,,,
+fill_word,Време,Прилози за време,увек,uvek,всегда,always,,,Ја увек пијем кафу.,Ja uvek pijem kafu.,Я всегда пью кофе.,I always drink coffee.
+translation_choice,Време,Прилози за време,понекад,ponekad,иногда,sometimes,,,,,,
+fill_word,Време,Прилози за време,понекад,ponekad,иногда,sometimes,,,Понекад читам књигу.,Ponekad čitam knjigu.,Иногда читаю книгу.,Sometimes I read a book.
+translation_choice,Време,Прилози за време,рано,rano,рано,early,,,,,,
+fill_word,Време,Прилози за време,рано,rano,рано,early,,,Устајем рано.,Ustajem rano.,Я встаю рано.,I get up early.
+translation_choice,Време,Прилози за време,касно,kasno,поздно,late,,,,,,
+fill_word,Време,Прилози за време,касно,kasno,поздно,late,,,Она је дошла касно.,Ona je došla kasno.,Она пришла поздно.,She came late.
+translation_choice,Време,Прилози за време,брзо,brzo,быстро,fast,,,,,,
+fill_word,Време,Прилози за време,брзо,brzo,быстро,fast,,,Он говори брзо.,On govori brzo.,Он говорит быстро.,He speaks fast.
+translation_choice,Време,Прилози за време,споро,sporo,медленно,slowly,,,,,,
+fill_word,Време,Прилози за време,споро,sporo,медленно,slowly,,,Воз иде споро.,Voz ide sporo.,Поезд идёт медленно.,The train is going slowly.
+translation_choice,Време,Бројеви,нула,nula,ноль,zero,,,,,,
+fill_word,Време,Бројеви,нула,nula,ноль,zero,,,Вани је нула степени.,Vani je nula stepeni.,На улице ноль градусов.,It's zero degrees outside.
+translation_choice,Време,Бројеви,три,tri,три,three,,,,,,
+fill_word,Време,Бројеви,три,tri,три,three,,,Имам три дана слободно.,Imam tri dana slobodno.,У меня три дня выходных.,I have three days off.
+translation_choice,Време,Бројеви,четири,cetiri,четыре,four,,,,,,
+fill_word,Време,Бројеви,четири,cetiri,четыре,four,,,Четири дана до викенда.,Četiri dana do vikenda.,Четыре дня до выходных.,Four days until the weekend.
+translation_choice,Време,Бројеви,седам,sedam,семь,seven,,,,,,
+fill_word,Време,Бројеви,седам,sedam,семь,seven,,,Седам ујутру је рано.,Sedam ujutru je rano.,Семь утра — рано.,Seven in the morning is early.
+translation_choice,Време,Бројеви,осам,osam,восемь,eight,,,,,,
+fill_word,Време,Бројеви,осам,osam,восемь,eight,,,Осам сати ујутру идем на посао.,Osam sati ujutru idem na posao.,Иду на работу в восемь утра.,I go to work at eight in the morning.
+translation_choice,Време,Бројеви,девет,devet,девять,nine,,,,,,
+fill_word,Време,Бројеви,девет,devet,девять,nine,,,У девет идем у кино.,U devet idem u kino.,В девять иду в кино.,At nine I'm going to the cinema.
+translation_choice,Време,Бројеви,двадесет,dvadeset,двадцать,twenty,,,,,,
+fill_word,Време,Бројеви,двадесет,dvadeset,двадцать,twenty,,,У разреду је двадесет ученика.,U razredu je dvadeset učenika.,В классе двадцать учеников.,There are twenty students in the class.
+translation_choice,Време,Бројеви,тридесет,trideset,тридцать,thirty,,,,,,
+fill_word,Време,Бројеви,тридесет,trideset,тридцать,thirty,,,Април има тридесет дана.,April ima trideset dana.,В апреле тридцать дней.,April has thirty days.
+translation_choice,Време,Бројеви,четрдесет,četrdeset,сорок,forty,,,,,,
+fill_word,Време,Бројеви,четрдесет,četrdeset,сорок,forty,,,Мој отац има четрдесет година.,Moj otac ima četrdeset godina.,Моему отцу сорок лет.,My father is forty years old.
+translation_choice,Време,Бројеви,хиљаду,hiljadu,тысяча,a thousand,,,,,,
+fill_word,Време,Бројеви,хиљаду,hiljadu,тысяча,a thousand,,,Хиљаду људи је дошло на концерт.,Hiljadu ljudi je došlo na koncert.,Тысяча людей пришла на концерт.,A thousand people came to the concert.
+translation_choice,Време,Годишња доба,зима,zima,зима,winter,,,,,,
+fill_word,Време,Годишња доба,зима,zima,зима,winter,,,Зима је хладна.,Zima je hladna.,Зима холодная.,Winter is cold.
+translation_choice,Време,Годишња доба,лето,leto,лето,summer,,,,,,
+fill_word,Време,Годишња доба,лето,leto,лето,summer,,,Лето је топло.,Leto je toplo.,Лето тёплое.,Summer is warm.
+translation_choice,Време,Годишња доба,пролеће,proleće,весна,spring,,,,,,
+fill_word,Време,Годишња доба,пролеће,proleće,весна,spring,,,Пролеће је лепо.,Proleće je lepo.,Весна красивая.,Spring is beautiful.
+translation_choice,Време,Годишња доба,јесен,jesen,осень,autumn,,,,,,
+fill_word,Време,Годишња доба,јесен,jesen,осень,autumn,,,Јесен је хладна.,Jesen je hladna.,Осень холодная.,Autumn is cold.
+translation_choice,Време,Годишња доба,месец,mesec,месяц,month,,,,,,
+fill_word,Време,Годишња доба,месец,mesec,месяц,month,,,Овај месец је март.,Ovaj mesec je mart.,Этот месяц — март.,This month is March.
+translation_choice,Време,Годишња доба,година,godina,год,year,,,,,,
+fill_word,Време,Годишња доба,година,godina,год,year,,,Она има двадесет година.,Ona ima dvadeset godina.,Ей двадцать лет.,She is twenty years old.
+translation_choice,Време,Годишња доба,рођендан,rođendan,день рождения,birthday,,,,,,
+fill_word,Време,Годишња доба,рођендан,rođendan,день рождения,birthday,,,Мој рођендан је у мају.,Moj rođendan je u maju.,Мой день рождения в мае.,My birthday is in May.
+translation_choice,Време,Годишња доба,време,vreme,время; погода,time; weather,,,,,,
+fill_word,Време,Годишња доба,време,vreme,время; погода,time; weather,,,Време је лепо.,Vreme je lepo.,Погода хорошая.,The weather is beautiful.
+translation_choice,Време,Празници,празник,praznik,праздник,holiday,,,,,,
+fill_word,Време,Празници,празник,praznik,праздник,holiday,,,Празник је сутра.,Praznik je sutra.,Праздник завтра.,The holiday is tomorrow.
+translation_choice,Време,Празници,славити,slaviti,праздновать,to celebrate,,,,,,
+fill_word,Време,Празници,славити,slaviti,праздновать,to celebrate,,,____ рођендан код куће.,____ rođendan kod kuće.,Мы празднуем день рождения дома.,We celebrate the birthday at home.
+translation_choice,Време,Празници,срећан,srećan,счастливый,happy,,,,,,
+fill_word,Време,Празници,срећан,srećan,счастливый,happy,,,Данас сам срећан.,Danas sam srećan.,Сегодня я счастлив.,I am happy today.
+translation_choice,Време,Празници,весео,veseo,весёлый,cheerful,,,,,,
+fill_word,Време,Празници,весео,veseo,весёлый,cheerful,,,Деца су ____.,Deca su ____.,Дети весёлые.,The children are cheerful.
+translation_choice,Време,Празници,одмор,odmor,отпуск; отдых,vacation / rest,,,,,,
+fill_word,Време,Празници,одмор,odmor,отпуск; отдых,vacation / rest,,,Идем на одмор у августу.,Idem na odmor u avgustu.,Я еду в отпуск в августе.,I'm going on vacation in August.
+translation_choice,Време,Празници,певати,pevati,петь,to sing,,,,,,
+fill_word,Време,Празници,певати,pevati,петь,to sing,,,____ српске песме.,____ srpske pesme.,Я пою сербские песни.,I sing Serbian songs.
+translation_choice,Време,Празници,викенд,vikend,выходные,weekend,,,,,,
+fill_word,Време,Празници,викенд,vikend,выходные,weekend,,,____ се одмарам.,____ se odmaram.,В выходные я отдыхаю.,I rest on the weekend.
+translation_choice,Време,Празници,ноћ,noć,ночь,night,,,,,,
+fill_word,Време,Празници,ноћ,noć,ночь,night,,,____ је тихо.,____ je tiho.,Ночью тихо.,It's quiet at night.
+translation_choice,Време,Празници,субота,subota,суббота,Saturday,,,,,,
+fill_word,Време,Празници,субота,subota,суббота,Saturday,,,У ____ идем на пијацу.,U ____ idem na pijacu.,В субботу я иду на рынок.,On Saturday I go to the market.
+translation_choice,Време,Празници,недеља,nedelja,воскресенье,Sunday,,,,,,
+fill_word,Време,Празници,недеља,nedelja,воскресенье,Sunday,,,____ се одмарам.,____ se odmaram.,По воскресеньям я отдыхаю.,On Sundays I rest.

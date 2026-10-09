@@ -1,0 +1,306 @@
+cyrillic,latin,translationRu,translationEn,partOfSpeech,gender,number,declension,conjugation,exampleCyrillic,exampleTranslationRu,exampleTranslationEn
+август,avgust,август,August,noun,m,singular,I,,У августу идемо на море.,В августе мы едем на море.,We go to the sea in August.
+аеродром,aerodrom,аэропорт,airport,noun,m,singular,I,,Авион је на аеродрому.,Самолёт находится в аэропорту.,The plane is at the airport.
+април,april,апрель,April,noun,m,singular,I,,У априлу цвета дрвеће.,В апреле цветут деревья.,The trees bloom in April.
+баба,baba,бабушка,grandmother,noun,f,singular,II,,Баба пече колаче.,Бабушка печёт пирожные.,Grandma bakes cakes.
+болница,bolnica,больница,hospital,noun,f,singular,II,,Лекар ради у болници.,Врач работает в больнице.,The doctor works at the hospital.
+боја,boja,цвет,color,noun,f,singular,II,,Омиљена боја ми је плава.,Мой любимый цвет — синий.,My favorite color is blue.
+брат,brat,брат,brother,noun,m,singular,I,,Мој брат је старији од мене.,Мой брат старше меня.,My brother is older than me.
+брзо,brzo,быстро,fast,adverb,,,,,Пише брзо.,Он пишет быстро.,He writes fast.
+будити се,buditi se,просыпаться,to wake up,verb,,,,III,Будим се у шест сати.,Я просыпаюсь в шесть часов.,I wake up at six o'clock.
+велики,veliki,большой,big,adjective,,,,,Велики град је гласан.,Большой город шумный.,A big city is noisy.
+виза,viza,виза,visa,noun,f,singular,II,,Треба ми виза за пут.,Мне нужна виза для поездки.,I need a visa for the trip.
+висок,visok,высокий,tall,adjective,,,,,Он је висок и спортски.,Он высокий и спортивный.,He is tall and athletic.
+вода,voda,вода,water,noun,f,singular,II,,Пијем пуно воде.,Я пью много воды.,I drink a lot of water.
+врата,vrata,дверь,door,noun,n,plural,I,,"Отвори врата, молим.","Открой дверь, пожалуйста.","Open the door, please."
+време,vreme,время; погода,time; weather,noun,n,singular,I,,Време је да идемо.,Пора идти.,It is time to go.
+главни,glavni,главный,main,adjective,,,,,Ово је главна улица.,Это главная улица.,This is the main street.
+говорити,govoriti,говорить,to speak,verb,,,,III,Говорим три језика.,Я говорю на трёх языках.,I speak three languages.
+година,godina,год,year,noun,f,singular,II,,Учим се већ годину дана.,Я учусь уже год.,I have been studying for a year.
+град,grad,город,city,noun,m,singular,I,,Волим свој град.,Я люблю свой город.,I love my city.
+дан,dan,день,day,noun,m,singular,I,,Имам слободан дан.,У меня свободный день.,I have a free day.
+данас,danas,сегодня,today,adverb,,,,,Данас је сунчано.,Сегодня солнечно.,It is sunny today.
+два,dva,два,two,numeral,,,,,Имам два брата.,У меня два брата.,I have two brothers.
+девет,devet,девять,nine,numeral,,,,,У девет сати почиње час.,В девять часов начинается урок.,The lesson starts at nine o'clock.
+деда,deda,дедушка,grandfather,noun,m,singular,I,,Деда чита новине.,Дедушка читает газету.,Grandpa reads the newspaper.
+десет,deset,десять,ten,numeral,,,,,Десет студената је у сали.,В аудитории десять студентов.,There are ten students in the hall.
+децембар,decembar,декабрь,December,noun,m,singular,I,,Децембар је последњи месец.,Декабрь — последний месяц.,December is the last month.
+добар,dobar,хороший,good,adjective,,,,,Он је добар пријатељ.,Он хороший друг.,He is a good friend.
+довиђења,doviđenja,до свидания,goodbye,interjection,,,,,"Довиђења, до сутра!","До свидания, до завтра!","Goodbye, see you tomorrow!"
+дом,dom,дом,home,noun,m,singular,I,,Кућа је мој дом.,Дом — это мой родной дом.,Home is where I live.
+дуг,dug,долгий,long,adjective,,,,,Пут је дуг.,Дорога длинная.,The road is long.
+жена,žena,женщина,woman,noun,f,singular,II,,Жена чита књигу.,Женщина читает книгу.,The woman is reading a book.
+живети,živeti,жить,to live,verb,,,,III,Живим у Србији.,Я живу в Сербии.,I live in Serbia.
+зграда,zgrada,здание,building,noun,f,singular,II,,Зграда има десет спратова.,В здании десять этажей.,The building has ten floors.
+здраво,zdravo,привет,hello,interjection,,,,,"Здраво, како си?","Привет, как дела?","Hello, how are you?"
+здравствати,zdravstvati,приветствовать,to greet,verb,,,,II,Лепо је здравствати госте.,Приятно приветствовать гостей.,It is nice to greet guests.
+зелен,zelen,зелёный,green,adjective,,,,,Трава је зелена.,Трава зелёная.,The grass is green.
+земља,zemlja,страна,country,noun,f,singular,II,,Ово је моја земља.,Это моя страна.,This is my country.
+зима,zima,зима,winter,noun,f,singular,II,,Зими пада снег.,Зимой идёт снег.,It snows in winter.
+зовати се,zovati se,зоваться,to be called,verb,,,,II,Како се зовеш?,Как тебя зовут?,What is your name?
+изволите,izvolite,прошу,here you go / please,interjection,,,,,"Изволите, седите.","Пожалуйста, садитесь.","Please, have a seat."
+излаз,izlaz,выход,exit,noun,m,singular,I,,Где је излаз?,Где выход?,Where is the exit?
+име,ime,имя,name,noun,n,singular,I,,Моје име је Марта.,Меня зовут Марта.,My name is Marta.
+инжењер,inženjer,инженер,engineer,noun,m,singular,I,,Он је грађевински инжењер.,Он инженер-строитель.,He is a civil engineer.
+карта,karta,билет,ticket,noun,f,singular,II,,Купио сам карту за воз.,Я купил билет на поезд.,I bought a train ticket.
+касно,kasno,поздно,late,adverb,,,,,Већ је касно за шетњу.,Уже поздно для прогулки.,It is already late for a walk.
+кафа,kafa,кофе,coffee,noun,f,singular,II,,Пијем кафу ујутру.,Я пью кофе утром.,I drink coffee in the morning.
+кофер,kofer,чемодан,suitcase,noun,m,singular,I,,Мој кофер је тежак.,Мой чемодан тяжёлый.,My suitcase is heavy.
+кућа,kuća,дом,house,noun,f,singular,II,,Кућа има велики врт.,У дома большой сад.,The house has a big garden.
+књига,knjiga,книга,book,noun,f,singular,II,,Читам интересантну књигу.,Я читаю интересную книгу.,I am reading an interesting book.
+лекар,lekar,врач,doctor,noun,m,singular,I,,Лекар прегледа пацијента.,Врач осматривает пациента.,The doctor examines the patient.
+леп,lep,красивый,beautiful,adjective,,,,,Време је лепо.,Погода красивая.,The weather is beautiful.
+лето,leto,лето,summer,noun,n,singular,I,,Лето је топло и сунчано.,Лето тёплое и солнечное.,Summer is warm and sunny.
+лош,loš,плохой,bad,adjective,,,,,Имам лош дан.,У меня плохой день.,I am having a bad day.
+мали,mali,маленький,small,adjective,,,,,Имамо малу кућу.,У нас маленький дом.,We have a small house.
+март,mart,март,March,noun,m,singular,I,,Март је трећи месец.,Март — третий месяц.,March is the third month.
+мај,maj,май,May,noun,m,singular,I,,Мај је леп месец.,Май — красивый месяц.,May is a beautiful month.
+мајка,majka,мать,mother,noun,f,singular,II,,Моја мајка је учитељица.,Моя мать — учительница.,My mother is a teacher.
+месец,mesec,месяц,month,noun,m,singular,I,,Месец има дванаест месеци.,В году двенадцать месяцев.,A year has twelve months.
+месо,meso,мясо,meat,noun,n,singular,I,,Једем мало меса.,Я ем мало мяса.,I eat little meat.
+ми,mi,мы,we,pronoun,,,,,Ми смо из Београда.,Мы из Белграда.,We are from Belgrade.
+минута,minuta,минута,minute,noun,f,singular,II,,Чекај пет минута.,Подожди пять минут.,Wait five minutes.
+млад,mlad,молодой,young,adjective,,,,,Млада жена се смеје.,Молодая женщина смеётся.,The young woman is laughing.
+молим,molim,пожалуйста,please / you're welcome,interjection,,,,,"Молим, уђите.","Пожалуйста, входите.","Please, come in."
+мој,moj,мой,my,pronoun,,,,,Ово је моја књига.,Это моя книга.,This is my book.
+наставник,nastavnik,учитель,teacher,noun,m,singular,I,,Наставник објашњава лекцију.,Учитель объясняет урок.,The teacher explains the lesson.
+недеља,nedelja,воскресенье,Sunday,noun,f,singular,II,,Недељом се одмарам.,По воскресеньям я отдыхаю.,On Sundays I rest.
+низак,nizak,низкий,short,adjective,,,,,Столица је ниска.,Стул низкий.,The chair is low.
+нов,nov,новый,new,adjective,,,,,Купио сам нов телефон.,Я купил новый телефон.,I bought a new phone.
+новембар,novembar,ноябрь,November,noun,m,singular,I,,Новембар је кишовит месец.,Ноябрь — дождливый месяц.,November is a rainy month.
+нос,nos,нос,nose,noun,m,singular,I,,Има мали нос.,У него маленький нос.,He has a small nose.
+ноћас,noćas,сегодня ночью,tonight,adverb,,,,,Ноћас је дуго падала киша.,Сегодня ночью долго шёл дождь.,It rained for a long time last night.
+нула,nula,ноль,zero,numeral,,,,,Температура је испод нуле.,Температура ниже нуля.,The temperature is below zero.
+одакле,odakle,откуда,from where,adverb,,,,,Одакле си?,Откуда ты?,Where are you from?
+октобар,oktobar,октябрь,October,noun,m,singular,I,,У октобру је јесен.,В октябре осень.,It is autumn in October.
+он,on,он,he,pronoun,,,,,Он ради у банци.,Он работает в банке.,He works at a bank.
+она,ona,она,she,pronoun,,,,,Она воли музику.,Она любит музыку.,She loves music.
+осам,osam,восемь,eight,numeral,,,,,Радим до осам сати.,Я работаю до восьми часов.,I work until eight o'clock.
+отац,otac,отец,father,noun,m,singular,I,,Мој отац је возач.,Мой отец — водитель.,My father is a driver.
+пас,pas,собака,dog,noun,m,singular,I,,Пас је веран пријатељ.,Собака — верный друг.,A dog is a loyal friend.
+пасош,pasoš,паспорт,passport,noun,m,singular,I,,Покажите ваш пасош.,Покажите ваш паспорт.,"Show your passport, please."
+пет,pet,пять,five,numeral,,,,,У пет сати идем кући.,В пять часов я иду домой.,At five o'clock I go home.
+петак,petak,пятница,Friday,noun,m,singular,I,,У петак је састанак.,В пятницу встреча.,There is a meeting on Friday.
+плав,plav,синий,blue,adjective,,,,,Плаво море је прелепо.,Синее море прекрасно.,The blue sea is beautiful.
+подне,podne,полдень,noon,noun,n,singular,I,,У подне имам паузу.,В полдень у меня перерыв.,I have a break at noon.
+понедељак,ponedeljak,понедельник,Monday,noun,m,singular,I,,У понедељак почиње недеља.,Неделя начинается в понедельник.,The week starts on Monday.
+понекад,ponekad,иногда,sometimes,adverb,,,,,Понекад гледам филмове.,Иногда я смотрю фильмы.,Sometimes I watch films.
+поподне,popodne,день,afternoon,noun,n,singular,I,,Поподне је слободно.,После обеда я свободен.,I am free in the afternoon.
+посао,posao,работа,job,noun,m,singular,I,,Волим свој посао.,Я люблю свою работу.,I love my job.
+пријатељ,prijatelj,друг,friend,noun,m,singular,I,,Он је мој најбољи пријатељ.,Он мой лучший друг.,He is my best friend.
+пријатно,prijatno,приятного,have a nice time,interjection,,,,,Пријатно ми је.,Мне очень приятно.,It is a pleasure to meet you.
+пролеће,proleće,весна,spring,noun,n,singular,I,,У пролеће све цвета.,Весной всё цветёт.,Everything blooms in spring.
+путовање,putovanje,путешествие,journey / trip,noun,n,singular,I,,Путовање је било лепо.,Поездка была прекрасной.,The trip was wonderful.
+радити,raditi,работать,to work,verb,,,,III,Радим од девет до пет.,Я работаю с девяти до пяти.,I work from nine to five.
+рано,rano,рано,early,adverb,,,,,Рано ујутру је тихо.,Ранним утром тихо.,It is quiet early in the morning.
+рачун,račun,счёт,bill,noun,m,singular,I,,Могу ли да платим рачун?,Можно оплатить счёт?,Can I pay the bill?
+рођендан,rođendan,день рождения,birthday,noun,m,singular,I,,Срећан рођендан!,С днём рождения!,Happy birthday!
+рука,ruka,рука,hand / arm,noun,f,singular,II,,Боли ме лева рука.,У меня болит левая рука.,My left arm hurts.
+ручак,ručak,обед,lunch,noun,m,singular,I,,Ручак је у један сат.,Обед в час дня.,Lunch is at one o'clock.
+сада,sada,сейчас,now,adverb,,,,,Сада сам заузет.,Сейчас я занят.,I am busy now.
+сат,sat,час,hour / clock,noun,m,singular,I,,Колико је сати?,Который час?,What time is it?
+седам,sedam,семь,seven,numeral,,,,,Будим се у седам.,Я просыпаюсь в семь.,I wake up at seven.
+септембар,septembar,сентябрь,September,noun,m,singular,I,,У септембру почиње јесен.,Осень начинается в сентябре.,Autumn begins in September.
+сестра,sestra,сестра,sister,noun,f,singular,II,,Моја сестра је млађа.,Моя сестра младше.,My sister is younger.
+со,so,соль,salt,noun,f,singular,III,,Додај мало соли.,Добавь немного соли.,Add a little salt.
+соба,soba,комната,room,noun,f,singular,II,,Соба је светла и топла.,Комната светлая и тёплая.,The room is bright and warm.
+споро,sporo,медленно,slowly,adverb,,,,,"Молим, говорите спорије.","Говорите, пожалуйста, медленнее.",Please speak more slowly.
+среда,sreda,среда,Wednesday,noun,f,singular,II,,Средом имам часове.,По средам у меня занятия.,I have classes on Wednesdays.
+српски,srpski,сербский,Serbian,adjective,,,,,Учим српски језик.,Я учу сербский язык.,I am learning the Serbian language.
+стан,stan,квартира,apartment,noun,m,singular,I,,Стан је у центру.,Квартира в центре.,The apartment is in the center.
+станица,stanica,станция,station,noun,f,singular,II,,Идем на аутобуску станицу.,Я иду на автобусную остановку.,I am going to the bus stop.
+стар,star,старый,old,adjective,,,,,Старо дрво је високо.,Старое дерево высокое.,The old tree is tall.
+сто,sto,сто,hundred,numeral,,,,,Књига кошта сто динара.,Книга стоит сто динаров.,The book costs one hundred dinars.
+студент,student,студент,university student,noun,m,singular,I,,Студент полаже испит.,Студент сдаёт экзамен.,The student takes the exam.
+субота,subota,суббота,Saturday,noun,f,singular,II,,У суботу идем на пијацу.,В субботу я иду на рынок.,On Saturday I go to the market.
+сусед,sused,сосед,neighbor,noun,m,singular,I,,Наш сусед је љубазан.,Наш сосед любезный.,Our neighbor is friendly.
+сутра,sutra,завтра,tomorrow,adverb,,,,,Сутра је радни дан.,Завтра рабочий день.,Tomorrow is a work day.
+твој,tvoj,твой,your,pronoun,,,,,Где је твоја сестра?,Где твоя сестра?,Where is your sister?
+тешко,teško,трудно,difficult,adverb,,,,,Задатак је тежак.,Задание трудное.,The task is difficult.
+ти,ti,ты,you,pronoun,,,,,Ти си мој пријатељ.,Ты мой друг.,You are my friend.
+три,tri,три,three,numeral,,,,,Чекам већ три сата.,Я жду уже три часа.,I have been waiting for three hours.
+увек,uvek,всегда,always,adverb,,,,,Увек доручкујем код куће.,Я всегда завтракаю дома.,I always have breakfast at home.
+укусно,ukusno,вкусно,delicious,adverb,,,,,Јело је укусно.,Блюдо вкусное.,The dish is delicious.
+улица,ulica,улица,street,noun,f,singular,II,,Улица је широка.,Улица широкая.,The street is wide.
+уста,usta,рот,mouth,noun,n,plural,I,,Отвори уста.,Открой рот.,Open your mouth.
+уторак,utorak,вторник,Tuesday,noun,m,singular,I,,У уторак имам испит.,Во вторник у меня экзамен.,I have an exam on Tuesday.
+ученик,učenik,ученик,school student,noun,m,singular,I,,Ученик учи лекцију.,Ученик учит урок.,The student studies the lesson.
+фебруар,februar,февраль,February,noun,m,singular,I,,У фебруару је хладно.,В феврале холодно.,It is cold in February.
+хвала,hvala,спасибо,thanks,interjection,,,,,Хвала на помоћи.,Спасибо за помощь.,Thank you for the help.
+хлад,hlad,прохлада; тень,coolness / shade,noun,m,singular,I,,Седимо у хладу.,Мы сидим в тени.,We are sitting in the shade.
+хлеб,hleb,хлеб,bread,noun,m,singular,I,,Купио сам свеж хлеб.,Я купил свежий хлеб.,I bought fresh bread.
+хотел,hotel,отель,hotel,noun,m,singular,I,,Хотел је у центру града.,Отель в центре города.,The hotel is in the city center.
+црвен,crven,красный,red,adjective,,,,,Црвени аутомобил је мој.,Красная машина — моя.,The red car is mine.
+чај,čaj,чай,tea,noun,m,singular,I,,Волим чај са лимуном.,Я люблю чай с лимоном.,I like tea with lemon.
+четвртак,četvrtak,четверг,Thursday,noun,m,singular,I,,У четвртак идемо у биоскоп.,В четверг мы идём в кино.,We are going to the cinema on Thursday.
+четири,četiri,четыре,four,numeral,,,,,Имам четири сестре.,У меня четыре сестры.,I have four sisters.
+човек,čovek,человек,person,noun,m,singular,I,,Човек седи у парку.,Человек сидит в парке.,The man is sitting in the park.
+шест,šest,шесть,six,numeral,,,,,У шест сати устајем.,Я встаю в шесть часов.,I get up at six o'clock.
+широк,širok,широкий,wide,adjective,,,,,Река је широка и дуга.,Река широкая и длинная.,The river is wide and long.
+школа,škola,школа,school,noun,f,singular,II,,Школа почиње у септембру.,Школа начинается в сентябре.,School starts in September.
+шума,šuma,лес,forest,noun,f,singular,II,,Шетали смо кроз шуму.,Мы гуляли по лесу.,We walked through the forest.
+ђак,đak,ученик,pupil / student,noun,m,singular,I,,Ђак учи лекцију.,Ученик учит урок.,The pupil studies the lesson.
+ја,ja,я,I,pronoun,,,,,Ја сам из Русије.,Я из России.,I am from Russia.
+јабука,jabuka,яблоко,apple,noun,f,singular,II,,Јабука је црвена.,Яблоко красное.,The apple is red.
+јануар,januar,январь,January,noun,m,singular,I,,Јануар је први месец у години.,Январь — первый месяц года.,January is the first month of the year.
+један,jedan,один,one,numeral,,,,,Дај ми један хлеб.,Дай мне один хлеб.,Give me one bread.
+језик,jezik,язык,language,noun,m,singular,I,,Српски језик је тежак али леп.,"Сербский язык трудный, но красивый.",The Serbian language is difficult but beautiful.
+јесен,jesen,осень,autumn,noun,f,singular,III,,Јесен је лепо годишње доба.,Осень — красивое время года.,Autumn is a beautiful season.
+јул,jul,июль,July,noun,m,singular,I,,У јулу је најтоплије.,В июле самое жаркое время.,It is hottest in July.
+јун,jun,июнь,June,noun,m,singular,I,,У јуну идемо на море.,В июне мы едем на море.,We go to the sea in June.
+јутро,jutro,утро,morning,noun,n,singular,I,,Јутро је свеже.,Утро свежее.,The morning is fresh.
+јуче,juče,вчера,yesterday,adverb,,,,,Јуче смо били у парку.,Вчера мы были в парке.,We were in the park yesterday.
+љубав,ljubav,любов,love,noun,f,singular,III,,Љубав је важна у животу.,Любовь важна в жизни.,Love is important in life.
+њива,njiva,поле,field,noun,f,singular,II,,Поље је у близини села.,Поле рядом с селом.,The field is near the village.
+ћирилица,ćirilica,кириллица,Cyrillic script,noun,f,singular,II,,Ћирилица има тридесет слова.,В кириллице тридцать букв.,The Cyrillic script has thirty letters.
+џем,džem,джем,jam,noun,m,singular,I,,Волим џем са хлебом.,Я люблю джем с хлебом.,I like jam with bread.
+глава,glava,голова,head,noun,f,singular,II,,Боли ме глава.,У меня болит голова.,My head hurts.
+лице,lice,лицо,face,noun,n,singular,I,,Има лепо лице.,У неё красивое лицо.,She has a pretty face.
+око,oko,глаз,eye,noun,n,singular,I,,Има плаве очи.,У него голубые глаза.,He has blue eyes.
+уво,uvo,ухо,ear,noun,n,singular,I,,Чујем на једно уво.,Я слышу одним ухом.,I hear with one ear.
+коса,kosa,волосы,hair,noun,f,singular,II,,Има дугу косу.,У неё длинные волосы.,She has long hair.
+зуб,zub,зуб,tooth,noun,m,singular,I,,Морам код зубара.,Мне нужно к стоматологу.,I need to go to the dentist.
+нога,noga,нога,leg,noun,f,singular,II,,Боли ме нога.,У меня болит нога.,My leg hurts.
+стопало,stopalo,ступня,foot,noun,n,singular,I,,Имам велика стопала.,У меня большие ступни.,I have big feet.
+прст,prst,палец,finger,noun,m,singular,I,,Посекао сам прст.,Я порезал палец.,I cut my finger.
+срце,srce,сердце,heart,noun,n,singular,I,,Срце ми брзо куца.,Моё сердце быстро бьётся.,My heart beats fast.
+врат,vrat,шея,neck,noun,m,singular,I,,Боли ме врат.,У меня болит шея.,My neck hurts.
+супруг,suprug,муж,husband,noun,m,singular,I,,Мој супруг ради у банци.,Мой муж работает в банке.,My husband works at a bank.
+супруга,supruga,жена,wife,noun,f,singular,II,,Његова супруга је лекар.,Его жена — врач.,His wife is a doctor.
+син,sin,сын,son,noun,m,singular,I,,Имам једног сина.,У меня один сын.,I have one son.
+ћерка,ćerka,дочь,daughter,noun,f,singular,II,,Моја ћерка иде у школу.,Моя дочь ходит в школу.,My daughter goes to school.
+унук,unuk,внук,grandson,noun,m,singular,I,,Бака воли свог унука.,Бабушка любит своего внука.,Grandma loves her grandson.
+унука,unuka,внучка,granddaughter,noun,f,singular,II,,Деда игра са унуком.,Дедушка играет с внучкой.,Grandpa plays with his granddaughter.
+тетка,tetka,тётя,aunt,noun,f,singular,II,,Моја тетка живи у Београду.,Моя тётя живёт в Белграде.,My aunt lives in Belgrade.
+стриц,stric,дядя,uncle,noun,m,singular,I,,Мој стриц је учитељ.,Мой дядя — учитель.,My uncle is a teacher.
+родитељ,roditelj,родитель,parent,noun,m,singular,I,,Моји родитељи су у Србији.,Мои родители в Сербии.,My parents are in Serbia.
+дете,dete,ребёнок,child,noun,n,singular,I,,Дете игра у парку.,Ребёнок играет в парке.,The child plays in the park.
+беба,beba,младенец,baby,noun,f,singular,II,,Беба спава.,Младенец спит.,The baby is sleeping.
+породица,porodica,семья,family,noun,f,singular,II,,Волим своју породицу.,Я люблю свою семью.,I love my family.
+млеко,mleko,молоко,milk,noun,n,singular,I,,Пијем млеко свако јутро.,Я пью молоко каждое утро.,I drink milk every morning.
+сир,sir,сыр,cheese,noun,m,singular,I,,Купио сам сир на пијаци.,Я купил сыр на рынке.,I bought cheese at the market.
+јогурт,jogurt,йогурт,yogurt,noun,m,singular,I,,Јогурт је здрав.,Йогурт полезен.,Yogurt is healthy.
+јаје,jaje,яйцо,egg,noun,n,singular,I,,Једем јаје за доручак.,Я ем яйцо на завтрак.,I eat an egg for breakfast.
+риба,riba,рыба,fish,noun,f,singular,II,,Риба је укусна.,Рыба вкусная.,The fish is delicious.
+шећер,šećer,сахар,sugar,noun,m,singular,I,,Не пијем кафу са шећером.,Я не пью кофе с сахаром.,I don't drink coffee with sugar.
+воће,voće,фрукты,fruit,noun,n,singular,I,,Воће је здраво.,Фрукты полезны.,Fruit is healthy.
+поврће,povrće,овощи,vegetables,noun,n,singular,I,,Једем много поврћа.,Я ем много овощей.,I eat a lot of vegetables.
+кромпир,krompir,картофель,potato,noun,m,singular,I,,Волим печени кромпир.,Я люблю печёный картофель.,I like baked potatoes.
+парадајз,paradajz,помидор,tomato,noun,m,singular,I,,Парадајз је црвен.,Помидор красный.,The tomato is red.
+јагода,jagoda,клубника,strawberry,noun,f,singular,II,,Јагоде су слатке.,Клубника сладкая.,Strawberries are sweet.
+супа,supa,суп,soup,noun,f,singular,II,,Скувао сам супу.,Я сварил суп.,I cooked soup.
+прозор,prozor,окно,window,noun,m,singular,I,,Отвори прозор.,Открой окно.,Open the window.
+зид,zid,стена,wall,noun,m,singular,I,,Слика виси на зиду.,Картина висит на стене.,The picture hangs on the wall.
+кров,krov,крыша,roof,noun,m,singular,I,,Кућа има црвен кров.,У дома красная крыша.,The house has a red roof.
+под,pod,пол,floor,noun,m,singular,I,,Седимо на поду.,Мы сидим на полу.,We are sitting on the floor.
+кухиња,kuhinja,кухня,kitchen,noun,f,singular,II,,Вечерамо у кухињи.,Мы ужинаем на кухне.,We have dinner in the kitchen.
+купатило,kupatilo,ванная,bathroom,noun,n,singular,I,,Купатило је чисто.,Ванная комната чистая.,The bathroom is clean.
+кревет,krevet,кровать,bed,noun,m,singular,I,,Спавам у великом кревету.,Я сплю на большой кровати.,I sleep in a big bed.
+столица,stolica,стул,chair,noun,f,singular,II,,Седи на столици.,Он сидит на стуле.,He sits on a chair.
+парк,park,парк,park,noun,m,singular,I,,Шетамо кроз парк.,Мы гуляем по парку.,We walk through the park.
+мост,most,мост,bridge,noun,m,singular,I,,Мост је преко реке.,Мост через реку.,The bridge is over the river.
+црква,crkva,церковь,church,noun,f,singular,II,,Црква је стара.,Церковь старая.,The church is old.
+музеј,muzej,музей,museum,noun,m,singular,I,,Музеј је отворен.,Музей открыт.,The museum is open.
+библиотека,biblioteka,библиотека,library,noun,f,singular,II,,Читам у библиотеци.,Я читаю в библиотеке.,I read at the library.
+апотека,apoteka,аптека,pharmacy,noun,f,singular,II,,Апотека ради до осам.,Аптека работает до восьми.,The pharmacy is open until eight.
+продавница,prodavnica,магазин,shop,noun,f,singular,II,,Идем у продавницу.,Я иду в магазин.,I'm going to the shop.
+ресторан,restoran,ресторан,restaurant,noun,m,singular,I,,Једемо у ресторану.,Мы едим в ресторане.,We eat at a restaurant.
+пошта,pošta,почта,post office,noun,f,singular,II,,Пошта је близу.,Почта рядом.,The post office is nearby.
+река,reka,река,river,noun,f,singular,II,,Пливамо у реци.,Мы плаваем в реке.,We swim in the river.
+језеро,jezero,озеро,lake,noun,n,singular,I,,Језеро је дубоко.,Озеро глубокое.,The lake is deep.
+море,more,море,sea,noun,n,singular,I,,Летом идемо на море.,Летом мы едем на море.,In summer we go to the sea.
+планина,planina,гора,mountain,noun,f,singular,II,,Планина је висока.,Гора высокая.,The mountain is high.
+небо,nebo,небо,sky,noun,n,singular,I,,Небо је плаво.,Небо голубое.,The sky is blue.
+сунце,sunce,солнце,sun,noun,n,singular,I,,Сунце сија.,Солнце светит.,The sun is shining.
+звезда,zvezda,звезда,star,noun,f,singular,II,,Звезде су на небу.,Звёзды на небе.,The stars are in the sky.
+ветар,vetar,ветер,wind,noun,m,singular,I,,Ветар је јак.,Ветер сильный.,The wind is strong.
+киша,kiša,дождь,rain,noun,f,singular,II,,Пада киша.,Идёт дождь.,It's raining.
+снег,sneg,снег,snow,noun,m,singular,I,,Снег пада.,Идёт снег.,It's snowing.
+дрво,drvo,дерево,tree,noun,n,singular,I,,Дрво је високо.,Дерево высокое.,The tree is tall.
+мачка,mačka,кошка,cat,noun,f,singular,II,,Мачка спава на софи.,Кошка спит на диване.,The cat sleeps on the sofa.
+крава,krava,корова,cow,noun,f,singular,II,,Крава даје млеко.,Корова даёт молоко.,The cow gives milk.
+коњ,konj,лошадь,horse,noun,m,singular,I,,Коњ брзо трчи.,Лошадь быстро бежит.,The horse runs fast.
+овца,ovca,овца,sheep,noun,f,singular,II,,Овца је у пољу.,Овца в поле.,The sheep is in the field.
+коза,koza,коза,goat,noun,f,singular,II,,Коза једе траву.,Коза ест траву.,The goat eats grass.
+птица,ptica,птица,bird,noun,f,singular,II,,Птица пева.,Птица поёт.,The bird sings.
+медвед,medved,медведь,bear,noun,m,singular,I,,Медвед живи у шуми.,Медведь живёт в лесу.,The bear lives in the forest.
+вук,vuk,волк,wolf,noun,m,singular,I,,Вук је дивља животиња.,Волк — дикое животное.,The wolf is a wild animal.
+лисица,lisica,лиса,fox,noun,f,singular,II,,Лисица је лукава.,Лиса хитрая.,The fox is cunning.
+зец,zec,заяц,rabbit,noun,m,singular,I,,Зец брзо скаче.,Заяц быстро прыгает.,The rabbit jumps fast.
+слон,slon,слон,elephant,noun,m,singular,I,,Слон је велик.,Слон большой.,The elephant is big.
+ноћ,noć,ночь,night,noun,f,singular,III,,Ноћу је тихо.,Ночью тихо.,It's quiet at night.
+празник,praznik,праздник,holiday,noun,m,singular,I,,Празник је сутра.,Праздник завтра.,The holiday is tomorrow.
+викенд,vikend,выходные,weekend,noun,m,singular,I,,Викендом се одмарам.,В выходные я отдыхаю.,I rest on the weekend.
+одмор,odmor,отпуск; отдых,vacation / rest,noun,m,singular,I,,Идем на одмор у августу.,Я еду в отпуск в августе.,I'm going on vacation in August.
+радник,radnik,рабочий,worker,noun,m,singular,I,,Радник ради у фабрици.,Рабочий работает на фабрике.,The worker works in a factory.
+кувар,kuvar,повар,cook,noun,m,singular,I,,Кувар припрема јело.,Повар готовит блюдо.,The cook prepares the dish.
+конобар,konobar,официант,waiter,noun,m,singular,I,,Конобар доноси кафу.,Официант приносит кофе.,The waiter brings coffee.
+возач,vozač,водитель,driver,noun,m,singular,I,,Возач вози аутобус.,Водитель ведёт автобус.,The driver drives the bus.
+пилот,pilot,пилот,pilot,noun,m,singular,I,,Пилот лети авионом.,Пилот летит на самолёте.,The pilot flies a plane.
+полицајац,policajac,полицейский,policeman,noun,m,singular,I,,Полицајац чува град.,Полицейский охраняет город.,The policeman protects the city.
+глумац,glumac,актёр,actor,noun,m,singular,I,,Глумац игра у филму.,Актёр снимается в фильме.,The actor acts in a film.
+адвокат,advokat,адвокат,lawyer,noun,m,singular,I,,Адвокат брани клијента.,Адвокат защищает клиента.,The lawyer defends the client.
+аутобус,autobus,автобус,bus,noun,m,singular,I,,Аутобус полази у седам.,Автобус отправляется в семь.,The bus leaves at seven.
+трамвај,tramvaj,трамвай,tram,noun,m,singular,I,,Трамвај иде до центра.,Трамвай идёт до центра.,The tram goes to the center.
+воз,voz,поезд,train,noun,m,singular,I,,Воз стиже касно.,Поезд прибывает поздно.,The train arrives late.
+метро,metro,метро,metro / subway,noun,n,singular,I,,Метро је брзо.,Метро быстрое.,The metro is fast.
+такси,taksi,такси,taxi,noun,m,singular,I,,Узео сам такси.,Я взял такси.,I took a taxi.
+аутомобил,automobil,автомобиль,car,noun,m,singular,I,,Аутомобил је нов.,Автомобиль новый.,The car is new.
+бицикл,bicikl,велосипед,bicycle,noun,m,singular,I,,Вози бицикл.,Он ездит на велосипеде.,He rides a bicycle.
+камион,kamion,грузовик,truck,noun,m,singular,I,,Камион носи робу.,Грузовик перевозит товары.,The truck carries goods.
+брод,brod,корабль,ship,noun,m,singular,I,,Брод плови по мору.,Корабль плывёт по морю.,The ship sails the sea.
+авион,avion,самолёт,plane,noun,m,singular,I,,Авион лети високо.,Самолёт летит высоко.,The plane flies high.
+пут,put,дорога,road / way,noun,m,singular,I,,Пут је дуг.,Дорога длинная.,The road is long.
+ићи,ići,идти,to go,verb,,,,II,Идем у школу.,Я иду в школу.,I am going to school.
+доћи,doći,приходить,to come,verb,,,,II,Дођи сутра код мене.,Приходи завтра ко мне.,Come to my place tomorrow.
+јести,jesti,есть,to eat,verb,,,,II,Једемо у подне.,Мы едим в полдень.,We eat at noon.
+пити,piti,пить,to drink,verb,,,,II,Пијем воду.,Я пью воду.,I drink water.
+спавати,spavati,спать,to sleep,verb,,,,I,Спавам осам сати.,Я сплю восемь часов.,I sleep eight hours.
+читати,čitati,читать,to read,verb,,,,I,Читам књигу.,Я читаю книгу.,I am reading a book.
+писати,pisati,писать,to write,verb,,,,II,Пишем писмо.,Я пишу письмо.,I am writing a letter.
+учити,učiti,учить,to learn / study,verb,,,,III,Учим српски језик.,Я учу сербский язык.,I am learning Serbian.
+знати,znati,знать,to know,verb,,,,I,Знаш ли одговор?,Ты знаешь ответ?,Do you know the answer?
+мислити,misliti,думать,to think,verb,,,,III,Мислим на тебе.,Я думаю о тебе.,I am thinking about you.
+волети,voleti,любить,to love,verb,,,,III,Волим те.,Я тебя люблю.,I love you.
+видети,videti,видеть,to see,verb,,,,III,Видим птицу на небу.,Я вижу птицу в небе.,I see a bird in the sky.
+чути,čuti,слышать,to hear,verb,,,,II,Чујем музику.,Я слышу музыку.,I hear music.
+слушати,slušati,слушать,to listen,verb,,,,I,Слушам радио.,Я слушаю радио.,I listen to the radio.
+гледати,gledati,смотреть,to watch,verb,,,,I,Гледамо филм.,Мы смотрим фильм.,We are watching a film.
+играти,igrati,играть,to play,verb,,,,I,Деца играју у парку.,Дети играют в парке.,The children play in the park.
+купити,kupiti,купить,to buy,verb,,,,III,Купио сам хлеб.,Я купил хлеб.,I bought bread.
+платити,platiti,платить,to pay,verb,,,,III,Платим рачун.,Я плачу по счёту.,I pay the bill.
+отворити,otvoriti,открыть,to open,verb,,,,III,Отвори врата.,Открой дверь.,Open the door.
+затворити,zatvoriti,закрыть,to close,verb,,,,III,Затвори прозор.,Закрой окно.,Close the window.
+врућ,vruć,горячий,hot,adjective,,,,,Кафа је врућа.,Кофе горячий.,The coffee is hot.
+хладан,hladan,холодный,cold,adjective,,,,,Данас је хладно.,Сегодня холодно.,It is cold today.
+топао,topao,тёплый,warm,adjective,,,,,Свиђа ми се топло море.,Мне нравится тёплое море.,I like the warm sea.
+јак,jak,сильный,strong,adjective,,,,,Он је јак.,Он сильный.,He is strong.
+слаб,slab,слабый,weak,adjective,,,,,Он је слаб.,Он слабый.,He is weak.
+брз,brz,быстрый,fast,adjective,,,,,Аутомобил је брз.,Автомобиль быстрый.,The car is fast.
+тежак,težak,тяжёлый; трудный,heavy / difficult,adjective,,,,,Торба је тешка.,Сумка тяжёлая.,The bag is heavy.
+чист,čist,чистый,clean,adjective,,,,,Соба је чиста.,Комната чистая.,The room is clean.
+прљав,prljav,грязный,dirty,adjective,,,,,Одећа је прљава.,Одежда грязная.,The clothes are dirty.
+сув,suv,сухой,dry,adjective,,,,,Земља је сува.,Земля сухая.,The ground is dry.
+мокар,mokar,мокрый,wet,adjective,,,,,Пас је мокар.,Пёс мокрый.,The dog is wet.
+пун,pun,полный,full,adjective,,,,,Аутобус је пун.,Автобус полный.,The bus is full.
+богат,bogat,богатый,rich,adjective,,,,,Он је богат човек.,Он богатый человек.,He is a rich man.
+скуп,skup,дорогой,expensive,adjective,,,,,Овај стан је скуп.,Эта квартира дорогая.,This apartment is expensive.
+јефтин,jeftin,дешёвый,cheap,adjective,,,,,Хлеб је јефтин.,Хлеб дешёвый.,Bread is cheap.
+паметан,pametan,умный,smart,adjective,,,,,Ти си паметан.,Ты умный.,You are smart.
+срећан,srećan,счастливый,happy,adjective,,,,,Данас сам срећан.,Сегодня я счастлив.,I am happy today.
+гладан,gladan,голодный,hungry,adjective,,,,,Гладан сам.,Я голоден.,I am hungry.
+здрав,zdrav,здоровый,healthy,adjective,,,,,Здрав сам.,Я здоров.,I am healthy.
+још,još,ещё,still / more,adverb,,,,,Још сам ту.,Я ещё здесь.,I am still here.
+већ,već,уже,already,adverb,,,,,Већ је касно.,Уже поздно.,It is already late.
+опет,opet,снова,again,adverb,,,,,Опет пада киша.,Опять идёт дождь.,It is raining again.
+никада,nikada,никогда,never,adverb,,,,,Никада не касним.,Я никогда не опаздываю.,I am never late.
+често,često,часто,often,adverb,,,,,Често идем у парк.,Я часто хожу в парк.,I often go to the park.
+овде,ovde,здесь,here,adverb,,,,,Овде је лепо.,Здесь красиво.,It is nice here.
+тамо,tamo,там,there,adverb,,,,,Тамо је моја кућа.,Там мой дом.,My house is there.
+добро,dobro,хорошо,well,adverb,,,,,Добро говорим српски.,Я хорошо говорю по-сербски.,I speak Serbian well.
+много,mnogo,много,much / many,adverb,,,,,Много хвала.,Большое спасибо.,Thank you very much.
+у,u,в,in / at,preposition,,,,,Живим у Београду.,Я живу в Белграде.,I live in Belgrade.
+на,na,на,on,preposition,,,,,Књига је на столу.,Книга на столе.,The book is on the table.
+за,za,за / для,for,preposition,,,,,Ово је поклон за тебе.,Это подарок для тебя.,This is a gift for you.
+без,bez,без,without,preposition,,,,,Пијем кафу без шећера.,Я пью кофе без сахара.,I drink coffee without sugar.
+али,ali,но,but,conjunction,,,,,Хладно је али лепо.,Холодно но красиво.,It is cold but nice.

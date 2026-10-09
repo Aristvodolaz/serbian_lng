@@ -15,19 +15,20 @@ Both clients are thin: they bundle no course content and read everything from th
 
 Android and iOS implement the same API surface and the same two learning modes, because those are the two the backend supports:
 
-- **Lessons** — multiple choice only (`translate_choice`, the sole member of the backend's `ExerciseType` enum). Exercises of any other type are filtered out on both clients rather than rendered through the wrong UI, and are excluded from the score posted to `/complete`.
-- **Vocabulary** — spaced-repetition flashcards, answered "still learning" or "I know it".
+- **Lessons** — multiple choice (`translation_choice`: translate a word) and fill-the-blank (`fill_word`: pick the word for the `___` in a sentence). Exercises of any other type are filtered out on both clients rather than rendered through the wrong UI, and are excluded from the score posted to `/complete`.
+- **Vocabulary** — a dictionary of all published words (`GET /words`, searchable) plus spaced-repetition flashcards, answered "still learning" or "I know it".
 
 Other shared behaviour worth keeping in step when either client changes: JWT access/refresh with a single retry on 401, unknown enum values decoding to a safe default instead of failing the whole response, and UI copy in Serbian (source), English and Russian.
 
 ## Status
 
 - Design concept: 5 core screens (script picker, lesson path, exercise, flashcards, profile) plus a design system.
-- Backend: auth, lesson path/exercises, flashcard review, badges — implemented and verified end-to-end against PostgreSQL.
-- Android and iOS: onboarding, lesson path, lessons, flashcards and profile, all against the live API.
+- Backend: auth, lesson path/exercises, flashcard review, badges, dictionary (`GET /words` + `GET /words/attributes`) — implemented and verified end-to-end against PostgreSQL.
+- iOS: onboarding, lesson path, payload-era lessons, dictionary tab («Речник»: search + word cards with grammar attributes), flashcards and profile, all against the live API.
 
 ### Known gaps
 
 - No word-pair matching, word bank or listening exercises anywhere in the shipping stack. Adding one means a new entry in the backend's exercise type registry, content for it (authored through the admin panel), and a screen on both clients before it is worth wiring up.
+- Android is stale against the payload-era backend: `ContentDtos.kt` still decodes the old `promptCyrillic`/`choices`/`correctChoiceId` shape and knows nothing about the dictionary endpoints, so its lesson screen is broken against the current API. iOS was adapted; Android needs the same pass.
 - `PATCH /users/me` is implemented on the backend and called by iOS (profile settings), but Android has no screen for it yet.
 - Lesson content is authored with **English** translations, while both clients localise their own chrome into Russian and English — so a Russian-speaking learner currently gets a Russian interface around English answers.

@@ -1,0 +1,62 @@
+cyrillic,latin,translationRu,translationEn,partOfSpeech,gender,number,declension,conjugation,exampleCyrillic,exampleTranslationRu,exampleTranslationEn
+оно,ono,он,it,pronoun,n,singular,,,Оно је моја књига.,Это моя книга.,It is my book.
+ви,vi,вы,you,pronoun,,plural,,,Ви сте одлични студенти.,Вы отличные студенты.,You are excellent students.
+они,oni,они,they,pronoun,m,plural,,,Они живе у Новом Саду.,Они живут в Нови-Саде.,They live in Novi Sad.
+његов,njegov,его,his,pronoun,m,singular,,,Ово је његов нови аутомобил.,Это его новая машина.,This is his new car.
+њен,njen,её,her,pronoun,f,singular,,,То је њена омиљена песма.,Это её любимая песня.,That is her favorite song.
+наш,naš,наш,our,pronoun,m,singular,,,Наш град је веома стар.,Наш город очень старый.,Our city is very old.
+ваш,vaš,ваш,your,pronoun,m,singular,,,Ваш син је веома паметан.,Ваш сын очень умный.,Your son is very smart.
+њихов,njihov,их,their,pronoun,m,singular,,,Њихов дом је поред реке.,Их дом у реки.,Their house is by the river.
+свој,svoj,свой,one's own,pronoun,m,singular,,,Имам свој мали стан.,У меня есть своя маленькая квартира.,I have my own small apartment.
+овај,ovaj,этот,this,pronoun,m,singular,,,Овај воз је брз.,Этот поезд быстрый.,This train is fast.
+тај,taj,тот,that,pronoun,m,singular,,,Тај човек је мој учитељ.,Тот человек мой учитель.,That man is my teacher.
+онај,onaj,вон тот,that one,pronoun,m,singular,,,Онај пас је веома велики.,Та соба очень большая.,That dog is very big.
+ко,ko,кто,who,pronoun,,,,,Ко је тај млади глумац?,Кто этот молодой актёр?,Who is that young actor?
+шта,šta,что,what,pronoun,,,,,Шта желиш за доручак?,Что ты хочешь на завтрак?,What do you want for breakfast?
+чији,čiji,чей,whose,pronoun,m,singular,,,Чији је овај телефон?,Чей это телефон?,Whose phone is this?
+који,koji,который,which,pronoun,m,singular,,,Који је твој омиљени град?,Какой твой любимый город?,Which is your favorite city?
+неко,neko,кто-то,someone,pronoun,,,,,Неко је заборавио кишобран.,Кто-то забыл зонт.,Someone forgot an umbrella.
+нико,niko,никто,nobody,pronoun,,,,,Нико није код куће данас.,Никого нет дома сегодня.,Nobody is home today.
+све,sve,всё,everything,pronoun,,,,,Све је спремно за пут.,Всё готово к поездке.,Everything is ready for the trip.
+из,iz,из,from,preposition,,,,,Пијем чај из велике шоље.,Я пью чай из большой чашки.,I drink tea from a big cup.
+од,od,от,from,preposition,,,,,Овај поклон је од моје сестре.,Этот подарок от моей сестры.,This gift is from my sister.
+до,do,до,to,preposition,,,,,Идем од куће до школе.,Я иду от дома до школы.,I go from home to school.
+са,sa,с,with,preposition,,,,,Идем у парк са братом.,Я иду в парк с братом.,I am going to the park with my brother.
+кроз,kroz,через,through,preposition,,,,,Пролазимо кроз велику шуму.,Мы проходим через большой лес.,We are passing through a big forest.
+преко,preko,через,across,preposition,,,,,Прешли смо преко моста.,Мы перешли через мост.,We crossed over the bridge.
+између,između,между,between,preposition,,,,,Банка је између два парка.,Банк находится между двумя парками.,The bank is between two parks.
+поред,pored,рядом с,next to,preposition,,,,,Кафић је поред станице.,Кафе рядом со станцией.,The café is next to the station.
+код,kod,у,near,preposition,,,,,Вечерамо код наше баке.,Мы ужинаем у нашей бабушки.,We have dinner at our grandma's.
+после,posle,после,after,preposition,,,,,После посла идем у теретану.,После работы я иду в спортзал.,After work I go to the gym.
+пре,pre,перед,before,preposition,,,,,Пре доручка пијем воду.,Перед завтраком я пью воду.,Before breakfast I drink water.
+и,i,и,and,conjunction,,,,,Купио сам хлеб и млеко.,Я купил хлеб и молоко.,I bought bread and milk.
+или,ili,или,or,conjunction,,,,,Хоћеш чај или кафу?,Хочешь чай или кофе?,Do you want tea or coffee?
+јер,jer,потому что,because,conjunction,,,,,Не идем јер сам уморан.,Я не иду потому что устал.,I am not going because I am tired.
+ако,ako,если,if,conjunction,,,,,Позови ме ако треба помоћ.,Позвони мне если нужна помощь.,Call me if you need help.
+да,da,что; чтобы,that; to,conjunction,,,,,Желим да учим српски.,Я хочу учить сербский.,I want to study Serbian.
+него,nego,а,but,conjunction,,,,,Не идем аутом него возом.,Я еду не на машине а на поезде.,I go not by car but by train.
+док,dok,пока,while,conjunction,,,,,Слушам музику док радим.,Я слушаю музыку пока работаю.,I listen to music while I work.
+ли,li,ли,(question particle),particle,,,,,Да ли си гладан?,Ты голоден?,Are you hungry?
+не,ne,нет не,no not,particle,,,,,Не желим слаткиш после вечере.,Я не хочу сладкое после ужина.,I do not want sweets after dinner.
+ни,ni,ни,nor,particle,,,,,Ни ја не знам одговор.,Я тоже не знаю ответ.,I do not know the answer either.
+само,samo,только,only,particle,,,,,Имам само једну сестру.,У меня только одна сестра.,I have only one sister.
+баш,baš,именно,really,particle,,,,,Баш ми се допада овај филм.,Мне очень нравится этот фильм.,I really like this film.
+ево,evo,вот,here is,particle,,,,,Ево ти кључа од собе.,Вот тебе ключ от комнаты.,Here is the key to the room.
+ето,eto,вот,there is,particle,,,,,Ето га на станици.,Вот он на станции.,There he is at the station.
+тек,tek,только,only,particle,,,,,Тек сада разумем задатак.,Только сейчас я понимаю задание.,I understand the task only now.
+ћао,ćao,пока привет,bye hi,interjection,,,,,Ћао до сутра!,Пока до завтра!,Bye until tomorrow!
+извините,izvinite,извините,excuse me,interjection,,,,,Извините можете да ми помогнете?,Извините можете мне помочь?,Excuse me can you help me?
+ајде,ajde,давай,let's go,interjection,,,,,Ајде да идемо заједно.,Давай пойдём вместе.,Let's go together.
+браво,bravo,браво,well done,interjection,,,,,Браво за твој одговор!,Браво за твой ответ!,Bravo for your answer!
+једанаест,jedanaest,одиннадцать,eleven,numeral,,,,,Час почиње у једанаест сати.,Урок начинается в одиннадцать часов.,The lesson starts at eleven o'clock.
+дванаест,dvanaest,двенадцать,twelve,numeral,,,,,Имам дванаест година.,Мне двенадцать лет.,I am twelve years old.
+тринаест,trinaest,тринадцать,thirteen,numeral,,,,,Тринаест је срећан број за њега.,Тринадцать счастливое число для него.,Thirteen is a lucky number for him.
+двадесет,dvadeset,двадцать,twenty,numeral,,,,,У разреду је двадесет ученика.,В классе двадцать учеников.,There are twenty students in the class.
+тридесет,trideset,тридцать,thirty,numeral,,,,,Април има тридесет дана.,В апреле тридцать дней.,April has thirty days.
+четрдесет,četrdeset,сорок,forty,numeral,,,,,Мој отац има четрдесет година.,Моему отцу сорок лет.,My father is forty years old.
+педесет,pedeset,пятьдесят,fifty,numeral,,,,,Воз путује педесет километара.,Поезд едет пятьдесят километров.,The train travels fifty kilometers.
+шездесет,šezdeset,шестьдесят,sixty,numeral,,,,,Бака има шездесет година.,Бабушке шестьдесят лет.,Grandma is sixty years old.
+седамдесет,sedamdeset,семьдесят,seventy,numeral,,,,,Деда има седамдесет година.,Дедушке семьдесят лет.,Grandpa is seventy years old.
+осамдесет,osamdeset,восемьдесят,eighty,numeral,,,,,Осамдесет година је дуг живот.,Восемьдесят лет долгая жизнь.,Eighty years is a long life.
+деведесет,devedeset,девяносто,ninety,numeral,,,,,Зграда је стара деведесет година.,Зданию девяносто лет.,The building is ninety years old.
+хиљаду,hiljadu,тысяча,a thousand,numeral,,,,,Хиљаду људи је дошло на концерт.,Тысяча людей пришла на концерт.,A thousand people came to the concert.

@@ -1,0 +1,101 @@
+cyrillic,latin,translationRu,translationEn,partOfSpeech,gender,number,declension,conjugation,exampleCyrillic,exampleTranslationRu,exampleTranslationEn
+отићи,otići,уйти/уехать,to leave,verb,,,,II,Ми одемо кући после школе.,Мы идём домой после школы.,We go home after school.
+вратити се,vratiti se,вернуться,to return,verb,,,,III,Вратим се кући увече.,Я возвращаюсь домой вечером.,I return home in the evening.
+трчати,trčati,бежать,to run,verb,,,,III,Он трчи свако јутро.,Он бегает каждое утро.,He runs every morning.
+ходати,hodati,ходить,to walk,verb,,,,I,Ми ходамо по парку.,Мы гуляем по парку.,We walk in the park.
+возити,voziti,водить машину,to drive,verb,,,,III,Она вози ауто.,Она водит машину.,She drives a car.
+летети,leteti,лететь,to fly,verb,,,,III,Птица лети високо.,Птица летит высоко.,The bird flies high.
+стати,stati,остановиться,to stop,verb,,,,II,Аутобус стане на станици.,Автобус останавливается на остановке.,The bus stops at the station.
+путовати,putovati,путешествовать,to travel,verb,,,,II,Ми путујемо у Србију.,Мы путешествуем в Сербию.,We travel to Serbia.
+кретати се,kretati se,двигаться,to move,verb,,,,II,Ауто се креће споро.,Машина движется медленно.,The car moves slowly.
+силазити,silaziti,спускаться,to get off,verb,,,,III,Силазим на станици.,Я выхожу на остановке.,I get off at the station.
+устати,ustati,встать,to get up,verb,,,,II,Устанем у седам сати.,Я встаю в семь часов.,I get up at seven o'clock.
+одмарати се,odmarati se,отдыхать,to rest,verb,,,,I,Одмарам се недељом.,Я отдыхаю по воскресеньям.,I rest on Sundays.
+оставити,ostaviti,оставить,to leave,verb,,,,III,Оставим кључеве на столу.,Я оставляю ключи на столе.,I leave the keys on the table.
+узети,uzeti,взять,to take,verb,,,,II,Она узме јабуку са стола.,Она берёт яблоко со стола.,She takes an apple from the table.
+прати,prati,мыть,to wash,verb,,,,II,Перем руке пре јела.,Я мою руки перед едой.,I wash my hands before eating.
+чистити,čistiti,убирать,to clean,verb,,,,III,Чистим стан сваке суботе.,Я убираю квартиру каждую субботу.,I clean the apartment every Saturday.
+лећи,leći,лечь,to lie down,verb,,,,II,Легнем у кревет.,Я ложусь на кровать.,I lie down on the bed.
+ручати,ručati,обедать,to have lunch,verb,,,,I,Ми ручамо у подне.,Мы обедаем в полдень.,We have lunch at noon.
+вечерати,večerati,ужинать,to have dinner,verb,,,,I,Вечерамо заједно.,Мы ужинаем вместе.,We have dinner together.
+припремати,pripremati,готовить еду,to prepare,verb,,,,I,Припремам вечеру.,Я готовлю ужин.,I am preparing dinner.
+рећи,reći,сказать,to say,verb,,,,II,Рећи ћу истину.,Я скажу правду.,I will tell the truth.
+питати,pitati,спрашивать,to ask,verb,,,,I,Она пита за цену.,Она спрашивает о цене.,She asks about the price.
+одговорити,odgovoriti,ответить,to answer,verb,,,,III,Одговорим на питање.,Я отвечаю на вопрос.,I answer the question.
+причати,pričati,рассказывать,to talk,verb,,,,I,Причам са пријатељем.,Я разговариваю с другом.,I talk with a friend.
+звати,zvati,звать,to call,verb,,,,II,Зовем те увече.,Я звоню тебе вечером.,I call you in the evening.
+поздравити,pozdraviti,поздороваться,to greet,verb,,,,III,Поздравим комшију.,Я здороваюсь с соседом.,I greet the neighbor.
+разговарати,razgovarati,разговаривать,to converse,verb,,,,I,Разговарамо о послу.,Мы разговариваем о работе.,We talk about work.
+ћутати,ćutati,молчать,to be silent,verb,,,,III,Он ћути на часу.,Он молчит на уроке.,He is silent in class.
+викати,vikati,кричать,to shout,verb,,,,II,Деца вичу на улици.,Дети кричат на улице.,The children shout in the street.
+разумети,razumeti,понимать,to understand,verb,,,,II,Разумем српски.,Я понимаю сербский.,I understand Serbian.
+памтити,pamtiti,помнить,to remember,verb,,,,III,Памтим твоје име.,Я помню твоё имя.,I remember your name.
+изгледати,izgledati,выглядеть,to look,verb,,,,I,Ти изгледаш уморно.,Ты выглядишь усталым.,You look tired.
+осећати се,osećati se,чувствовать себя,to feel,verb,,,,I,Осећам се добро.,Я чувствую себя хорошо.,I feel good.
+размишљати,razmišljati,размышлять,to think,verb,,,,I,Размишљам о будућности.,Я думаю о будущем.,I think about the future.
+заборавити,zaboraviti,забыть,to forget,verb,,,,III,Понекад заборавим име.,Иногда я забываю имя.,Sometimes I forget the name.
+проверити,proveriti,проверить,to check,verb,,,,III,Проверим пошту ујутру.,Я проверяю почту утром.,I check the mail in the morning.
+схватити,shvatiti,понять,to realize,verb,,,,III,Схватим све брзо.,Я быстро всё понимаю.,I understand everything quickly.
+сањати,sanjati,видеть сны,to dream,verb,,,,I,Сањам сваке ноћи.,Я вижу сны каждую ночь.,I dream every night.
+хтети,hteti,хотеть,to want,verb,,,,,Хоћу кафу.,Я хочу кофе.,I want coffee.
+моћи,moći,мочь,to be able,verb,,,,,Могу да помогнем.,Я могу помочь.,I can help.
+морати,morati,быть должным,must,verb,,,,I,Морам да учим.,Я должен учиться.,I must study.
+требати,trebati,нуждаться,to need,verb,,,,I,Треба ми твоја помоћ.,Мне нужна твоя помощь.,I need your help.
+желети,želeti,желать,to wish,verb,,,,III,Желим ти срећу.,Я желаю тебе счастья.,I wish you happiness.
+успети,uspeti,добиться успеха,to succeed,verb,,,,II,Он увек успе.,Он всегда добивается успеха.,He always succeeds.
+сумњати,sumnjati,сомневаться,to doubt,verb,,,,I,Сумњам у њега.,Я сомневаюсь в нём.,I doubt him.
+надати се,nadati se,надеяться,to hope,verb,,,,I,Надам се лепом времену.,Я надеюсь на хорошую погоду.,I hope for nice weather.
+умети,umeti,уметь,to know how,verb,,,,II,Умем да пливам.,Я умею плавать.,I know how to swim.
+смети,smeti,сметь,to be allowed,verb,,,,II,Не смем да касним.,Мне нельзя опаздывать.,I must not be late.
+коштати,koštati,стоить,to cost,verb,,,,I,Колико кошта ова јакна?,Сколько стоит эта куртка?,How much does this jacket cost?
+продавати,prodavati,продавать,to sell,verb,,,,II,Продајем стару књигу.,Я продаю старую книгу.,I am selling an old book.
+тражити,tražiti,искать,to look for,verb,,,,III,Тражим кључеве.,Я ищу ключи.,I am looking for the keys.
+наћи,naći,найти,to find,verb,,,,II,Нађем интересантну књигу.,Я нахожу интересную книгу.,I find an interesting book.
+мењати,menjati,менять,to change,verb,,,,I,Мењам новац у банци.,Я меняю деньги в банке.,I exchange money at the bank.
+враћати,vraćati,возвращать,to return,verb,,,,I,Враћам књигу у библиотеку.,Я возвращаю книгу в библиотеку.,I return the book to the library.
+дуговати,dugovati,быть должным,to owe,verb,,,,II,Дугујеш ми десет динара.,Ты должен мне десять динаров.,You owe me ten dinars.
+штедети,štedeti,копить,to save,verb,,,,III,Штедим за путовање.,Я коплю на поездку.,I am saving for the trip.
+бројати,brojati,считать,to count,verb,,,,III,Бројим до десет.,Я считаю до десяти.,I count to ten.
+свидети се,svideti se,нравиться,to like,verb,,,,III,Свиђа ми се ова песма.,Мне нравится эта песня.,I like this song.
+бојати се,bojati se,бояться,to be afraid,verb,,,,III,Бојим се паса.,Я боюсь собак.,I am afraid of dogs.
+смејати се,smejati se,смеяться,to laugh,verb,,,,II,Смејем се његовој шали.,Я смеюсь над его шуткой.,I laugh at his joke.
+плакати,plakati,плакать,to cry,verb,,,,II,Дете плаче.,Ребёнок плачет.,The child is crying.
+љутити се,ljutiti se,сердиться,to be angry,verb,,,,III,Љутим се на брата.,Я сержусь на брата.,I am angry with my brother.
+радовати се,radovati se,радоваться,to be glad,verb,,,,II,Радујем се празнику.,Я радуюсь празднику.,I look forward to the holiday.
+умрети,umreti,умереть,to die,verb,,,,II,Цвеће умре без воде.,Цветы умирают без воды.,Flowers die without water.
+одморити се,odmoriti se,отдохнуть,to rest,verb,,,,III,Одморимо се после посла.,Мы отдыхаем после работы.,We rest after work.
+бринути се,brinuti se,заботиться,to worry,verb,,,,II,Бринем се о породици.,Я забочусь о семье.,I care about my family.
+уморити се,umoriti se,устать,to get tired,verb,,,,III,Уморим се после тренинга.,Я устаю после тренировки.,I get tired after training.
+кувати,kuvati,готовить,to cook,verb,,,,I,Кувам ручак за породицу.,Я готовлю обед для семьи.,I cook lunch for the family.
+пећи,peći,печь,to bake,verb,,,,II,Печем хлеб код куће.,Я пеку хлеб дома.,I bake bread at home.
+пробати,probati,пробовать,to try,verb,,,,I,Пробам ново јело.,Я пробую новое блюдо.,I try a new dish.
+сећи,seći,резать,to cut,verb,,,,II,Сечем хлеб ножем.,Я режу хлеб ножом.,I cut the bread with a knife.
+сипати,sipati,наливать,to pour,verb,,,,I,Сипам воду у чашу.,Я наливаю воду в стакан.,I pour water into the glass.
+наручити,naručiti,заказать,to order,verb,,,,III,Наручимо кафу и колаче.,Мы заказываем кофе и пирожные.,We order coffee and pastries.
+послужити,poslužiti,подать,to serve,verb,,,,III,Послужим госте кафом.,Я угощаю гостей кофе.,I serve the guests coffee.
+доручковати,doručkovati,завтракать,to have breakfast,verb,,,,II,Доручкујем у осам.,Я завтракаю в восемь.,I have breakfast at eight.
+купати се,kupati se,купаться,to bathe,verb,,,,I,Купам се у мору.,Я купаюсь в море.,I bathe in the sea.
+облачити се,oblačiti se,одеваться,to get dressed,verb,,,,III,Облачим се брзо.,Я одеваюсь быстро.,I get dressed quickly.
+догодити се,dogoditi se,случиться,to happen,verb,,,,III,Све се догоди брзо.,Всё происходит быстро.,Everything happens quickly.
+бити,biti,быть,to be,verb,,,,,Желим да будем лекар.,Я хочу быть врачом.,I want to be a doctor.
+имати,imati,иметь,to have,verb,,,,I,Имам две сестре.,У меня две сестры.,I have two sisters.
+излазити,izlaziti,выходить,to go out,verb,,,,III,Излазим из куће у осам.,Я выхожу из дома в восемь.,I leave the house at eight.
+улазити,ulaziti,входить,to enter,verb,,,,III,Улазим у зграду.,Я вхожу в здание.,I enter the building.
+почињати,počinjati,начинать,to begin,verb,,,,II,Почињем рад у девет.,Я начинаю работу в девять.,I start work at nine.
+завршавати,završavati,заканчивать,to finish,verb,,,,I,Завршавам посао у пет.,Я заканчиваю работу в пять.,I finish work at five.
+чекати,čekati,ждать,to wait,verb,,,,I,Чекам аутобус.,Я жду автобус.,I wait for the bus.
+шетати,šetati,гулять,to stroll,verb,,,,I,Шетам поред реке.,Я гуляю вдоль реки.,I walk along the river.
+пливати,plivati,плавать,to swim,verb,,,,I,Пливам у базену.,Я плаваю в бассейне.,I swim in the pool.
+певати,pevati,петь,to sing,verb,,,,I,Певам српске песме.,Я пою сербские песни.,I sing Serbian songs.
+седети,sedeti,сидеть,to sit,verb,,,,III,Седим код прозора.,Я сижу у окна.,I sit by the window.
+стајати,stajati,стоять,to stand,verb,,,,III,Стојим испред продавнице.,Я стою перед магазином.,I stand in front of the shop.
+лежати,ležati,лежать,to lie,verb,,,,III,Лежим на каучу.,Я лежу на диване.,I lie on the couch.
+носити,nositi,носить,to carry,verb,,,,III,Носим торбу у руци.,Я несу сумку в руке.,I carry the bag in my hand.
+давати,davati,давать,to give,verb,,,,II,Дајем му књигу.,Я даю ему книгу.,I give him the book.
+добити,dobiti,получить,to receive,verb,,,,II,Сваког јутра добијем поруку.,Каждое утро я получаю сообщение.,Every morning I receive a message.
+слати,slati,посылать,to send,verb,,,,II,Шаљем писмо мами.,Я посылаю письмо маме.,I send a letter to mom.
+славити,slaviti,праздновать,to celebrate,verb,,,,III,Славимо рођендан код куће.,Мы празднуем день рождения дома.,We celebrate the birthday at home.
+помагати,pomagati,помогать,to help,verb,,,,II,Помажем мами у кухињи.,Я помогаю маме на кухне.,I help mom in the kitchen.
+становати,stanovati,проживать,to reside,verb,,,,II,Станујем у Београду.,Я живу в Белграде.,I live in Belgrade.
+спаковати,spakovati,упаковать,to pack,verb,,,,II,Спакујем кофер за пут.,Я собираю чемодан в дорогу.,I pack the suitcase for the trip.
+позвати,pozvati,позвать,to invite,verb,,,,II,Позовем пријатеље на вечеру.,Я приглашаю друзей на ужин.,I invite friends to dinner.
