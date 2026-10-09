@@ -95,29 +95,48 @@ final class APIClient {
             urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
 
+        print("[REČ] \(request.method.rawValue) \(urlRequest.url?.absoluteString ?? "?")")
+
         let data: Data
         let response: URLResponse
         do {
             (data, response) = try await session.data(for: urlRequest)
         } catch let error as URLError {
+            print("[REČ]  ✗ сеть: \(error.localizedDescription) (код \(error.errorCode))")
             throw APIError.fromURLError(error)
         }
 
         guard let http = response as? HTTPURLResponse else {
+            print("[REČ]  ✗ не-HTTP ответ")
             throw APIError.transport("Неочекиван одговор сервера.")
         }
 
+        print("[REČ]  → \(http.statusCode) \(urlRequest.url?.path ?? "")")
+
         if http.statusCode == 401, request.requiresAuthentication, allowRefresh {
+            print("[REČ]  → 401, обновляю токен…")
             _ = try await refreshedTokens()
             return try await perform(request, allowRefresh: false)
         }
 
         guard (200..<300).contains(http.statusCode) else {
             if http.statusCode == 401 { throw APIError.unauthorized }
+            print("[REČ]  ✗ \(http.statusCode) тело: \(Self.bodyPreview(data))")
             throw APIError.fromResponse(status: http.statusCode, data: data)
         }
 
+        print("[REČ]  ← тело: \(Self.bodyPreview(data))")
         return data
+    }
+
+    /// Truncated text preview of a response body for console diagnostics —
+    /// audio and other binary payloads degrade to a byte count.
+    private static func bodyPreview(_ data: Data) -> String {
+        guard !data.isEmpty else { return "(пусто)" }
+        if let text = String(data: data, encoding: .utf8) {
+            return text.count > 600 ? String(text.prefix(600)) + "…" : text
+        }
+        return "(\(data.count) байт, бинарные данные)"
     }
 
     private func makeURLRequest(_ request: APIRequest) throws -> URLRequest {

@@ -97,17 +97,17 @@ struct LessonScreen: View {
     private func exerciseBody(_ exercise: Exercise) -> some View {
         VStack(alignment: .leading, spacing: Metrics.loose) {
             VStack(alignment: .leading, spacing: 4) {
-                EyebrowLabel(text: "Преведите реченицу")
+                EyebrowLabel(text: eyebrow(for: exercise))
                 prompt(for: exercise)
             }
 
             VStack(spacing: 9) {
-                ForEach(exercise.choices) { choice in
+                ForEach(exercise.payload.answers) { answer in
                     ChoiceRow(
-                        text: choice.displayText(matching: session.languagePreference),
-                        feedback: model.feedback(for: choice)
+                        text: choiceText(for: answer, in: exercise),
+                        feedback: model.feedback(for: answer)
                     ) {
-                        model.select(choice.id)
+                        model.select(answer.id)
                     }
                     .disabled(model.hasAnswered)
                 }
@@ -138,27 +138,59 @@ struct LessonScreen: View {
                 }
             }
             .buttonStyle(.recPrimary)
-            .disabled(model.selectedChoiceID == nil || model.isBusy)
+            .disabled(model.selectedAnswerID == nil || model.isBusy)
         }
         .animation(.easeOut(duration: 0.2), value: model.result)
-        .animation(.easeOut(duration: 0.15), value: model.selectedChoiceID)
+        .animation(.easeOut(duration: 0.15), value: model.selectedAnswerID)
+    }
+
+    private func eyebrow(for exercise: Exercise) -> LocalizedStringKey {
+        switch exercise.type {
+        case .translationChoice: return "Преведите реч"
+        case .fillWord: return "Попуните празнину"
+        case .unknown: return "Вежба"
+        }
     }
 
     /// Cyrillic leads, the transliteration sits underneath — the alphabet is
     /// learned in passing rather than in a separate drill.
     private func prompt(for exercise: Exercise) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(session.scriptPreference == .latin ? exercise.promptLatin : exercise.promptCyrillic)
+            Text(exercise.prompt(script: session.scriptPreference) ?? "")
                 .font(.recSentence)
                 .foregroundStyle(Palette.ink)
-            if session.scriptPreference == .both {
-                Text(exercise.promptLatin)
+            if session.scriptPreference == .both,
+               let latin = exercise.prompt(script: .latin),
+               latin != exercise.prompt(script: .cyrillic) {
+                Text(latin)
                     .font(.recCallout)
                     .italic()
                     .foregroundStyle(Palette.oxblood)
             }
+            if exercise.type == .fillWord,
+               let translation = exercise.promptTranslation(matching: session.languagePreference),
+               !translation.isEmpty,
+               exercise.payload.settings?.showSentenceTranslation ?? true {
+                Text(translation)
+                    .font(.recCallout)
+                    .foregroundStyle(Palette.inkSoft)
+            }
         }
         .accessibilityElement(children: .combine)
+    }
+
+    /// `translation_choice` shows the answer's translation (the question is the
+    /// Serbian word, so its own translation would give the answer away);
+    /// `fill_word` shows the Serbian word to insert into the blank.
+    private func choiceText(for answer: ExerciseAnswer, in exercise: Exercise) -> String {
+        switch exercise.type {
+        case .translationChoice:
+            return answer.translation(matching: session.languagePreference) ?? ""
+        case .fillWord:
+            return answer.serbian(script: session.scriptPreference) ?? ""
+        case .unknown:
+            return answer.serbian(script: session.scriptPreference) ?? ""
+        }
     }
 }
 

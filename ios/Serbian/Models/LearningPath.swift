@@ -59,9 +59,12 @@ struct LearningPath: Codable, Equatable, Sendable {
     }
 }
 
-/// `ExerciseType`
+/// `ExerciseType` — a registry entry on the backend, not an enum there either.
+/// New types decode to `.unknown` and are skipped rather than pushed through a
+/// UI that would make no sense for them.
 enum ExerciseType: String, Codable, Sendable {
-    case translateChoice = "translate_choice"
+    case translationChoice = "translation_choice"
+    case fillWord = "fill_word"
     case unknown
 
     init(from decoder: any Decoder) throws {
@@ -69,31 +72,97 @@ enum ExerciseType: String, Codable, Sendable {
         self = ExerciseType(rawValue: raw) ?? .unknown
     }
 
-    /// `translate_choice` is the only type the backend defines, and the only one
-    /// this app has a screen for. Should the backend grow another type, older
-    /// builds decode it as `.unknown` and skip it instead of forcing it through
-    /// the multiple-choice UI, where the prompt would make no sense.
-    var isSupported: Bool { self == .translateChoice }
+    var isSupported: Bool {
+        self == .translationChoice || self == .fillWord
+    }
 }
 
-/// `ExerciseChoicePublicDto` — deliberately has no `isCorrect`; the backend only
+/// A payload element shared by `question`, `sentence` and `answers`: Serbian in
+/// both scripts plus the translations. When `wordId` is set the backend already
+/// resolved the dictionary Word's content into these fields.
+struct ExerciseText: Codable, Equatable, Sendable {
+    let wordId: String?
+    let srCyr: String?
+    let srLat: String?
+    let ru: String?
+    let en: String?
+    let audioUrl: String?
+    let imageUrl: String?
+}
+
+/// `ExerciseAnswer` — one option. Deliberately no `isCorrect`: the backend only
 /// reveals the answer once one has been submitted.
-struct ExerciseChoice: Codable, Identifiable, Equatable, Sendable {
+struct ExerciseAnswer: Codable, Identifiable, Equatable, Sendable {
     let id: String
-    let text: String
-    let textRu: String
+    let wordId: String?
+    let srCyr: String?
+    let srLat: String?
+    let ru: String?
+    let en: String?
+    let audioUrl: String?
+    let imageUrl: String?
+}
+
+struct ExerciseSettings: Codable, Equatable, Sendable {
+    let shuffleOptions: Bool?
+    let showImage: Bool?
+    let showSentenceTranslation: Bool?
+    let playAudio: Bool?
+}
+
+/// The decoded `payload` of an exercise. Only the fields relevant to the type
+/// are present, and `correctAnswerId` is stripped server-side.
+struct ExercisePayload: Codable, Equatable, Sendable {
+    let question: ExerciseText?
+    let sentence: ExerciseText?
+    let answers: [ExerciseAnswer]
+    let settings: ExerciseSettings?
 }
 
 /// `ExercisePublicDto`
 struct Exercise: Codable, Identifiable, Equatable, Sendable {
     let id: String
     let type: ExerciseType
-    let promptCyrillic: String
-    let promptLatin: String
-    let promptTranslationRu: String
-    let promptTranslationEn: String
     let order: Int
-    let choices: [ExerciseChoice]
+    let payload: ExercisePayload
+
+    /// The prompt element: a word for `translation_choice`, a sentence for `fill_word`.
+    var promptItem: ExerciseText? {
+        payload.question ?? payload.sentence
+    }
+
+    /// Serbian prompt text in the learner's preferred script, falling back to
+    /// whatever text the payload actually carries.
+    func prompt(script preference: ScriptPreference) -> String? {
+        guard let item = promptItem else { return nil }
+        switch preference {
+        case .latin: return item.srLat ?? item.srCyr
+        case .cyrillic: return item.srCyr ?? item.srLat
+        case .both: return item.srCyr ?? item.srLat
+        }
+    }
+
+    /// The prompt's translation into the interface language.
+    func promptTranslation(matching language: LanguagePreference) -> String? {
+        guard let item = promptItem else { return nil }
+        return language == .en ? item.en : item.ru
+    }
+}
+
+extension ExerciseAnswer {
+    /// Choice text: translations for `translation_choice`, Serbian words for
+    /// `fill_word` — resolved by the caller with the right preference.
+    func translation(matching language: LanguagePreference) -> String? {
+        language == .en ? en : ru
+    }
+
+    func serbian(script preference: ScriptPreference) -> String? {
+        switch preference {
+        case .latin: return srLat ?? srCyr
+        case .cyrillic: return srCyr ?? srLat
+        case .both: return srCyr ?? srLat
+        }
+    }
 }
 
 /// `LessonDetailResponseDto`
@@ -116,10 +185,11 @@ struct LessonDetail: Codable, Identifiable, Equatable, Sendable {
     }
 }
 
-/// `AnswerResultResponseDto`
+/// `AnswerResultResponseDto` — `correctAnswer` is only present after a submit.
 struct AnswerResult: Codable, Equatable, Sendable {
     let correct: Bool
-    let correctChoiceId: String
+    let correctAnswerId: String
+    let correctAnswer: ExerciseAnswer?
 }
 
 /// `CompleteLessonResponseDto`
@@ -138,7 +208,7 @@ struct CompleteLessonRequest: Encodable, Sendable {
 
 /// `AnswerExerciseDto`
 struct AnswerExerciseRequest: Encodable, Sendable {
-    let choiceId: String
+    let answerId: String
 }
 
 // MARK: - Translation helpers
@@ -161,15 +231,3 @@ extension LessonDetail {
     }
 }
 
-extension Exercise {
-    func promptTranslation(matching language: LanguagePreference) -> String {
-        language == .en ? promptTranslationEn : promptTranslationRu
-    }
-}
-
-extension ExerciseChoice {
-    func displayText(matching language: LanguagePreference) -> String {
-        // text is Serbian (primary), textRu is Russian translation of the meaning
-        language == .ru ? textRu : text
-    }
-}

@@ -18,7 +18,7 @@ final class LessonViewModel {
     private(set) var completion: LessonCompletion?
     private(set) var errorMessage: String?
 
-    var selectedChoiceID: String?
+    var selectedAnswerID: String?
 
     init(lesson: LessonSummary) {
         self.lesson = lesson
@@ -35,7 +35,7 @@ final class LessonViewModel {
     /// Nothing has been answered yet, so closing loses nothing and asking would
     /// only be in the way.
     var canLeaveWithoutConfirming: Bool {
-        exerciseIndex == 0 && selectedChoiceID == nil && result == nil
+        exerciseIndex == 0 && selectedAnswerID == nil && result == nil
     }
 
     var progress: Double {
@@ -66,9 +66,9 @@ final class LessonViewModel {
 
     // MARK: - Answering
 
-    func select(_ choiceID: String) {
+    func select(_ answerID: String) {
         guard !hasAnswered else { return }
-        selectedChoiceID = choiceID
+        selectedAnswerID = answerID
     }
 
     func primaryAction(using api: RecAPI, session: SessionStore) async {
@@ -80,7 +80,7 @@ final class LessonViewModel {
     }
 
     private func check(using api: RecAPI) async {
-        guard let exercise = currentExercise, let choiceID = selectedChoiceID, !isBusy else { return }
+        guard let exercise = currentExercise, let answerID = selectedAnswerID, !isBusy else { return }
         isBusy = true
         errorMessage = nil
         defer { isBusy = false }
@@ -89,7 +89,7 @@ final class LessonViewModel {
             let answer = try await api.answer(
                 lessonID: lesson.id,
                 exerciseID: exercise.id,
-                choiceID: choiceID
+                answerID: answerID
             )
             result = answer
             if answer.correct { correctCount += 1 }
@@ -107,7 +107,7 @@ final class LessonViewModel {
         }
 
         exerciseIndex += 1
-        selectedChoiceID = nil
+        selectedAnswerID = nil
         result = nil
     }
 
@@ -131,12 +131,12 @@ final class LessonViewModel {
 
     // MARK: - Feedback helpers
 
-    func feedback(for choice: ExerciseChoice) -> ChoiceFeedback {
+    func feedback(for answer: ExerciseAnswer) -> ChoiceFeedback {
         guard let result else {
-            return selectedChoiceID == choice.id ? .selected : .neutral
+            return selectedAnswerID == answer.id ? .selected : .neutral
         }
-        if choice.id == result.correctChoiceId { return .correct }
-        if choice.id == selectedChoiceID { return .wrong }
+        if answer.id == result.correctAnswerId { return .correct }
+        if answer.id == selectedAnswerID { return .wrong }
         return .neutral
     }
 

@@ -101,10 +101,10 @@ final class RecAPI {
         try await client.send(.get("lessons/\(id)"), as: LessonDetail.self)
     }
 
-    func answer(lessonID: String, exerciseID: String, choiceID: String) async throws -> AnswerResult {
+    func answer(lessonID: String, exerciseID: String, answerID: String) async throws -> AnswerResult {
         let request = try APIRequest.post(
             "lessons/\(lessonID)/exercises/\(exerciseID)/answer",
-            body: AnswerExerciseRequest(choiceId: choiceID)
+            body: AnswerExerciseRequest(answerId: answerID)
         )
         return try await client.send(request, as: AnswerResult.self)
     }
@@ -128,6 +128,21 @@ final class RecAPI {
             .get("vocabulary/review", query: [URLQueryItem(name: "limit", value: String(limit))]),
             as: [ReviewWord].self
         )
+    }
+
+    func words(search: String? = nil, limit: Int = 50, offset: Int = 0) async throws -> WordsResponse {
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset)),
+        ]
+        if let search, !search.isEmpty {
+            query.insert(URLQueryItem(name: "search", value: search), at: 0)
+        }
+        return try await client.send(.get("words", query: query), as: WordsResponse.self)
+    }
+
+    func wordAttributes() async throws -> WordAttributes {
+        try await client.send(.get("words/attributes"), as: WordAttributes.self)
     }
 
     func submitReview(wordID: String, outcome: ReviewOutcome) async throws -> ReviewSubmission {

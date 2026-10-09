@@ -31,9 +31,9 @@ struct MainTabView: View {
                     Label("Кораци", systemImage: "figure.walk.motion")
                 }
 
-            FlashcardsScreen()
+            WordsScreen()
                 .tabItem {
-                    Label("Речник", systemImage: "rectangle.on.rectangle.angled")
+                    Label("Речник", systemImage: "character.book.closed")
                 }
 
             ProfileScreen()

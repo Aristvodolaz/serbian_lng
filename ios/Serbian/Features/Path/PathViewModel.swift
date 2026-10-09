@@ -14,8 +14,13 @@ final class PathViewModel {
     func load(using api: RecAPI) async {
         if !state.hasLoaded { state = .loading }
         do {
-            state = .loaded(try await api.learningPath())
+            let path = try await api.learningPath()
+            let units = path.units.count
+            let lessons = path.units.reduce(0) { $0 + $1.lessons.count }
+            print("[REČ] units: \(units) юнитов, \(lessons) уроков")
+            state = .loaded(path)
         } catch {
+            print("[REČ] units error: \(String(describing: error))")
             state = .failed(error.learnerFacingMessage)
         }
     }

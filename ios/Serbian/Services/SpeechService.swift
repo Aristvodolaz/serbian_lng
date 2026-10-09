@@ -21,18 +21,27 @@ final class SpeechService: NSObject {
     }
 
     func pronounce(_ word: ReviewWord) {
+        pronounce(word.cyrillic, latinFallback: word.latin)
+    }
+
+    func pronounce(_ word: Word) {
+        pronounce(word.cyrillic, latinFallback: word.latin)
+    }
+
+    /// Prefer backend TTS (real Serbian) — fall back to on-device if it fails.
+    /// `latinFallback` is spoken when only a non-Serbian on-device voice is
+    /// available, since those voices garble Cyrillic.
+    private func pronounce(_ text: String, latinFallback: String?) {
         activateSession()
 
-        // Prefer backend TTS (real Serbian) — fall back to on-device if it fails.
         Task {
             do {
                 guard let api else { throw CocoaError(.fileReadUnknown) }
-                let text = word.cyrillic
                 let data = try await api.speak(text)
                 try play(data)
             } catch {
                 print("SpeechService: backend TTS failed (\(error)), using on-device fallback")
-                speakWithTTS(word)
+                speakWithTTS(text, latinFallback: latinFallback)
             }
         }
     }
@@ -45,13 +54,13 @@ final class SpeechService: NSObject {
 
     // MARK: - On-device fallback
 
-    private func speakWithTTS(_ word: ReviewWord) {
+    private func speakWithTTS(_ text: String, latinFallback: String?) {
         guard let voice = serbianVoice() else {
             print("SpeechService: no Serbian voice available")
             return
         }
 
-        let spoken = voice.language.hasPrefix("sr") ? word.cyrillic : word.latin
+        let spoken = voice.language.hasPrefix("sr") ? text : (latinFallback ?? text)
         let utterance = AVSpeechUtterance(string: spoken)
         utterance.voice = voice
         utterance.rate = 0.45

@@ -6,15 +6,13 @@ struct FlashcardsScreen: View {
     @State private var model = FlashcardsViewModel()
 
     var body: some View {
-        NavigationStack {
-            content
-                .padding(.horizontal, Metrics.screenPadding)
-                .padding(.bottom, Metrics.regular)
-                .groundBackground()
-                .navigationTitle("Речник")
-                .navigationBarTitleDisplayMode(.inline)
-        }
-        .task { await model.loadIfNeeded(using: session.api) }
+        content
+            .padding(.horizontal, Metrics.screenPadding)
+            .padding(.bottom, Metrics.regular)
+            .groundBackground()
+            .navigationTitle("Повторение")
+            .navigationBarTitleDisplayMode(.inline)
+            .task { await model.loadIfNeeded(using: session.api) }
     }
 
     @ViewBuilder
