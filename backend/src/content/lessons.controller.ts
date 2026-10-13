@@ -28,11 +28,12 @@ export class LessonsController {
   @Post(':lessonId/exercises/:exerciseId/answer')
   @ApiOkResponse({ type: AnswerResultResponseDto })
   answer(
+    @CurrentUser() user: AuthenticatedUser,
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
     @Param('exerciseId', ParseUUIDPipe) exerciseId: string,
     @Body() dto: AnswerExerciseDto,
   ): Promise<AnswerResultResponseDto> {
-    return this.contentService.checkAnswer(lessonId, exerciseId, dto.answerId);
+    return this.contentService.checkAnswer(user.id, lessonId, exerciseId, dto.answerId);
   }
 
   @Post(':lessonId/complete')

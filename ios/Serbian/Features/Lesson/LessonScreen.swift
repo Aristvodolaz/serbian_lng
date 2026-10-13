@@ -46,7 +46,7 @@ struct LessonScreen: View {
             if let completion = model.completion {
                 LessonCompletionView(
                     completion: completion,
-                    correctCount: model.correctCount,
+                    correctCount: model.correctFirstAttemptCount,
                     totalCount: model.exercises.count
                 ) {
                     onFinish()
@@ -96,15 +96,91 @@ struct LessonScreen: View {
 
     private func exerciseBody(_ exercise: Exercise) -> some View {
         VStack(alignment: .leading, spacing: Metrics.loose) {
+            // One case per exercise type: the extension point for new types is a
+            // new body view here, not another branch inside a shared renderer.
+            switch exercise.type {
+            case .translationChoice:
+                TranslationChoiceBody(exercise: exercise, model: model, eyebrow: "Преведите реч", showTranslationChoices: true)
+            case .fillWord:
+                FillWordBody(exercise: exercise, model: model)
+            case .unknown:
+                TranslationChoiceBody(exercise: exercise, model: model, eyebrow: "Вежба", showTranslationChoices: false)
+            }
+
+            if let message = model.errorMessage {
+                InlineMessage(text: message)
+            }
+
+            Spacer(minLength: Metrics.regular)
+
+            if let result = model.result {
+                FeedbackPanel(
+                    correct: result.correct,
+                    title: result.correct ? "Тачно!" : "Није тачно",
+                    detail: result.correct ? nil : correctAnswerText(for: result),
+                    actionTitle: model.primaryActionTitle,
+                    isBusy: model.isBusy
+                ) {
+                    Task { await model.primaryAction(using: session.api, session: session) }
+                }
+            } else {
+                Button {
+                    Task { await model.primaryAction(using: session.api, session: session) }
+                } label: {
+                    if model.isBusy {
+                        ProgressView().tint(Palette.onIndigo)
+                    } else {
+                        Text(model.primaryActionTitle)
+                    }
+                }
+                .buttonStyle(.recPrimary)
+                .disabled(model.selectedAnswerID == nil || model.isBusy)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: model.result)
+        .animation(.easeOut(duration: 0.15), value: model.selectedAnswerID)
+    }
+
+    /// «Тачан одговор: шумa · лес» — Serbian in the learner's script plus the
+    /// translation, so a miss is teachable rather than just marked.
+    private func correctAnswerText(for result: AnswerResult) -> String? {
+        guard let answer = result.correctAnswer,
+              let serbian = answer.serbian(script: session.scriptPreference),
+              !serbian.isEmpty else { return nil }
+        let translation = answer.translation(matching: session.languagePreference) ?? ""
+        if translation.isEmpty {
+            return String(localized: "Тачан одговор: \(serbian)")
+        }
+        return String(localized: "Тачан одговор: \(serbian) · \(translation)")
+    }
+}
+
+/// Per-type exercise bodies. The `switch` in `exerciseBody` selects one; a new
+/// exercise type means a new body view here plus one case — no shared
+/// per-type rendering logic and no registries (that's an F10 decision).
+private struct TranslationChoiceBody: View {
+    @Environment(SessionStore.self) private var session
+    let exercise: Exercise
+    let model: LessonViewModel
+    var eyebrow: LocalizedStringKey
+    /// `translation_choice` shows the answer's translation (the question is the
+    /// Serbian word, so its own translation would give the answer away);
+    /// fallback rendering of an unknown type shows the Serbian word instead.
+    var showTranslationChoices: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Metrics.loose) {
             VStack(alignment: .leading, spacing: 4) {
-                EyebrowLabel(text: eyebrow(for: exercise))
-                prompt(for: exercise)
+                EyebrowLabel(text: eyebrow)
+                prompt
             }
 
             VStack(spacing: 9) {
                 ForEach(exercise.payload.answers) { answer in
                     ChoiceRow(
-                        text: choiceText(for: answer, in: exercise),
+                        text: showTranslationChoices
+                            ? answer.translation(matching: session.languagePreference) ?? ""
+                            : answer.serbian(script: session.scriptPreference) ?? "",
                         feedback: model.feedback(for: answer)
                     ) {
                         model.select(answer.id)
@@ -112,49 +188,12 @@ struct LessonScreen: View {
                     .disabled(model.hasAnswered)
                 }
             }
-
-            if let message = model.errorMessage {
-                InlineMessage(text: message)
-            }
-
-            if let result = model.result {
-                InlineMessage(
-                    text: result.correct
-                        ? String(localized: "Тачно!")
-                        : String(localized: "Још једном — тачан одговор је означен."),
-                    tone: result.correct ? .success : .error
-                )
-            }
-
-            Spacer(minLength: Metrics.regular)
-
-            Button {
-                Task { await model.primaryAction(using: session.api, session: session) }
-            } label: {
-                if model.isBusy {
-                    ProgressView().tint(Palette.onIndigo)
-                } else {
-                    Text(model.primaryActionTitle)
-                }
-            }
-            .buttonStyle(.recPrimary)
-            .disabled(model.selectedAnswerID == nil || model.isBusy)
-        }
-        .animation(.easeOut(duration: 0.2), value: model.result)
-        .animation(.easeOut(duration: 0.15), value: model.selectedAnswerID)
-    }
-
-    private func eyebrow(for exercise: Exercise) -> LocalizedStringKey {
-        switch exercise.type {
-        case .translationChoice: return "Преведите реч"
-        case .fillWord: return "Попуните празнину"
-        case .unknown: return "Вежба"
         }
     }
 
     /// Cyrillic leads, the transliteration sits underneath — the alphabet is
     /// learned in passing rather than in a separate drill.
-    private func prompt(for exercise: Exercise) -> some View {
+    private var prompt: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(exercise.prompt(script: session.scriptPreference) ?? "")
                 .font(.recSentence)
@@ -167,8 +206,53 @@ struct LessonScreen: View {
                     .italic()
                     .foregroundStyle(Palette.oxblood)
             }
-            if exercise.type == .fillWord,
-               let translation = exercise.promptTranslation(matching: session.languagePreference),
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct FillWordBody: View {
+    @Environment(SessionStore.self) private var session
+    let exercise: Exercise
+    let model: LessonViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Metrics.loose) {
+            VStack(alignment: .leading, spacing: 4) {
+                EyebrowLabel(text: "Попуните празнину")
+                prompt
+            }
+
+            VStack(spacing: 9) {
+                ForEach(exercise.payload.answers) { answer in
+                    ChoiceRow(
+                        text: answer.serbian(script: session.scriptPreference) ?? "",
+                        feedback: model.feedback(for: answer)
+                    ) {
+                        model.select(answer.id)
+                    }
+                    .disabled(model.hasAnswered)
+                }
+            }
+        }
+    }
+
+    private var prompt: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            if let sentence = exercise.prompt(script: session.scriptPreference) {
+                fillWordSentence(sentence)
+                    .font(.recSentence)
+                    .foregroundStyle(Palette.ink)
+            }
+            if session.scriptPreference == .both,
+               let latin = exercise.prompt(script: .latin),
+               latin != exercise.prompt(script: .cyrillic) {
+                Text(latin)
+                    .font(.recCallout)
+                    .italic()
+                    .foregroundStyle(Palette.oxblood)
+            }
+            if let translation = exercise.promptTranslation(matching: session.languagePreference),
                !translation.isEmpty,
                exercise.payload.settings?.showSentenceTranslation ?? true {
                 Text(translation)
@@ -179,18 +263,20 @@ struct LessonScreen: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// `translation_choice` shows the answer's translation (the question is the
-    /// Serbian word, so its own translation would give the answer away);
-    /// `fill_word` shows the Serbian word to insert into the blank.
-    private func choiceText(for answer: ExerciseAnswer, in exercise: Exercise) -> String {
-        switch exercise.type {
-        case .translationChoice:
-            return answer.translation(matching: session.languagePreference) ?? ""
-        case .fillWord:
-            return answer.serbian(script: session.scriptPreference) ?? ""
-        case .unknown:
-            return answer.serbian(script: session.scriptPreference) ?? ""
+    /// Renders the fill_word sentence with the `____` gap highlighted — the
+    /// blank is the thing being asked about, so it shouldn't read as ordinary
+    /// text.
+    private func fillWordSentence(_ sentence: String) -> Text {
+        var styled = Text("")
+        for (index, part) in sentence.components(separatedBy: "____").enumerated() {
+            if index > 0 {
+                styled = styled + Text("____").fontWeight(.bold).foregroundColor(Palette.ochre)
+            }
+            if !part.isEmpty {
+                styled = styled + Text(part)
+            }
         }
+        return styled
     }
 }
 
@@ -225,6 +311,19 @@ private struct ChoiceRow: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(text)
+        .accessibilityValue(accessibilityValue ?? "")
+        .accessibilityAddTraits(.isButton)
+    }
+
+    /// VoiceOver reads the outcome of the last check along with the option.
+    private var accessibilityValue: String? {
+        switch feedback {
+        case .correct: String(localized: "тачан одговор")
+        case .wrong: String(localized: "погрешан одговор")
+        case .neutral, .selected: nil
+        }
     }
 
     private var foreground: Color {

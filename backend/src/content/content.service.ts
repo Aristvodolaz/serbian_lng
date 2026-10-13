@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Unit } from './entities/unit.entity';
 import { Lesson } from './entities/lesson.entity';
 import { Exercise } from './entities/exercise.entity';
 import { UserLessonProgress } from './entities/user-lesson-progress.entity';
+import { UserExerciseAnswer } from './entities/user-exercise-answer.entity';
 import { Word } from '../vocabulary/entities/word.entity';
 import { ContentStatus } from '../common/enums/content-status.enum';
 import { PathResponseDto, LessonPathStatus, UnitPathDto } from './dto/path-response.dto';
@@ -14,7 +15,7 @@ import { CompleteLessonResponseDto } from './dto/complete-lesson-response.dto';
 import { User } from '../users/entities/user.entity';
 import { BadgesService } from '../badges/badges.service';
 import { collectWordIds, resolveExercisePayload, toPublicPayload } from './exercise-resolver';
-import { getCorrectAnswer } from './exercise-types';
+import { getCorrectAnswer, validateExercisePayload } from './exercise-types';
 
 // Below this ratio a lesson still counts as completed (it unlocks the next
 // one) but only earns half XP — mirrors "Провери" allowing imperfect runs.
@@ -32,6 +33,8 @@ export class ContentService {
     private readonly exerciseRepository: Repository<Exercise>,
     @InjectRepository(UserLessonProgress)
     private readonly progressRepository: Repository<UserLessonProgress>,
+    @InjectRepository(UserExerciseAnswer)
+    private readonly answerRepository: Repository<UserExerciseAnswer>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Word)
@@ -116,6 +119,7 @@ export class ContentService {
   }
 
   async checkAnswer(
+    userId: string,
     lessonId: string,
     exerciseId: string,
     answerId: string,
@@ -126,14 +130,54 @@ export class ContentService {
     }
 
     const payload = exercise.payload;
-    if (!('answers' in payload)) {
-      throw new NotFoundException('Exercise has no answers');
+    const payloadIssues = validateExercisePayload(exercise.type, payload);
+    if (payloadIssues.length > 0) {
+      throw new BadRequestException({
+        message: 'Exercise payload is broken and cannot be answered',
+        issues: payloadIssues,
+      });
     }
     const chosen = payload.answers.find((a) => a.id === answerId);
     if (!chosen) throw new NotFoundException('Answer not found');
 
     const correct = chosen.id === payload.correctAnswerId;
     const correctAnswer = getCorrectAnswer(payload);
+
+    // Server-side record of the last attempt per (user, exercise); the first
+    // attempt (attemptNumber = 1) is what completeLesson scores.
+    const existing = await this.answerRepository.findOne({
+      where: { userId, exerciseId },
+    });
+    if (existing) {
+      existing.correct = correct;
+      existing.attemptNumber = existing.attemptNumber + 1;
+      existing.answeredAt = new Date();
+      await this.answerRepository.save(existing);
+    } else {
+      try {
+        await this.answerRepository.insert({
+          userId,
+          exerciseId,
+          lessonId,
+          correct,
+          attemptNumber: 1,
+          answeredAt: new Date(),
+        });
+      } catch (error) {
+        // Two concurrent first answers race the unique (userId, exerciseId)
+        // constraint; the loser of the insert re-applies as an update instead
+        // of surfacing the 23505 as a 500.
+        if ((error as { code?: string }).code !== '23505') throw error;
+        await this.answerRepository.update(
+          { userId, exerciseId },
+          {
+            correct,
+            attemptNumber: () => '"attemptNumber" + 1',
+            answeredAt: new Date(),
+          },
+        );
+      }
+    }
 
     let correctAnswerResolved = correctAnswer;
     if (correctAnswer) {
@@ -166,6 +210,17 @@ export class ContentService {
 
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
+
+    // Server records are the source of truth: score by the FIRST attempt of
+    // each exercise. The client report is only a fallback for lessons answered
+    // before server-side accounting existed.
+    const firstAttempts = await this.answerRepository.find({
+      where: { userId, lessonId, attemptNumber: 1 },
+    });
+    if (firstAttempts.length > 0) {
+      correctCount = firstAttempts.filter((a) => a.correct).length;
+      totalCount = firstAttempts.length;
+    }
 
     const now = new Date();
     const ratio = totalCount > 0 ? correctCount / totalCount : 0;

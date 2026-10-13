@@ -6,19 +6,27 @@ import Foundation
 /// The correct choice is never known locally — it arrives with the answer
 /// response, which is why `check()` has to await the server before the UI can
 /// show feedback.
+///
+/// Wrong answers re-queue: an exercise the user got wrong moves to the end of
+/// the queue and repeats until answered correctly, while XP counts only the
+/// FIRST attempt of each exercise.
 @Observable
 final class LessonViewModel {
     let lesson: LessonSummary
 
     private(set) var state: LoadState<LessonDetail> = .idle
-    private(set) var exerciseIndex = 0
+    private(set) var queue: [Exercise] = []
     private(set) var result: AnswerResult?
-    private(set) var correctCount = 0
+    private(set) var completedCount = 0
+    private(set) var correctFirstAttemptCount = 0
+    private(set) var advancedCount = 0
     private(set) var isBusy = false
     private(set) var completion: LessonCompletion?
     private(set) var errorMessage: String?
 
     var selectedAnswerID: String?
+
+    private var answeredExerciseIDs = Set<String>()
 
     init(lesson: LessonSummary) {
         self.lesson = lesson
@@ -29,28 +37,30 @@ final class LessonViewModel {
     }
 
     var currentExercise: Exercise? {
-        exercises.indices.contains(exerciseIndex) ? exercises[exerciseIndex] : nil
+        queue.first
     }
 
     /// Nothing has been answered yet, so closing loses nothing and asking would
     /// only be in the way.
     var canLeaveWithoutConfirming: Bool {
-        exerciseIndex == 0 && selectedAnswerID == nil && result == nil
+        advancedCount == 0 && selectedAnswerID == nil && result == nil
     }
 
     var progress: Double {
         guard !exercises.isEmpty else { return 0 }
-        let answered = Double(exerciseIndex) + (result == nil ? 0 : 1)
-        return answered / Double(exercises.count)
+        return Double(completedCount) / Double(exercises.count)
     }
 
     var hasAnswered: Bool { result != nil }
 
-    var isLastExercise: Bool { exerciseIndex >= exercises.count - 1 }
+    var isLastExercise: Bool { queue.count == 1 }
 
     var primaryActionTitle: String {
         if !hasAnswered { return String(localized: "Провери") }
-        return isLastExercise ? String(localized: "Заврши") : String(localized: "Настави")
+        // The run ends here only if the last remaining exercise was answered
+        // correctly — a wrong answer on it just repeats.
+        let finished = result?.correct == true && isLastExercise
+        return finished ? String(localized: "Заврши") : String(localized: "Настави")
     }
 
     // MARK: - Loading
@@ -58,10 +68,30 @@ final class LessonViewModel {
     func load(using api: RecAPI) async {
         state = .loading
         do {
-            state = .loaded(try await api.lesson(id: lesson.id))
+            let detail = try await api.lesson(id: lesson.id)
+            state = .loaded(detail)
+            // `shuffleOptions` is honored once, at load — repeats of a wrong
+            // answer reuse the same order rather than re-randomizing.
+            queue = detail.playableExercises.map { exercise in
+                exercise.payload.settings?.shuffleOptions == true ? shuffled(exercise) : exercise
+            }
         } catch {
             state = .failed(error.learnerFacingMessage)
         }
+    }
+
+    private func shuffled(_ exercise: Exercise) -> Exercise {
+        Exercise(
+            id: exercise.id,
+            type: exercise.type,
+            order: exercise.order,
+            payload: ExercisePayload(
+                question: exercise.payload.question,
+                sentence: exercise.payload.sentence,
+                answers: exercise.payload.answers.shuffled(),
+                settings: exercise.payload.settings
+            )
+        )
     }
 
     // MARK: - Answering
@@ -92,21 +122,38 @@ final class LessonViewModel {
                 answerID: answerID
             )
             result = answer
-            if answer.correct { correctCount += 1 }
+            SoundService.shared.play(answer.correct ? .correct : .wrong)
+            // Only the first attempt of an exercise earns XP credit.
+            if answer.correct && !answeredExerciseIDs.contains(exercise.id) {
+                answeredExerciseIDs.insert(exercise.id)
+                correctFirstAttemptCount += 1
+            }
         } catch {
+            // Keep the selection and stay on «Провери» — a network hiccup
+            // should not cost the user their answer.
             errorMessage = error.learnerFacingMessage
         }
     }
 
     private func advance(using api: RecAPI, session: SessionStore) async {
-        guard !isBusy else { return }
+        guard !isBusy, result != nil else { return }
+        advancedCount += 1
 
-        if isLastExercise {
-            await finish(using: api, session: session)
-            return
+        if result?.correct == true {
+            if queue.count == 1 {
+                // The last exercise stays on screen until completeLesson
+                // confirms — a failed call would otherwise leave an empty
+                // screen with the error hidden and no way to retry.
+                await finish(using: api, session: session)
+                return
+            }
+            completedCount += 1
+            queue.removeFirst()
+        } else {
+            // Wrong answer: re-queue at the end and repeat until correct.
+            queue.append(queue.removeFirst())
         }
 
-        exerciseIndex += 1
         selectedAnswerID = nil
         result = nil
     }
@@ -119,9 +166,16 @@ final class LessonViewModel {
         do {
             let summary = try await api.completeLesson(
                 id: lesson.id,
-                correctCount: correctCount,
+                correctCount: correctFirstAttemptCount,
                 totalCount: max(exercises.count, 1)
             )
+            // The completion counts as done only now: the last exercise kept
+            // its place in the queue until this call succeeded, so a failure
+            // above leaves the screen — and the «Заврши» retry — intact.
+            completedCount += 1
+            queue = []
+            result = nil
+            selectedAnswerID = nil
             session.applyLessonCompletion(summary)
             completion = summary
         } catch {

@@ -3,10 +3,27 @@
 // (plus a renderer on each client and an admin editor). No DB migration, no
 // change to lesson/unit structure — this is the whole point of the design.
 //
+// ── Type contract ─────────────────────────────────────────────
+// An exercise type is identified by `type: string` (a key of
+// EXERCISE_TYPE_REGISTRY) and carries a type-specific `payload: jsonb`
+// (plus per-exercise `order` and `status`, stored as columns). Payloads are
+// plain JSON — no DB schema per type.
+//
 // A payload carries every language (ru/en) and both Serbian scripts
 // (srCyr/srLat); the client picks the fields it needs from the user's
 // language/script preferences. Answers reference a dictionary Word by id
 // (`wordId`) — inline fields are the fallback when no word exists yet.
+//
+// Every registry entry must provide:
+// - `label` / `description` — surfaced in the admin template list;
+// - `createPayload()` — an empty-but-well-shaped template for the admin
+//   editor, so a structurally invalid payload for a known type cannot even
+//   be typed in;
+// - `validate(payload) → ValidationIssue[]` — the single source of truth for
+//   payload validity. It runs at admin save (create/update/bulk) and at the
+//   publish gate, and its rules must cover what `checkAnswer` relies on:
+//   unique non-empty `answers[].id` and a `correctAnswerId` matching one of
+//   them. Reference: docs/exercise-types.md.
 
 export const EXERCISE_TYPES = ['translation_choice', 'fill_word'] as const;
 export type ExerciseType = (typeof EXERCISE_TYPES)[number];
@@ -119,6 +136,72 @@ function validateAnswers(
   return issues;
 }
 
+/** The visual gap left where the missing word should go in a fill_word sentence. */
+export const BLANK_TOKEN = '____';
+
+/** Whole-word, case-insensitive matcher — the single regex shared by the
+ * save-time blank check and the serve-time blanking in exercise-resolver. */
+export function wholeWordRegExp(word: string): RegExp {
+  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(?<![\\p{L}])${escaped}(?![\\p{L}])`, 'iu');
+}
+
+/** Whole-word, case-insensitive occurrence of `word` in `sentence`. */
+function hasWholeWord(sentence: string, word: string): boolean {
+  return wholeWordRegExp(word).test(sentence);
+}
+
+/**
+ * A fill_word payload is playable only if the client can show a gap: either
+ * the author baked `____` into the sentence, or the correct answer appears
+ * verbatim (in at least one script) so serve-time blanking can put the gap
+ * there. Otherwise the exercise degenerates — the sentence shows complete.
+ * Word-linked answers (`wordId`, no inline sr text) are not verifiable here —
+ * their text is resolved from the dictionary before serve-time blanking — so
+ * they pass; the sentence should then contain the word verbatim or bake `____`.
+ */
+function checkFillWordBlank(payload: Record<string, unknown>): ValidationIssue | undefined {
+  const sentence = payload.sentence as Record<string, unknown> | undefined;
+  if (typeof sentence !== 'object' || sentence === null) return undefined;
+  const srCyr = typeof sentence.srCyr === 'string' ? sentence.srCyr : '';
+  const srLat = typeof sentence.srLat === 'string' ? sentence.srLat : '';
+  if (!srCyr.trim() || !srLat.trim()) return undefined;
+  if (srCyr.includes(BLANK_TOKEN) || srLat.includes(BLANK_TOKEN)) return undefined;
+
+  const answers = Array.isArray(payload.answers) ? payload.answers : [];
+  const correct = answers.find(
+    (a) =>
+      typeof a === 'object' &&
+      a !== null &&
+      (a as Record<string, unknown>).id === payload.correctAnswerId,
+  ) as Record<string, unknown> | undefined;
+  if (!correct) return undefined;
+
+  const hasWordRef = hasText(correct.wordId);
+  const hasInlineSr = hasText(correct.srCyr) || hasText(correct.srLat);
+  if (hasWordRef && !hasInlineSr) {
+    // A word-linked answer without inline text cannot be verified statically:
+    // at serve time the Word content is resolved into the payload first and
+    // blanking runs on the resolved text. Trusting it here is cheaper than
+    // threading the dictionary into this pure module.
+    return undefined;
+  }
+
+  const cyrBlankable =
+    hasText(correct.srCyr) && hasWholeWord(srCyr, (correct.srCyr as string).trim());
+  const latBlankable =
+    hasText(correct.srLat) && hasWholeWord(srLat, (correct.srLat as string).trim());
+  if (!cyrBlankable && !latBlankable) {
+    return {
+      field: 'sentence',
+      message:
+        'no author-baked ____ and the correct answer is not found verbatim in the sentence — ' +
+        'the blank will not be substituted; bake ____ into the sentence or make the answer appear verbatim',
+    };
+  }
+  return undefined;
+}
+
 function validateCorrectAnswerId(
   payload: Record<string, unknown>,
 ): ValidationIssue[] {
@@ -218,6 +301,8 @@ export const EXERCISE_TYPE_REGISTRY: Record<ExerciseType, ExerciseTypeDefinition
       }
       issues.push(...validateAnswers(p.answers, 3));
       issues.push(...validateCorrectAnswerId(p));
+      const blankIssue = checkFillWordBlank(p);
+      if (blankIssue) issues.push(blankIssue);
       return issues;
     },
   },

@@ -339,6 +339,51 @@ struct InlineMessage: View {
     }
 }
 
+/// Bottom panel shown after an answer is checked: green or red, states the
+/// outcome and — on a miss — the correct answer, with the continue button
+/// inside so the next step is always in the same place.
+struct FeedbackPanel: View {
+    var correct: Bool
+    var title: LocalizedStringKey
+    var detail: String?
+    var actionTitle: String
+    var isBusy = false
+    var action: () -> Void
+
+    private var accent: Color {
+        correct ? Palette.good : Palette.oxblood
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Metrics.tight) {
+            HStack(spacing: 8) {
+                Image(systemName: correct ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(accent)
+                Text(title)
+                    .font(.recCalloutStrong)
+                    .foregroundStyle(accent)
+            }
+
+            if let detail, !detail.isEmpty {
+                Text(detail)
+                    .font(.recFootnote)
+                    .foregroundStyle(Palette.ink)
+            }
+
+            Button(actionTitle, action: action)
+                .buttonStyle(.recPrimary)
+                .disabled(isBusy)
+        }
+        .padding(Metrics.regular)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(accent.opacity(correct ? 0.12 : 0.10))
+        )
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
+}
+
 // MARK: - Layout helpers
 
 struct SectionHeader: View {

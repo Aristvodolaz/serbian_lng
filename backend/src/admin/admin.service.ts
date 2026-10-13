@@ -17,6 +17,7 @@ import {
   getExerciseTypeDefinition,
   validateExercisePayload,
   EXERCISE_TYPE_REGISTRY,
+  ValidationIssue,
 } from '../content/exercise-types';
 import {
   WordAttributeField,
@@ -683,6 +684,13 @@ export class AdminService {
     if (typeof dto.payload !== 'object' || dto.payload === null) {
       throw new BadRequestException('payload must be an object');
     }
+    const issues = validateExercisePayload(type, dto.payload);
+    if (issues.length > 0) {
+      throw new BadRequestException({
+        message: 'Exercise payload has validation issues',
+        issues,
+      });
+    }
 
     const maxOrder = await this.exerciseRepo.findOne({
       where: { lessonId },
@@ -722,6 +730,18 @@ export class AdminService {
     if (dto.order !== undefined) exercise.order = dto.order;
     if (dto.status !== undefined) exercise.status = dto.status;
 
+    // Only re-validate when the payload-relevant fields changed, so legacy
+    // broken exercises stay editable (order/status fixes still go through).
+    if (dto.type !== undefined || dto.payload !== undefined) {
+      const issues = validateExercisePayload(exercise.type, exercise.payload);
+      if (issues.length > 0) {
+        throw new BadRequestException({
+          message: 'Exercise payload has validation issues',
+          issues,
+        });
+      }
+    }
+
     await this.exerciseRepo.save(exercise);
     return this.mapExercise(exercise);
   }
@@ -736,6 +756,29 @@ export class AdminService {
   async bulkCreateExercises(
     exercises: Array<{ lessonId: string; type?: string; payload: Record<string, unknown> }>,
   ): Promise<{ created: number; updated: number }> {
+    // Validate the whole batch before touching the DB — a single bad row
+    // rejects the entire import, with its (1-based) row number in the list.
+    const validationErrors: Array<{ row: number; issues: ValidationIssue[] }> = [];
+    exercises.forEach((dto, index) => {
+      const type = (dto.type ?? 'translation_choice') as ExerciseType;
+      const issues: ValidationIssue[] = [];
+      if (!getExerciseTypeDefinition(type)) {
+        issues.push({ field: 'type', message: `unknown exercise type: ${type}` });
+      }
+      if (typeof dto.payload !== 'object' || dto.payload === null) {
+        issues.push({ field: 'payload', message: 'payload must be an object' });
+      } else {
+        issues.push(...validateExercisePayload(type, dto.payload));
+      }
+      if (issues.length > 0) validationErrors.push({ row: index + 1, issues });
+    });
+    if (validationErrors.length > 0) {
+      throw new BadRequestException({
+        message: 'Bulk import rejected: some rows have validation issues',
+        rows: validationErrors,
+      });
+    }
+
     let created = 0;
 
     const byLesson = new Map<string, typeof exercises[number][]>();

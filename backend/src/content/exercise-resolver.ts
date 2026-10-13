@@ -4,7 +4,7 @@
 // stripping the anti-cheat field before the payload leaves the server.
 
 import { Word } from '../vocabulary/entities/word.entity';
-import { ExerciseAnswer, ExercisePayload } from './exercise-types';
+import { BLANK_TOKEN, ExerciseAnswer, ExercisePayload, wholeWordRegExp } from './exercise-types';
 
 /** Short human-readable preview of an exercise payload (for admin lists). */
 export function exercisePreview(payload: ExercisePayload): string {
@@ -97,9 +97,6 @@ export function toPublicPayload(payload: ExercisePayload): Record<string, unknow
   return rest as unknown as Record<string, unknown>;
 }
 
-/** The visual gap left where the missing word should go in a fill_word sentence. */
-const BLANK_TOKEN = '____';
-
 /**
  * Replaces the first whole-word, case-insensitive occurrence of `word` in
  * `sentence` with the blank token. Returns the sentence unchanged when the
@@ -112,7 +109,5 @@ function blankWord(
   word: string | undefined | null,
 ): string | undefined | null {
   if (!sentence || !word) return sentence;
-  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(`(?<![\\p{L}])${escaped}(?![\\p{L}])`, 'iu');
-  return sentence.replace(re, BLANK_TOKEN);
+  return sentence.replace(wholeWordRegExp(word), BLANK_TOKEN);
 }
