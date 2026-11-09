@@ -37,7 +37,11 @@ import com.rec.app.R
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.BadgeDiamond
 import com.rec.app.ui.components.ErrorContent
-import com.rec.app.ui.components.LanguageChip
+import com.rec.app.ui.components.LanguageSwitch
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material3.Icon
 import com.rec.app.ui.components.StatCard
 import com.rec.app.ui.components.StreakPill
 import com.rec.app.ui.theme.RecTheme
@@ -65,17 +69,27 @@ fun ProfileScreen(viewModel: ProfileViewModel, onLoggedOut: () -> Unit) {
 @Composable
 private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit, onLanguage: (Boolean) -> Unit) {
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        // Blue hero card with the avatar, name and streak — the reference's header block.
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Brush.linearGradient(listOf(RecTheme.colors.indigoSoft, RecTheme.colors.indigo)), RoundedCornerShape(28.dp))
+                .padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
             Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        Brush.sweepGradient(listOf(RecTheme.colors.ochre, RecTheme.colors.oxblood, RecTheme.colors.indigo, RecTheme.colors.ochre)),
-                        CircleShape,
-                    ),
-            )
-            Column {
-                Text(state.displayName, style = MaterialTheme.typography.titleMedium, color = RecTheme.colors.ink)
+                modifier = Modifier.size(56.dp).background(RecTheme.colors.cream.copy(alpha = 0.22f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    state.displayName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = RecTheme.colors.cream,
+                )
+            }
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(state.displayName, style = MaterialTheme.typography.titleLarge, color = RecTheme.colors.cream)
                 StreakPill(days = state.streakDays)
             }
         }
@@ -85,7 +99,7 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit, 
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.height(120.dp),
+            modifier = Modifier.height(168.dp),
         ) {
             item { StatCard(value = state.wordsLearned.toString(), label = stringResource(R.string.stat_words)) }
             item { StatCard(value = "${state.accuracy}%", label = stringResource(R.string.stat_accuracy)) }
@@ -98,9 +112,9 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit, 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             state.week.forEach { day ->
                 Surface(
-                    shape = RoundedCornerShape(6.dp),
-                    color = if (day.active) RecTheme.colors.good else RecTheme.colors.thread.copy(alpha = 0.35f),
-                    modifier = Modifier.size(24.dp),
+                    shape = CircleShape,
+                    color = if (day.active) RecTheme.colors.good else RecTheme.colors.surface,
+                    modifier = Modifier.size(36.dp),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
@@ -136,13 +150,22 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit, 
 
         Spacer(Modifier.weight(1f))
         Text(stringResource(R.string.profile_language), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            LanguageChip("Русский", selected = !state.english, onClick = { onLanguage(false) })
-            LanguageChip("English", selected = state.english, onClick = { onLanguage(true) })
-        }
-        Spacer(Modifier.height(12.dp))
-        TextButton(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.profile_logout), color = RecTheme.colors.inkSoft)
+        LanguageSwitch(english = state.english, onSelect = onLanguage)
+        Spacer(Modifier.height(14.dp))
+        // Quiet but clearly an action: a white pill with a coral outline, not a faint text link.
+        Surface(
+            onClick = onLogout,
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+            shape = RoundedCornerShape(50),
+            color = RecTheme.colors.surface,
+            border = BorderStroke(1.5.dp, RecTheme.colors.oxblood.copy(alpha = 0.4f)),
+            shadowElevation = 3.dp,
+        ) {
+            Row(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterVertically) {
+                Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = RecTheme.colors.oxblood, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.profile_logout), style = MaterialTheme.typography.labelLarge, color = RecTheme.colors.oxblood)
+            }
         }
     }
 }

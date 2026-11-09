@@ -24,7 +24,7 @@ android {
             // Debug's cleartext allowance (src/debug/AndroidManifest.xml)
             // covers this. Swap back to "http://localhost:3000/" + `adb
             // reverse tcp:3000 tcp:3000` for local backend development.
-            buildConfigField("String", "BASE_URL", "\"http://159.194.226.2:3000/\"")
+            buildConfigField("String", "BASE_URL", "\"http://13.143.151.170:3000/\"")
         }
         release {
             isMinifyEnabled = false

@@ -58,7 +58,7 @@ fun RecTextField(
                 onNext = { onImeAction?.invoke() },
                 onDone = { onImeAction?.invoke() },
             ),
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(18.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = fieldColor,
                 unfocusedContainerColor = fieldColor,

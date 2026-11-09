@@ -5,6 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +32,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,12 +80,22 @@ fun DictionaryScreen(viewModel: DictionaryViewModel, onOpenFlashcards: () -> Uni
                 Icon(Icons.Filled.Style, contentDescription = stringResource(R.string.dict_flashcards), tint = RecTheme.colors.indigo)
             }
         }
-        OutlinedTextField(
+        TextField(
             value = state.search,
             onValueChange = viewModel::onSearchChange,
             singleLine = true,
-            placeholder = { Text(stringResource(R.string.dict_search_hint)) },
-            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.dict_search_hint), color = RecTheme.colors.inkSoft) },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = RecTheme.colors.inkSoft) },
+            shape = RoundedCornerShape(50),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = RecTheme.colors.surface,
+                unfocusedContainerColor = RecTheme.colors.surface,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = RecTheme.colors.ink,
+                unfocusedTextColor = RecTheme.colors.ink,
+            ),
+            modifier = Modifier.fillMaxWidth().shadow(6.dp, RoundedCornerShape(50), clip = false),
         )
         Spacer(Modifier.height(8.dp))
 
@@ -111,10 +126,21 @@ private fun WordList(
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { last -> if (last != null && last >= words.size - 10) onNearEnd() }
     }
-    LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(vertical = 8.dp),
+    ) {
         items(words, key = { it.id }) { word ->
+            // Each word is its own white card, like the reference's course tiles.
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { onSelect(word) }.padding(vertical = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(3.dp, RoundedCornerShape(20.dp), clip = false)
+                    .background(RecTheme.colors.surface, RoundedCornerShape(20.dp))
+                    .clickable { onSelect(word) }
+                    .padding(horizontal = 18.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -134,7 +160,6 @@ private fun WordList(
                     textAlign = TextAlign.End,
                 )
             }
-            Box(Modifier.fillMaxWidth().height(1.dp).background(RecTheme.colors.thread.copy(alpha = 0.3f)))
         }
         if (loadingMore) {
             item {
@@ -177,8 +202,8 @@ private fun WordCard(word: WordDto, script: String, english: Boolean, attributes
 
         val example = word.exampleCyrillic
         if (!example.isNullOrBlank()) {
-            Surface(shape = RoundedCornerShape(14.dp), color = RecTheme.colors.surface2, modifier = Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp)) {
+            Surface(shape = RoundedCornerShape(22.dp), color = RecTheme.colors.surface, shadowElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(18.dp)) {
                     Text(example, style = MaterialTheme.typography.bodyLarge, color = RecTheme.colors.ink)
                     exampleTranslation?.let {
                         Text(it, style = MaterialTheme.typography.bodySmall, color = RecTheme.colors.inkSoft)
@@ -196,8 +221,8 @@ private fun WordCard(word: WordDto, script: String, english: Boolean, attributes
         ).filter { it.second != null }
 
         if (rows.isNotEmpty()) {
-            Surface(shape = RoundedCornerShape(14.dp), color = RecTheme.colors.surface2, modifier = Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Surface(shape = RoundedCornerShape(22.dp), color = RecTheme.colors.surface, shadowElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     rows.forEach { (labelRes, value) ->
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text(stringResource(labelRes), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)

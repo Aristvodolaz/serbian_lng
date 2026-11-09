@@ -72,12 +72,12 @@ fun ScriptCard(
             .fillMaxWidth()
             .graphicsLayer { scaleX = scale; scaleY = scale }
             .clickable(interactionSource = interactionSource, indication = null, onClick = onClick),
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(22.dp),
         color = bg,
         border = BorderStroke(1.5.dp, border),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp).fillMaxWidth(),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp).fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -127,7 +127,7 @@ fun ChoiceCard(
                 enabled = state == ChoiceState.NEUTRAL || state == ChoiceState.SELECTED,
                 onClick = onClick,
             ),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(18.dp),
         color = bg,
         border = BorderStroke(1.5.dp, border),
     ) {
@@ -154,7 +154,7 @@ fun ScriptSummaryChip(
     val colors = RecTheme.colors
     Surface(
         modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(22.dp),
         color = colors.surface2,
         border = BorderStroke(1.dp, colors.thread.copy(alpha = 0.5f)),
     ) {
@@ -180,11 +180,11 @@ fun StatCard(value: String, label: String, modifier: Modifier = Modifier) {
     val colors = RecTheme.colors
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = colors.surface2,
-        border = BorderStroke(1.dp, colors.thread.copy(alpha = 0.5f)),
+        shape = RoundedCornerShape(22.dp),
+        color = colors.surface,
+        border = BorderStroke(1.dp, colors.thread.copy(alpha = 0.4f)),
     ) {
-        Column(modifier = Modifier.padding(10.dp)) {
+        Column(modifier = Modifier.padding(14.dp)) {
             Text(value, fontFamily = Mono, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge, color = colors.ink)
             Text(label, style = MaterialTheme.typography.labelSmall, color = colors.inkSoft)
         }
