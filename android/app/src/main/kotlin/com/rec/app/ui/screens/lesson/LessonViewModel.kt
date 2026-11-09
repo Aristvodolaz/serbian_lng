@@ -3,17 +3,18 @@ package com.rec.app.ui.screens.lesson
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.remote.dto.EarnedBadgeDto
-import com.rec.app.data.remote.dto.ExercisePublicDto
-import com.rec.app.data.repository.ContentRepository
-import com.rec.app.data.repository.UserRepository
+import com.rec.app.domain.model.Exercise
+import com.rec.app.domain.model.ExerciseText
+import com.rec.app.domain.model.EarnedBadge
+import com.rec.app.domain.model.SectionLockedException
+import com.rec.app.domain.repository.ContentRepository
+import com.rec.app.domain.repository.UserRepository
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 data class ChoiceUi(val id: String, val text: String)
 data class ExerciseUi(val id: String, val promptCyrillic: String, val promptLatin: String, val choices: List<ChoiceUi>)
@@ -58,7 +59,7 @@ class LessonViewModel(
     val state: StateFlow<LessonUiState> = _state.asStateFlow()
 
     private lateinit var lessonId: String
-    private var exercises: List<ExercisePublicDto> = emptyList()
+    private var exercises: List<Exercise> = emptyList()
     private var index = 0
     private var correctCount = 0
     private var languageIsEn = false
@@ -87,7 +88,7 @@ class LessonViewModel(
                     }
                 }
                 .onFailure {
-                    _state.value = if (it.isSectionLocked()) LessonUiState.Locked else LessonUiState.Error(uiText(R.string.lesson_error_load))
+                    _state.value = if (it is SectionLockedException) LessonUiState.Locked else LessonUiState.Error(uiText(R.string.lesson_error_load))
                 }
         }
     }
@@ -131,13 +132,13 @@ class LessonViewModel(
 
     private fun showCurrentExercise() {
         val exercise = exercises[index]
-        val item = exercise.payload.question ?: exercise.payload.sentence
+        val prompt: ExerciseText? = exercise.prompt
         _state.value = LessonUiState.InProgress(
             exercise = ExerciseUi(
                 id = exercise.id,
-                promptCyrillic = item?.srCyr ?: item?.srLat.orEmpty(),
-                promptLatin = item?.srLat ?: item?.srCyr.orEmpty(),
-                choices = exercise.payload.answers.map { answer ->
+                promptCyrillic = prompt?.srCyr ?: prompt?.srLat.orEmpty(),
+                promptLatin = prompt?.srLat ?: prompt?.srCyr.orEmpty(),
+                choices = exercise.answers.map { answer ->
                     ChoiceUi(answer.id, choiceText(exercise.type, answer.ru, answer.en, answer.srCyr, answer.srLat))
                 },
             ),
@@ -172,8 +173,4 @@ class LessonViewModel(
     }
 }
 
-private fun EarnedBadgeDto.toUi() = EarnedBadgeUi(titleCyrillic = titleCyrillic, titleLatin = titleLatin)
-
-/** The backend answers a lesson in a locked section with 403 and the message SECTION_LOCKED. */
-private fun Throwable.isSectionLocked(): Boolean =
-    this is HttpException && code() == 403 && response()?.errorBody()?.string()?.contains("SECTION_LOCKED") == true
+private fun EarnedBadge.toUi() = EarnedBadgeUi(titleCyrillic = titleCyrillic, titleLatin = titleLatin)

@@ -3,10 +3,11 @@ package com.rec.app.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.remote.dto.LessonSummaryDto
-import com.rec.app.data.remote.dto.SectionPathDto
-import com.rec.app.data.repository.ContentRepository
-import com.rec.app.data.repository.UserRepository
+import com.rec.app.domain.model.LessonStatus
+import com.rec.app.domain.model.LessonSummary
+import com.rec.app.domain.model.Section
+import com.rec.app.domain.repository.ContentRepository
+import com.rec.app.domain.repository.UserRepository
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
 import com.rec.app.ui.components.LessonPathStatus
@@ -91,7 +92,7 @@ class HomeViewModel(
  * checkpoint lesson sits after its last unit's lessons, as on iOS
  * (`LearningPath.lessons`); a section without units gets a unit of its own to hold it.
  */
-private fun SectionPathDto.toUnits(en: Boolean): List<UnitUi> {
+private fun Section.toUnits(en: Boolean): List<UnitUi> {
     val result = units.sortedBy { it.order }.map { unit ->
         UnitUi(
             id = unit.id,
@@ -113,15 +114,15 @@ private fun SectionPathDto.toUnits(en: Boolean): List<UnitUi> {
     return result
 }
 
-private fun LessonSummaryDto.toUi(en: Boolean) = LessonUi(
+private fun LessonSummary.toUi(en: Boolean) = LessonUi(
     id = id,
     title = title,
     titleLatin = titleLatin,
     titleTranslation = if (en) titleTranslationEn else titleTranslationRu,
     xpReward = xpReward,
     status = when (status) {
-        "done" -> LessonPathStatus.DONE
-        "current" -> LessonPathStatus.CURRENT
-        else -> LessonPathStatus.LOCKED
+        LessonStatus.DONE -> LessonPathStatus.DONE
+        LessonStatus.CURRENT -> LessonPathStatus.CURRENT
+        LessonStatus.LOCKED -> LessonPathStatus.LOCKED
     },
 )

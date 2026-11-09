@@ -3,9 +3,9 @@ package com.rec.app.ui.screens.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.repository.AuthRepository
-import com.rec.app.data.repository.BadgesRepository
-import com.rec.app.data.repository.UserRepository
+import com.rec.app.domain.repository.AuthRepository
+import com.rec.app.domain.repository.BadgesRepository
+import com.rec.app.domain.repository.UserRepository
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +60,7 @@ class ProfileViewModel(
                 accuracy = stats.accuracy,
                 lessonsCompleted = stats.lessonsCompleted,
                 weeksActive = stats.weeksActive,
-                week = week.days.map { DayUi(it.weekday, it.active) },
+                week = week.map { DayUi(it.weekday, it.active) },
                 badges = badges.orEmpty().map { EarnedBadgeUi(it.titleCyrillic, it.titleLatin) },
                 english = me.languagePreference == "en",
             )

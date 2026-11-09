@@ -3,7 +3,8 @@ package com.rec.app.ui.screens.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.repository.AuthRepository
+import com.rec.app.domain.model.AuthException
+import com.rec.app.domain.repository.AuthRepository
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 enum class AuthStage { WELCOME, LOGIN, SCRIPT, CREDENTIALS }
 
@@ -72,10 +72,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    private fun mapError(t: Throwable): UiText = when {
-        t is HttpException && t.code() == 401 -> uiText(R.string.auth_error_invalid_credentials)
-        t is HttpException && t.code() == 409 -> uiText(R.string.auth_error_email_taken)
-        t is HttpException -> uiText(R.string.auth_error_server, t.code())
+    private fun mapError(t: Throwable): UiText = when (t) {
+        is AuthException.InvalidCredentials -> uiText(R.string.auth_error_invalid_credentials)
+        is AuthException.EmailTaken -> uiText(R.string.auth_error_email_taken)
+        is AuthException.Server -> uiText(R.string.auth_error_server, t.code)
         else -> uiText(R.string.auth_error_network)
     }
 }

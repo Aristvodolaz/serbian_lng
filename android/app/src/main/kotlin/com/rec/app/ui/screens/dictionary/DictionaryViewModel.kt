@@ -2,10 +2,10 @@ package com.rec.app.ui.screens.dictionary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rec.app.data.remote.dto.WordAttributesDto
-import com.rec.app.data.remote.dto.WordDto
-import com.rec.app.data.repository.UserRepository
-import com.rec.app.data.repository.VocabularyRepository
+import com.rec.app.domain.model.Word
+import com.rec.app.domain.model.WordAttributes
+import com.rec.app.domain.repository.UserRepository
+import com.rec.app.domain.repository.VocabularyRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,15 +15,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class DictionaryUiState(
-    val words: List<WordDto> = emptyList(),
+    val words: List<Word> = emptyList(),
     val total: Int = 0,
     val search: String = "",
     val loading: Boolean = true,
     val loadingMore: Boolean = false,
     val error: Boolean = false,
-    val attributes: WordAttributesDto? = null,
+    val attributes: WordAttributes? = null,
     /** Word shown in the card; null means the list. */
-    val selected: WordDto? = null,
+    val selected: Word? = null,
     /** Script ("cyrillic" | "latin" | "both") and interface language from the profile. */
     val script: String = "both",
     val english: Boolean = false,
@@ -70,7 +70,7 @@ class DictionaryViewModel(
         viewModelScope.launch { fetch(replace = false) }
     }
 
-    fun select(word: WordDto?) = _state.update { it.copy(selected = word) }
+    fun select(word: Word?) = _state.update { it.copy(selected = word) }
 
     private suspend fun fetch(replace: Boolean) {
         val gen = if (replace) ++generation else generation

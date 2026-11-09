@@ -3,8 +3,8 @@ package com.rec.app.ui.screens.vocabulary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.remote.dto.ReviewWordResponse
-import com.rec.app.data.repository.VocabularyRepository
+import com.rec.app.domain.model.ReviewCard
+import com.rec.app.domain.repository.VocabularyRepository
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +35,7 @@ class VocabularyViewModel(
     private val _state = MutableStateFlow<FlashcardsUiState>(FlashcardsUiState.Loading)
     val state: StateFlow<FlashcardsUiState> = _state.asStateFlow()
 
-    private var queue: List<ReviewWordResponse> = emptyList()
+    private var queue: List<ReviewCard> = emptyList()
     private var index = 0
     private val earnedBadgeTitles = mutableListOf<String>()
 
@@ -58,8 +58,8 @@ class VocabularyViewModel(
         viewModelScope.launch {
             _state.value = current.copy(isSubmitting = true)
             vocabularyRepository.submitReview(current.card.wordId, result)
-                .onSuccess { response ->
-                    earnedBadgeTitles += response.newBadges.map { it.titleCyrillic }
+                .onSuccess { outcome ->
+                    earnedBadgeTitles += outcome.newBadges.map { it.titleCyrillic }
                     index++
                     if (index >= queue.size) {
                         _state.value = FlashcardsUiState.Done(queue.size, earnedBadgeTitles.toList())

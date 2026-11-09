@@ -46,9 +46,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rec.app.R
-import com.rec.app.data.remote.dto.WordAttributeOptionDto
-import com.rec.app.data.remote.dto.WordAttributesDto
-import com.rec.app.data.remote.dto.WordDto
+import com.rec.app.domain.model.AttributeOption
+import com.rec.app.domain.model.Word
+import com.rec.app.domain.model.WordAttributes
 import com.rec.app.ui.common.rememberSerbianSpeaker
 import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.theme.RecTheme
@@ -114,10 +114,10 @@ fun DictionaryScreen(viewModel: DictionaryViewModel, onOpenFlashcards: () -> Uni
 
 @Composable
 private fun WordList(
-    words: List<WordDto>,
+    words: List<Word>,
     script: String,
     english: Boolean,
-    onSelect: (WordDto) -> Unit,
+    onSelect: (Word) -> Unit,
     onNearEnd: () -> Unit,
     loadingMore: Boolean,
 ) {
@@ -173,7 +173,7 @@ private fun WordList(
 
 /** A single word: both scripts, translation, spoken pronunciation, example and grammar. */
 @Composable
-private fun WordCard(word: WordDto, script: String, english: Boolean, attributes: WordAttributesDto?) {
+private fun WordCard(word: Word, script: String, english: Boolean, attributes: WordAttributes?) {
     val speak = rememberSerbianSpeaker()
     val translation = if (english) word.translationEn else word.translationRu
     val exampleTranslation = if (english) word.exampleTranslationEn else word.exampleTranslationRu
@@ -236,7 +236,7 @@ private fun WordCard(word: WordDto, script: String, english: Boolean, attributes
 }
 
 /** Resolves a stored grammar code to its label; null when the word has no code, the raw code if unknown. */
-private fun String?.label(options: List<WordAttributeOptionDto>?, english: Boolean): String? {
+private fun String?.label(options: List<AttributeOption>?, english: Boolean): String? {
     val code = this ?: return null
     val match = options?.firstOrNull { it.value == code } ?: return code
     return if (english) match.en else match.ru
