@@ -18,6 +18,7 @@ interface Unit {
   titleTranslationEn: string;
   status: string;
   order: number;
+  sectionId: string | null;
   lessons?: Lesson[];
 }
 
@@ -30,6 +31,7 @@ interface Lesson {
   status: string;
   order: number;
   xpReward: number;
+  kind: string;
 }
 
 export default async function UnitDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -40,6 +42,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
   } catch {
     notFound();
   }
+  const sections = await fetchAdmin<{ data: { id: string; titleCyrillic: string }[] }>('/admin/sections?limit=100');
 
   return (
     <div>
@@ -70,7 +73,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
           </div>
         </dl>
         <div className="mt-4">
-          <EditUnitForm unit={unit} />
+          <EditUnitForm unit={unit} sections={sections.data} />
         </div>
       </div>
 
@@ -91,6 +94,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
               <th className="text-left px-4 py-3 font-medium text-gray-500">Latin</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation RU</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Translation EN</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-500">Kind</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">XP</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Status</th>
               <th className="text-left px-4 py-3 font-medium text-gray-500">Actions</th>
@@ -104,6 +108,15 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                 <td className="px-4 py-3 text-gray-600">{lesson.titleLatin}</td>
                 <td className="px-4 py-3 text-gray-600">{lesson.titleTranslationRu}</td>
                 <td className="px-4 py-3 text-gray-600">{lesson.titleTranslationEn}</td>
+                <td className="px-4 py-3">
+                  {lesson.kind === 'checkpoint' ? (
+                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                      checkpoint
+                    </span>
+                  ) : (
+                    <span className="text-gray-500 text-xs">regular</span>
+                  )}
+                </td>
                 <td className="px-4 py-3">{lesson.xpReward}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
@@ -123,7 +136,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
             ))}
             {!unit.lessons?.length && (
               <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
                   No lessons yet
                 </td>
               </tr>

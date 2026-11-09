@@ -30,6 +30,7 @@ import {
   CreateBadgeDto,
   CreateExerciseDto,
   CreateLessonDto,
+  CreateSectionDto,
   CreateUnitDto,
   CreateWordDto,
   ExerciseAdminResponseDto,
@@ -39,11 +40,14 @@ import {
   ListExercisesQueryDto,
   PublishAllResultDto,
   PublishWordsResultDto,
+  SectionAdminResponseDto,
+  SectionPublishResultDto,
   UnitAdminResponseDto,
   UnitPublishResultDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
+  UpdateSectionDto,
   UpdateUnitDto,
   UpdateWordDto,
   WordAdminResponseDto,
@@ -161,6 +165,65 @@ export class AdminController {
     @Body() dto: { units: BulkCreateUnitDto[] },
   ): Promise<{ created: number; updated: number }> {
     return this.adminService.bulkCreateUnits(dto.units);
+  }
+
+  // ── Sections ───────────────────────────────────────────────
+
+  @Get('sections')
+  @ApiOkResponse({ type: PaginatedResponse })
+  listSections(@Query() pagination: PaginationDto): Promise<PaginatedResponse<SectionAdminResponseDto>> {
+    return this.adminService.listSections(pagination);
+  }
+
+  @Post('sections')
+  @ApiOkResponse({ type: SectionAdminResponseDto })
+  createSection(@Body() dto: CreateSectionDto): Promise<SectionAdminResponseDto> {
+    return this.adminService.createSection(dto);
+  }
+
+  @Get('sections/:id')
+  @ApiOkResponse({ type: SectionAdminResponseDto })
+  getSection(
+    @Param('id', ParseUUIDPipe) sectionId: string,
+  ): Promise<SectionAdminResponseDto> {
+    return this.adminService.getSection(sectionId);
+  }
+
+  @Patch('sections/:id')
+  @ApiOkResponse({ type: SectionAdminResponseDto })
+  updateSection(
+    @Param('id', ParseUUIDPipe) sectionId: string,
+    @Body() dto: UpdateSectionDto,
+  ): Promise<SectionAdminResponseDto> {
+    return this.adminService.updateSection(sectionId, dto);
+  }
+
+  @Post('sections/:id/publish')
+  @ApiOkResponse({ type: SectionPublishResultDto })
+  publishSection(
+    @Param('id', ParseUUIDPipe) sectionId: string,
+  ): Promise<SectionPublishResultDto> {
+    return this.adminService.publishSection(sectionId);
+  }
+
+  @Post('sections/publish-all')
+  @ApiOkResponse({ type: PublishAllResultDto })
+  publishAllSections(): Promise<PublishAllResultDto> {
+    return this.adminService.publishAllSections();
+  }
+
+  @Delete('sections/:id')
+  deleteSection(
+    @Param('id', ParseUUIDPipe) sectionId: string,
+  ): Promise<{ deleted: true; deletedCheckpoints: number; deletedExercises: number }> {
+    return this.adminService.deleteSection(sectionId);
+  }
+
+  @Post('sections/bulk')
+  bulkCreateSections(
+    @Body() dto: { sections: CreateSectionDto[] },
+  ): Promise<{ created: number; updated: number }> {
+    return this.adminService.bulkCreateSections(dto.sections);
   }
 
   // ── Lessons ────────────────────────────────────────────────

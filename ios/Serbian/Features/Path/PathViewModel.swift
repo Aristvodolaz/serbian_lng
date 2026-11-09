@@ -15,9 +15,9 @@ final class PathViewModel {
         if !state.hasLoaded { state = .loading }
         do {
             let path = try await api.learningPath()
-            let units = path.units.count
-            let lessons = path.units.reduce(0) { $0 + $1.lessons.count }
-            print("[REČ] units: \(units) юнитов, \(lessons) уроков")
+            let sections = path.sections.count
+            let lessons = path.sections.reduce(0) { $0 + $1.units.reduce(0) { $0 + $1.lessons.count } }
+            print("[REČ] units: \(sections) секций, \(lessons) уроков")
             state = .loaded(path)
         } catch {
             print("[REČ] units error: \(String(describing: error))")

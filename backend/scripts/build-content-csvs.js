@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // One-off rebuild generator: parses the deleted seed.ts (read from stdin via
 // `git show b5299109:backend/src/database/seed.ts | node build-content-csvs.js`)
-// and emits units.csv / lessons.csv / exercises.csv for the admin CSV upload.
+// and emits sections.csv / units.csv / lessons.csv / exercises.csv for the admin CSV upload.
 //
 // Lesson plan + RU/EN unit & lesson titles are authored here; word data comes
 // from the seed. exampleTranslationRu/En for the later units (Људи, Време)
@@ -23,16 +23,22 @@ function toLatin(s) {
   return [...s].map((c) => TO_LATIN[c] ?? c).join('');
 }
 
-// ── Units (order matters: order column) ────────────────────────────────────
+// ── Sections (order matters: order column) ────────────────────────────────
+const SECTIONS = [
+  { cy: 'Основе',       la: 'Osnove',        ru: 'Основы',       en: 'Basics',          level: 'A1' },
+  { cy: 'Људи и време', la: 'Ljudi i vreme', ru: 'Люди и время', en: 'People and time', level: 'A1' },
+];
+
+// ── Units (order matters: order column; section groups them) ──────────────
 const UNITS = [
-  { cy: 'Писмо',      la: 'Pismo',     ru: 'Алфавит',     en: 'Alphabet' },
-  { cy: 'Поздрави',   la: 'Pozdravi',  ru: 'Приветствия', en: 'Greetings' },
-  { cy: 'Породица',   la: 'Porodica',  ru: 'Семья',       en: 'Family' },
-  { cy: 'Храна',      la: 'Hrana',     ru: 'Еда',         en: 'Food' },
-  { cy: 'Бројеви',    la: 'Brojevi',   ru: 'Числа',       en: 'Numbers' },
-  { cy: 'Путовање',   la: 'Putovanje', ru: 'Путешествие', en: 'Travel' },
-  { cy: 'Људи',       la: 'Ljudi',     ru: 'Люди',        en: 'People' },
-  { cy: 'Време',      la: 'Vreme',     ru: 'Время',       en: 'Time' },
+  { cy: 'Писмо',      la: 'Pismo',     ru: 'Алфавит',     en: 'Alphabet',     section: 'Основе' },
+  { cy: 'Поздрави',   la: 'Pozdravi',  ru: 'Приветствия', en: 'Greetings',    section: 'Основе' },
+  { cy: 'Породица',   la: 'Porodica',  ru: 'Семья',       en: 'Family',       section: 'Основе' },
+  { cy: 'Храна',      la: 'Hrana',     ru: 'Еда',         en: 'Food',         section: 'Основе' },
+  { cy: 'Бројеви',    la: 'Brojevi',   ru: 'Числа',       en: 'Numbers',      section: 'Основе' },
+  { cy: 'Путовање',   la: 'Putovanje', ru: 'Путешествие', en: 'Travel',       section: 'Људи и време' },
+  { cy: 'Људи',       la: 'Ljudi',     ru: 'Люди',        en: 'People',       section: 'Људи и време' },
+  { cy: 'Време',      la: 'Vreme',     ru: 'Время',       en: 'Time',         section: 'Људи и време' },
 ];
 
 // ── Lesson plan: unit → [{title, ru, en, words[]}] ────────────────────────
@@ -322,15 +328,24 @@ for (const [cy, w] of byCyr) {
 // ── Emit CSVs ─────────────────────────────────────────────────────────────
 const csv = (rows) => rows.map((r) => r.map((v) => String(v ?? '').replaceAll(',', ' / ').replaceAll('"', '""')).join(',')).join('\n');
 
-const unitRows = UNITS.map((u) => [u.cy, u.la, u.ru, u.en]);
-fs.writeFileSync('units.csv', `titleCyrillic,titleLatin,titleTranslationRu,titleTranslationEn\n${csv(unitRows)}\n`);
+const unitRows = UNITS.map((u) => [u.cy, u.la, u.ru, u.en, u.section]);
+const sectionRows = SECTIONS.map((s) => [s.cy, s.la, s.ru, s.en, s.level]);
+fs.writeFileSync(
+  'sections.csv',
+  `titleCyrillic,titleLatin,titleTranslationRu,titleTranslationEn,level\n${csv(sectionRows)}\n`,
+);
+fs.writeFileSync(
+  'units.csv',
+  `titleCyrillic,titleLatin,titleTranslationRu,titleTranslationEn,sectionTitle\n${csv(unitRows)}\n`,
+);
 
+const SECTION_OF_UNIT = Object.fromEntries(UNITS.map((u) => [u.cy, u.section]));
 const lessonRows = [];
 const exerciseRows = [];
 const missing = new Set();
 const seenWords = new Set();
 for (const l of LESSONS) {
-  lessonRows.push([l.unit, l.title, l.title, l.ru, l.en, 10]);
+  lessonRows.push([l.unit, l.title, l.title, l.ru, l.en, 10, 'regular', SECTION_OF_UNIT[l.unit]]);
   for (const cy of l.words) {
     if (seenWords.has(cy)) {
       console.error(`WARN: duplicate word "${cy}" in lesson plan (${l.title})`);
@@ -354,7 +369,15 @@ for (const l of LESSONS) {
     ]);
   }
 }
-fs.writeFileSync('lessons.csv', `unitTitle,title,titleLatin,titleTranslationRu,titleTranslationEn,xpReward\n${csv(lessonRows)}\n`);
+// Checkpoint rows resolve to their section (empty unitTitle is allowed); they
+// are uploaded last so each lands after every regular lesson of the rebuild.
+for (const s of SECTIONS) {
+  lessonRows.push(['', `Провера: ${s.cy}`, `Провера: ${s.la}`, `Проверка: ${s.ru}`, `Checkpoint: ${s.en}`, 30, 'checkpoint', s.cy]);
+}
+fs.writeFileSync(
+  'lessons.csv',
+  `unitTitle,title,titleLatin,titleTranslationRu,titleTranslationEn,xpReward,kind,sectionTitle\n${csv(lessonRows)}\n`,
+);
 fs.writeFileSync(
   'exercises.csv',
   `type,unitTitle,lessonTitle,cyrillic,latin,translationRu,translationEn,audioUrl,imageUrl,sentenceCyrillic,sentenceLatin,sentenceTranslationRu,sentenceTranslationEn\n${csv(exerciseRows)}\n`,
@@ -369,7 +392,7 @@ for (const [unitName, list] of units) {
     if (!allInPlan.has(w.cy)) uncovered.push(`${unitName}: ${w.cy}`);
   }
 }
-console.log(`units: ${unitRows.length}, lessons: ${lessonRows.length}, exercises: ${exerciseRows.length}`);
+console.log(`sections: ${sectionRows.length}, units: ${unitRows.length}, lessons: ${lessonRows.length}, exercises: ${exerciseRows.length}`);
 console.log(`words covered: ${covered}, missing from seed: ${[...missing].length}`);
 if (uncovered.length) console.log(`uncovered words:\n  ${uncovered.join('\n  ')}`);
 else console.log('uncovered words: none');

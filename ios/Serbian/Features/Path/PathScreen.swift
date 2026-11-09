@@ -35,7 +35,7 @@ struct PathScreen: View {
                 Task { await model.load(using: session.api) }
             }
         case .loaded(let path):
-            if path.units.isEmpty {
+            if path.sections.isEmpty {
                 EmptyStateView(
                     title: "Нема лекција",
                     message: "Сервер још нема садржај. Покрените `npm run seed` на бекенду."
@@ -59,10 +59,9 @@ struct PathScreen: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, Metrics.loose)
 
-                ForEach(Array(path.units.sorted { $0.order < $1.order }.enumerated()), id: \.element.id) { unitIndex, unit in
-                    UnitTrailSection(
-                        unit: unit,
-                        startIndex: startIndex(of: unitIndex, in: path),
+                ForEach(path.sections.sorted { $0.order < $1.order }) { section in
+                    SectionTrailSection(
+                        section: section,
                         scriptPreference: session.scriptPreference,
                         languagePreference: session.languagePreference
                     ) { lesson in
@@ -75,14 +74,6 @@ struct PathScreen: View {
         }
         .refreshable { await model.load(using: session.api) }
         .scrollIndicators(.hidden)
-    }
-
-    /// Keeps the left/right zigzag continuous across unit boundaries.
-    private func startIndex(of unitIndex: Int, in path: LearningPath) -> Int {
-        path.units
-            .sorted { $0.order < $1.order }
-            .prefix(unitIndex)
-            .reduce(0) { $0 + $1.lessons.count }
     }
 
     private var header: some View {
@@ -111,9 +102,78 @@ struct PathScreen: View {
     }
 }
 
+private struct SectionTrailSection: View {
+    var section: SectionPath
+    var scriptPreference: ScriptPreference
+    var languagePreference: LanguagePreference
+    var onSelect: (LessonSummary) -> Void
+
+    private var units: [PathUnit] {
+        section.units.sorted { $0.order < $1.order }
+    }
+
+    private var lessonCount: Int {
+        units.reduce(0) { $0 + $1.lessons.count }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // The legacy pseudo-section (orphan units) carries no titles and
+            // renders without a header.
+            if !section.titleCyrillic.isEmpty || !section.titleLatin.isEmpty {
+                HStack(spacing: Metrics.tight) {
+                    KilimRule(cell: 8, opacity: 0.5)
+                        .frame(width: 28)
+                    DualScriptText(
+                        cyrillic: section.titleCyrillic,
+                        latin: section.titleLatin,
+                        preference: scriptPreference,
+                        primaryFont: .recCalloutStrong,
+                        secondaryFont: .recCaption
+                    )
+                    Spacer()
+                    if let level = section.level {
+                        Pill(systemImage: "diagram.thumbnail", text: level, tint: Palette.indigo)
+                    }
+                    Text(section.titleTranslation(matching: languagePreference))
+                        .font(.recCaption)
+                        .foregroundStyle(Palette.inkSoft)
+                }
+                .padding(.bottom, Metrics.regular)
+            }
+
+            ForEach(units) { unit in
+                UnitTrailSection(
+                    unit: unit,
+                    scriptPreference: scriptPreference,
+                    languagePreference: languagePreference,
+                    onSelect: onSelect
+                )
+            }
+
+            if let checkpoint = section.checkpoint {
+                if let lastUnit = units.last, lastUnit.lessons.count > 0 {
+                    PathTrail(
+                        from: UnitTrailSection.xOffset(for: lastUnit.lessons.count - 1),
+                        to: UnitTrailSection.xOffset(for: lessonCount)
+                    )
+                }
+                PathNodeRow(
+                    lesson: checkpoint,
+                    isCheckpoint: true,
+                    scriptPreference: scriptPreference,
+                    languagePreference: languagePreference,
+                    xOffset: UnitTrailSection.xOffset(for: lessonCount),
+                    onSelect: onSelect
+                )
+            }
+        }
+        .padding(.bottom, Metrics.loose)
+    }
+}
+
 private struct UnitTrailSection: View {
     var unit: PathUnit
-    var startIndex: Int
     var scriptPreference: ScriptPreference
     var languagePreference: LanguagePreference
     var onSelect: (LessonSummary) -> Void
@@ -142,19 +202,18 @@ private struct UnitTrailSection: View {
             .padding(.bottom, Metrics.regular)
 
             ForEach(Array(lessons.enumerated()), id: \.element.id) { offset, lesson in
-                let index = startIndex + offset
                 PathNodeRow(
                     lesson: lesson,
                     scriptPreference: scriptPreference,
                     languagePreference: languagePreference,
-                    xOffset: Self.xOffset(for: index),
+                    xOffset: Self.xOffset(for: offset),
                     onSelect: onSelect
                 )
 
                 if offset < lessons.count - 1 {
                     PathTrail(
-                        from: Self.xOffset(for: index),
-                        to: Self.xOffset(for: index + 1)
+                        from: Self.xOffset(for: offset),
+                        to: Self.xOffset(for: offset + 1)
                     )
                 }
             }
@@ -163,8 +222,9 @@ private struct UnitTrailSection: View {
     }
 
     /// The trail leans left, centre, right, centre — the same rhythm as the
-    /// mockup's `:nth-child` offsets.
-    private static func xOffset(for index: Int) -> CGFloat {
+    /// mockup's `:nth-child` offsets. The rhythm restarts within every unit,
+    /// because sections wrap units freely and a global index would drift.
+    static func xOffset(for index: Int) -> CGFloat {
         let pattern: [CGFloat] = [0, -40, 0, 40]
         return pattern[index % pattern.count]
     }
@@ -172,6 +232,7 @@ private struct UnitTrailSection: View {
 
 private struct PathNodeRow: View {
     var lesson: LessonSummary
+    var isCheckpoint: Bool = false
     var scriptPreference: ScriptPreference
     var languagePreference: LanguagePreference
     var xOffset: CGFloat
@@ -182,7 +243,7 @@ private struct PathNodeRow: View {
             onSelect(lesson)
         } label: {
             VStack(spacing: 6) {
-                PathNode(status: lesson.status)
+                PathNode(status: lesson.status, isCheckpoint: isCheckpoint)
                 VStack(spacing: 1) {
                     Text(scriptPreference == .latin ? lesson.titleLatin : lesson.title)
                         .font(.recCalloutStrong)
@@ -210,6 +271,7 @@ private struct PathNodeRow: View {
 
 private struct PathNode: View {
     var status: LessonStatus
+    var isCheckpoint: Bool = false
 
     private var size: CGFloat { 64 }
 
@@ -218,7 +280,7 @@ private struct PathNode: View {
             switch status {
             case .done:
                 Circle().fill(Palette.good)
-                Image(systemName: "checkmark")
+                Image(systemName: isCheckpoint ? "flag.fill" : "checkmark")
                     .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(.white)
             case .current:
@@ -228,7 +290,7 @@ private struct PathNode: View {
                         Circle().strokeBorder(Palette.ochre.opacity(0.3), lineWidth: 5)
                             .scaleEffect(1.12)
                     )
-                Image(systemName: "star.fill")
+                Image(systemName: isCheckpoint ? "flag.fill" : "star.fill")
                     .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(Color(hex: 0x2A1C00))
             case .locked:
@@ -240,6 +302,10 @@ private struct PathNode: View {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(Palette.inkSoft)
+            }
+            if isCheckpoint {
+                Circle()
+                    .strokeBorder(Palette.indigo, lineWidth: 3)
             }
         }
         .frame(width: size, height: size)

@@ -27,7 +27,23 @@ export class UnitPathDto {
   @ApiProperty({ type: [LessonSummaryDto] }) lessons: LessonSummaryDto[];
 }
 
+// A section groups units on the path. `level` is the CEFR level (null for the
+// tail pseudo-section that holds legacy units created before sections).
+// `checkpoint` is the section's checkpoint lesson (kind='checkpoint'), which
+// sits outside the units' lesson lists, at the end of the section.
+export class SectionPathDto {
+  @ApiProperty() id: string;
+  @ApiProperty() titleCyrillic: string;
+  @ApiProperty() titleLatin: string;
+  @ApiProperty() titleTranslationRu: string;
+  @ApiProperty() titleTranslationEn: string;
+  @ApiProperty({ nullable: true }) level: string | null;
+  @ApiProperty() order: number;
+  @ApiProperty({ type: [UnitPathDto] }) units: UnitPathDto[];
+  @ApiProperty({ type: LessonSummaryDto, nullable: true }) checkpoint: LessonSummaryDto | null;
+}
+
 export class PathResponseDto {
-  @ApiProperty({ type: [UnitPathDto] })
-  units: UnitPathDto[];
+  @ApiProperty({ type: [SectionPathDto] })
+  sections: SectionPathDto[];
 }

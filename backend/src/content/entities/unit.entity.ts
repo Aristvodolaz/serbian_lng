@@ -1,5 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { Lesson } from './lesson.entity';
+import { Section } from './section.entity';
 import { ContentStatus } from '../../common/enums/content-status.enum';
 
 @Entity('units')
@@ -28,6 +37,15 @@ export class Unit {
 
   @Column()
   order: number;
+
+  // Nullable: units created before sections exist (CSV uploads without
+  // sectionTitle) stay valid and render as the legacy tail pseudo-section.
+  @Column({ type: 'uuid', nullable: true })
+  sectionId: string | null;
+
+  @ManyToOne(() => Section, (section) => section.units, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'sectionId' })
+  section: Section | null;
 
   @OneToMany(() => Lesson, (lesson) => lesson.unit, { cascade: true })
   lessons: Lesson[];

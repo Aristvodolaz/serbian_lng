@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { adminFetch } from '@/lib/client-api';
+import Papa from 'papaparse';
 import {
   ExercisePayload,
   createEmptyPayload,
@@ -94,8 +95,17 @@ function publishReport(data: any): string | null {
   return `Published: ${parts.join(', ')}\n\nSkipped:\n${lines.join('\n')}`;
 }
 
-// Bulk-publishes every draft unit, cascading into their lessons and exercises.
-export function PublishAllUnitsButton() {
+// Shared flow for the bulk-publish buttons: POST the endpoint, alert the
+// summary, reload. Only the per-scope summary differs.
+function PublishAllButton({
+  endpoint,
+  label,
+  summary,
+}: {
+  endpoint: string;
+  label: string;
+  summary: (data: any) => string;
+}) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -108,18 +118,13 @@ export function PublishAllUnitsButton() {
           setBusy(true);
           setError('');
           try {
-            const res = await adminFetch('/admin/units/publish-all', {
+            const res = await adminFetch(endpoint, {
               method: 'POST',
               body: '{}',
             });
             const data = await res.json().catch(() => null);
             if (!res.ok) throw new Error(data?.message || 'Failed');
-            const p = data?.published ?? {};
-            const parts = [`${p.units ?? 0} units`, `${p.lessons ?? 0} lessons`, `${p.exercises ?? 0} exercises`];
-            const skipped = Array.isArray(data?.skipped) ? data.skipped.length : 0;
-            alert(
-              `Published: ${parts.join(', ')}${skipped ? `\n\nSkipped: ${skipped}` : ''}`,
-            );
+            alert(summary(data));
             window.location.reload();
           } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed');
@@ -129,47 +134,67 @@ export function PublishAllUnitsButton() {
         }}
         className="px-3 py-1.5 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 whitespace-nowrap"
       >
-        {busy ? '…' : 'Publish All Units'}
+        {busy ? '…' : label}
       </button>
       {error && <span className="text-xs text-red-600">{error}</span>}
     </span>
   );
 }
 
+function publishedSummary(parts: string[], skipped: number): string {
+  return `Published: ${parts.join(', ')}${skipped ? `\n\nSkipped: ${skipped}` : ''}`;
+}
+
+// Bulk-publishes every draft unit, cascading into their lessons and exercises.
+export function PublishAllUnitsButton() {
+  return (
+    <PublishAllButton
+      endpoint="/admin/units/publish-all"
+      label="Publish All Units"
+      summary={(data) => {
+        const p = data?.published ?? {};
+        const skipped = Array.isArray(data?.skipped) ? data.skipped.length : 0;
+        return publishedSummary(
+          [`${p.units ?? 0} units`, `${p.lessons ?? 0} lessons`, `${p.exercises ?? 0} exercises`],
+          skipped,
+        );
+      }}
+    />
+  );
+}
+
+// Bulk-publishes every draft section, cascading into its units/lessons and
+// materializing the checkpoint where the section is ready.
+export function PublishAllSectionsButton() {
+  return (
+    <PublishAllButton
+      endpoint="/admin/sections/publish-all"
+      label="Publish All Sections"
+      summary={(data) => {
+        const p = data?.published ?? {};
+        const skipped = Array.isArray(data?.skipped) ? data.skipped.length : 0;
+        return publishedSummary(
+          [
+            `${p.sections ?? 0} sections`,
+            `${p.units ?? 0} units`,
+            `${p.lessons ?? 0} lessons`,
+            `${p.exercises ?? 0} exercises`,
+          ],
+          skipped,
+        );
+      }}
+    />
+  );
+}
+
 // Bulk-publishes every draft word in the dictionary.
 export function PublishAllWordsButton() {
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-
   return (
-    <span className="inline-flex items-center gap-2">
-      <button
-        type="button"
-        disabled={busy}
-        onClick={async () => {
-          setBusy(true);
-          setError('');
-          try {
-            const res = await adminFetch('/admin/words/publish-all', {
-              method: 'POST',
-              body: '{}',
-            });
-            const data = await res.json().catch(() => null);
-            if (!res.ok) throw new Error(data?.message || 'Failed');
-            alert(`Published: ${data?.published ?? 0} words`);
-            window.location.reload();
-          } catch (e) {
-            setError(e instanceof Error ? e.message : 'Failed');
-          } finally {
-            setBusy(false);
-          }
-        }}
-        className="px-3 py-1.5 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 whitespace-nowrap"
-      >
-        {busy ? '…' : 'Publish All Words'}
-      </button>
-      {error && <span className="text-xs text-red-600">{error}</span>}
-    </span>
+    <PublishAllButton
+      endpoint="/admin/words/publish-all"
+      label="Publish All Words"
+      summary={(data) => `Published: ${data?.published ?? 0} words`}
+    />
   );
 }
 
@@ -203,11 +228,19 @@ export function WordStatusButton({ wordId, status }: { wordId: string; status: s
 
 // ── Delete Button ────────────────────────────────────────────
 
-export function DeleteButton({ url, label = 'Delete' }: { url: string; label?: string }) {
+export function DeleteButton({
+  url,
+  label = 'Delete',
+  confirmMessage = 'Are you sure?',
+}: {
+  url: string;
+  label?: string;
+  confirmMessage?: string;
+}) {
   return (
     <button
       onClick={async () => {
-        if (!confirm('Are you sure?')) return;
+        if (!confirm(confirmMessage)) return;
         await adminFetch(url, { method: 'DELETE' });
         window.location.reload();
       }}
@@ -266,7 +299,13 @@ export function EditBadgeForm({ badge }: { badge: { id: string; titleCyrillic: s
 
 // ── Edit Unit Form ───────────────────────────────────────────
 
-export function EditUnitForm({ unit }: { unit: { id: string; titleCyrillic: string; titleLatin: string; titleTranslationRu: string; titleTranslationEn: string } }) {
+export function EditUnitForm({
+  unit,
+  sections,
+}: {
+  unit: { id: string; titleCyrillic: string; titleLatin: string; titleTranslationRu: string; titleTranslationEn: string; sectionId: string | null };
+  sections: { id: string; titleCyrillic: string }[];
+}) {
   return (
     <form
       onSubmit={async (e) => {
@@ -279,6 +318,7 @@ export function EditUnitForm({ unit }: { unit: { id: string; titleCyrillic: stri
             titleLatin: formData.get('titleLatin'),
             titleTranslationRu: formData.get('titleTranslationRu'),
             titleTranslationEn: formData.get('titleTranslationEn'),
+            sectionId: formData.get('sectionId') || null,
           }),
         });
         window.location.reload();
@@ -289,6 +329,14 @@ export function EditUnitForm({ unit }: { unit: { id: string; titleCyrillic: stri
       <input name="titleLatin" defaultValue={unit.titleLatin} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="titleTranslationRu" defaultValue={unit.titleTranslationRu} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
       <input name="titleTranslationEn" defaultValue={unit.titleTranslationEn} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+      <select name="sectionId" defaultValue={unit.sectionId ?? ''} className="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+        <option value="">No section</option>
+        {sections.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.titleCyrillic}
+          </option>
+        ))}
+      </select>
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
         Save
       </button>
@@ -724,5 +772,98 @@ export function EditWordForm({
         </button>
       </div>
     </form>
+  );
+}
+
+// ── CSV upload ───────────────────────────────────────────────
+
+// Shared CSV upload flow (parse -> map rows -> POST bulk). Each content type
+// supplies the endpoint, the request body key and a row mapper; the mapper
+// validates and maps, the shared component handles the file input, BOM
+// stripping, auth and the result message (red for "Error: ..." prefixed).
+export function CsvUploadButton({
+  endpoint,
+  bodyKey,
+  mapRows,
+}: {
+  endpoint: string;
+  bodyKey: string;
+  mapRows: (
+    data: Record<string, string>[],
+  ) => {
+    rows: unknown[];
+    format: (response: { created: number; updated: number }) => string;
+  };
+}) {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = async (file: File) => {
+    if (!file.name.endsWith('.csv')) {
+      setResult('Error: please select a .csv file');
+      return;
+    }
+
+    setLoading(true);
+    setResult('');
+
+    try {
+      const text = await file.text();
+      const { data, errors } = Papa.parse<Record<string, string>>(text, {
+        header: true,
+        skipEmptyLines: true,
+        beforeFirstChunk: (chunk: string) => chunk.replace(/^﻿/, ''),
+      });
+
+      if (errors.length > 0) {
+        throw new Error('CSV parse error: ' + errors[0].message);
+      }
+
+      const { rows, format } = mapRows(data);
+      if (rows.length === 0) {
+        throw new Error('No valid data rows found in CSV');
+      }
+
+      const res = await adminFetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({ [bodyKey]: rows }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        throw new Error(err?.message || 'Upload failed');
+      }
+
+      const response = await res.json();
+      setResult(format(response));
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } catch (err) {
+      setResult(`Error: ${err instanceof Error ? err.message : 'Failed to parse CSV'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <label>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv"
+          onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+          className="hidden"
+        />
+        <span className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium cursor-pointer inline-block">
+          Upload CSV
+        </span>
+      </label>
+      {loading && <span className="text-sm text-gray-500 ml-2">Uploading...</span>}
+      {result && (
+        <p className={`text-sm mt-2 ${result.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>
+          {result}
+        </p>
+      )}
+    </div>
   );
 }

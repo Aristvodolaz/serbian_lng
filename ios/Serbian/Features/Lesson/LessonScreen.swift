@@ -56,6 +56,15 @@ struct LessonScreen: View {
             }
         }
         .animation(.easeOut(duration: 0.25), value: model.completion)
+        .alert(
+            model.sectionLockedMessage,
+            isPresented: Binding(
+                get: { model.sectionLocked },
+                set: { _ in model.acknowledgeSectionLocked() }
+            )
+        ) {
+            Button("ОК") { dismiss() }
+        }
         // A wrong answer should feel different from a right one, not just look it.
         .sensoryFeedback(trigger: model.result) { _, answer in
             guard let answer else { return nil }

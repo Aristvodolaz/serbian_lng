@@ -105,7 +105,12 @@ export class UpdateExerciseDto {
 
 export class LessonAdminResponseDto {
   @ApiProperty() id: string;
-  @ApiProperty() unitId: string;
+  // Null for checkpoint lessons: they belong to a section, not a unit.
+  @ApiProperty({ nullable: true }) unitId: string | null;
+  // Null for regular lessons attached to a unit: they inherit the section
+  // through their unit. Set directly on checkpoints and sectionless lessons.
+  @ApiProperty({ nullable: true }) sectionId: string | null;
+  @ApiProperty({ enum: ['regular', 'checkpoint'] }) kind: string;
   @ApiProperty() title: string;
   @ApiProperty() titleLatin: string;
   @ApiProperty() titleTranslationRu: string;
@@ -235,6 +240,7 @@ export class UpdateLessonDto {
 
 export class UnitAdminResponseDto {
   @ApiProperty() id: string;
+  @ApiProperty({ nullable: true }) sectionId: string | null;
   @ApiProperty() titleCyrillic: string;
   @ApiProperty() titleLatin: string;
   @ApiProperty() titleTranslationRu: string;
@@ -302,6 +308,93 @@ export class UpdateUnitDto {
   @IsOptional()
   @IsString()
   icon?: string;
+
+  @ApiPropertyOptional({ description: 'Section to attach the unit to (uuid); omit or null to detach' })
+  @IsOptional()
+  @IsString()
+  sectionId?: string | null;
+
+  @ApiPropertyOptional({ enum: ContentStatus })
+  @IsOptional()
+  status?: ContentStatus;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  order?: number;
+}
+
+// ── Section DTOs ──────────────────────────────────────────────
+
+export class SectionAdminResponseDto {
+  @ApiProperty() id: string;
+  @ApiProperty() titleCyrillic: string;
+  @ApiProperty() titleLatin: string;
+  @ApiProperty() titleTranslationRu: string;
+  @ApiProperty() titleTranslationEn: string;
+  @ApiProperty() level: string;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
+  @ApiProperty() order: number;
+  @ApiProperty({ type: [UnitAdminResponseDto], required: false })
+  units?: UnitAdminResponseDto[];
+}
+
+export class CreateSectionDto {
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleCyrillic: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleLatin?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationEn?: string;
+
+  @ApiPropertyOptional({ default: 'A1' })
+  @IsOptional()
+  @IsString()
+  level?: string;
+}
+
+export class UpdateSectionDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  titleCyrillic?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  titleLatin?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  level?: string;
 
   @ApiPropertyOptional({ enum: ContentStatus })
   @IsOptional()
@@ -536,12 +629,35 @@ export class BulkCreateUnitDto {
   @IsOptional()
   @IsString()
   icon?: string;
+
+  @ApiPropertyOptional({ description: 'Section titleCyrillic to attach the unit to; missing sections are auto-created' })
+  @IsOptional()
+  @IsString()
+  sectionTitle?: string;
 }
 
 export class BulkCreateLessonDto {
-  @ApiProperty()
+  // Required for regular lessons; empty for checkpoints, which resolve to a
+  // section via sectionTitle in the CSV.
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  unitId: string;
+  unitId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  sectionId?: string;
+
+  @ApiPropertyOptional({ description: 'Section titleCyrillic to attach a checkpoint to; missing sections are auto-created' })
+  @IsOptional()
+  @IsString()
+  sectionTitle?: string;
+
+  @ApiPropertyOptional({ enum: ['regular', 'checkpoint'] })
+  @IsOptional()
+  @IsString()
+  kind?: string;
 
   @ApiProperty()
   @IsString()
@@ -668,10 +784,10 @@ export class LessonCompletionDto {
 // ── Publish results ────────────────────────────────────────────
 
 export class PublishIssueDto {
-  @ApiProperty({ enum: ['unit', 'lesson', 'exercise', 'word'] })
-  kind: 'unit' | 'lesson' | 'exercise' | 'word';
+  @ApiProperty({ enum: ['section', 'unit', 'lesson', 'exercise', 'word'] })
+  kind: 'section' | 'unit' | 'lesson' | 'exercise' | 'word';
   @ApiProperty() id: string;
-  @ApiProperty({ enum: ['validation', 'min_exercises', 'min_lessons'] }) reason: string;
+  @ApiProperty({ enum: ['validation', 'min_exercises', 'min_lessons', 'checkpoint_not_ready'] }) reason: string;
   @ApiProperty({ required: false }) detail?: string;
 }
 
@@ -692,12 +808,21 @@ export class PublishAllResultDto {
   @ApiProperty({
     type: 'object',
     properties: {
+      sections: { type: 'number' },
       units: { type: 'number' },
       lessons: { type: 'number' },
       exercises: { type: 'number' },
     },
   })
-  published: { units: number; lessons: number; exercises: number };
+  published: { sections: number; units: number; lessons: number; exercises: number };
+  @ApiProperty({ type: [PublishIssueDto] }) skipped: PublishIssueDto[];
+}
+
+export class SectionPublishResultDto {
+  @ApiProperty({ type: SectionAdminResponseDto }) section: SectionAdminResponseDto;
+  @ApiProperty() publishedUnits: number;
+  @ApiProperty() publishedLessons: number;
+  @ApiProperty() publishedExercises: number;
   @ApiProperty({ type: [PublishIssueDto] }) skipped: PublishIssueDto[];
 }
 

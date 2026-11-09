@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Users,
   BookOpen,
+  Layers,
   Award,
   BarChart3,
   LogOut,
@@ -14,6 +15,7 @@ import {
 const links = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/users', label: 'Users', icon: Users },
+  { href: '/content/sections', label: 'Sections', icon: Layers },
   { href: '/content/units', label: 'Units', icon: BookOpen },
   { href: '/content/words', label: 'Words', icon: BookOpen },
   { href: '/content/badges', label: 'Badges', icon: Award },

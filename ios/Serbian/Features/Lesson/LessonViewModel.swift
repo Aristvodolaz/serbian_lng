@@ -23,6 +23,17 @@ final class LessonViewModel {
     private(set) var isBusy = false
     private(set) var completion: LessonCompletion?
     private(set) var errorMessage: String?
+    /// The backend refused the lesson with 403 SECTION_LOCKED — the section's
+    /// checkpoint has to be passed first.
+    private(set) var sectionLocked = false
+
+    static let sectionLockedMessage = String(localized: "Завршите проверу главе.")
+
+    /// The «ОК» button of the section-locked alert — without it the flag
+    /// would stay set and the alert would re-present.
+    func acknowledgeSectionLocked() {
+        sectionLocked = false
+    }
 
     var selectedAnswerID: String?
 
@@ -76,8 +87,21 @@ final class LessonViewModel {
                 exercise.payload.settings?.shuffleOptions == true ? shuffled(exercise) : exercise
             }
         } catch {
-            state = .failed(error.learnerFacingMessage)
+            if Self.isSectionLocked(error) {
+                sectionLocked = true
+                state = .failed(Self.sectionLockedMessage)
+            } else {
+                state = .failed(error.learnerFacingMessage)
+            }
         }
+    }
+
+    /// 403 SECTION_LOCKED — the section's checkpoint is not passed yet.
+    private static func isSectionLocked(_ error: Error) -> Bool {
+        if case let APIError.server(status, message) = error as APIError {
+            return status == 403 && message.contains("SECTION_LOCKED")
+        }
+        return false
     }
 
     private func shuffled(_ exercise: Exercise) -> Exercise {
@@ -179,7 +203,14 @@ final class LessonViewModel {
             session.applyLessonCompletion(summary)
             completion = summary
         } catch {
-            errorMessage = error.learnerFacingMessage
+            // The alert is the single surface for the gate message here, and
+            // its «ОК» closes the lesson: with the gate up this lesson cannot
+            // be completed, so there is nothing to retry on this screen.
+            if Self.isSectionLocked(error) {
+                sectionLocked = true
+            } else {
+                errorMessage = error.learnerFacingMessage
+            }
         }
     }
 

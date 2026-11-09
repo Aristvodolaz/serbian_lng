@@ -40,14 +40,35 @@ struct PathUnit: Codable, Identifiable, Equatable, Sendable {
     let lessons: [LessonSummary]
 }
 
+/// `SectionPathDto`
+struct SectionPath: Codable, Identifiable, Equatable, Sendable {
+    let id: String
+    let titleCyrillic: String
+    let titleLatin: String
+    let titleTranslationRu: String
+    let titleTranslationEn: String
+    /// CEFR level (A1, A2…) — nil for the tail pseudo-section that holds
+    /// legacy units created before sections.
+    let level: String?
+    let order: Int
+    let units: [PathUnit]
+    /// The section's checkpoint lesson, which sits outside the units' lesson
+    /// lists, at the end of the section.
+    let checkpoint: LessonSummary?
+}
+
 /// `PathResponseDto`
 struct LearningPath: Codable, Equatable, Sendable {
-    let units: [PathUnit]
+    let sections: [SectionPath]
 
     /// Flattened lessons in path order — the winding trail on the home screen.
+    /// A section's checkpoint comes after its last unit's lessons.
     var lessons: [LessonSummary] {
-        units.sorted { $0.order < $1.order }
-            .flatMap { $0.lessons.sorted { $0.order < $1.order } }
+        sections.sorted { $0.order < $1.order }.flatMap { section in
+            section.units.sorted { $0.order < $1.order }
+                .flatMap { $0.lessons.sorted { $0.order < $1.order } }
+                + [section.checkpoint].compactMap { $0 }
+        }
     }
 
     var currentLesson: LessonSummary? {
@@ -220,6 +241,12 @@ extension LessonSummary {
 }
 
 extension PathUnit {
+    func titleTranslation(matching language: LanguagePreference) -> String {
+        language == .en ? titleTranslationEn : titleTranslationRu
+    }
+}
+
+extension SectionPath {
     func titleTranslation(matching language: LanguagePreference) -> String {
         language == .en ? titleTranslationEn : titleTranslationRu
     }

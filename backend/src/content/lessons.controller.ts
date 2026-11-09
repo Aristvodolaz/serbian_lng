@@ -20,9 +20,10 @@ export class LessonsController {
   @Get(':lessonId')
   @ApiOkResponse({ type: LessonDetailResponseDto })
   getDetail(
+    @CurrentUser() user: AuthenticatedUser,
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
   ): Promise<LessonDetailResponseDto> {
-    return this.contentService.getLessonDetail(lessonId);
+    return this.contentService.getLessonDetail(user.id, lessonId);
   }
 
   @Post(':lessonId/exercises/:exerciseId/answer')

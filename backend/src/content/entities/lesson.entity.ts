@@ -1,28 +1,44 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { Unit } from './unit.entity';
+import { Section } from './section.entity';
 import { Exercise } from './exercise.entity';
 import { ContentStatus } from '../../common/enums/content-status.enum';
 
+// Uniqueness is enforced by partial unique indexes (migration 1795):
+// (unitId, title) for regular lessons, (sectionId, title) for checkpoints —
+// a checkpoint belongs to a section, not a unit, so unitId is nullable.
 @Entity('lessons')
-@Unique(['unitId', 'title'])
+@Index('IDX_lessons_section', ['sectionId'])
 export class Lesson {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  unitId: string;
+  @Column({ type: 'uuid', nullable: true })
+  unitId: string | null;
 
   @ManyToOne(() => Unit, (unit) => unit.lessons, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'unitId' })
-  unit: Unit;
+  unit: Unit | null;
+
+  // 'regular' by default; 'checkpoint' marks a section-gating lesson whose
+  // exercises are assembled at serve time (see ContentService).
+  @Column({ type: 'varchar', default: 'regular' })
+  kind: 'regular' | 'checkpoint';
+
+  @Column({ type: 'uuid', nullable: true })
+  sectionId: string | null;
+
+  @ManyToOne(() => Section, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'sectionId' })
+  section: Section | null;
 
   @Column()
   title: string;

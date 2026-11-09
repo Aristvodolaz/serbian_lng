@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, ILike, Repository } from 'typeorm';
+import { Between, ILike, In, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../users/enums/user-role.enum';
 import { UserLessonProgress } from '../content/entities/user-lesson-progress.entity';
 import { UserWordProgress, WordProgressStatus } from '../vocabulary/entities/user-word-progress.entity';
+import { Section } from '../content/entities/section.entity';
 import { Unit } from '../content/entities/unit.entity';
 import { Lesson } from '../content/entities/lesson.entity';
 import { Exercise } from '../content/entities/exercise.entity';
@@ -43,6 +44,7 @@ import {
   CreateLessonDto,
   CreateUnitDto,
   CreateWordDto,
+  CreateSectionDto,
   ExerciseAdminResponseDto,
   ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
@@ -52,11 +54,14 @@ import {
   PublishAllResultDto,
   PublishIssueDto,
   PublishWordsResultDto,
+  SectionAdminResponseDto,
+  SectionPublishResultDto,
   UnitAdminResponseDto,
   UnitPublishResultDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
+  UpdateSectionDto,
   UpdateUnitDto,
   UpdateWordDto,
   WordAdminResponseDto,
@@ -66,6 +71,7 @@ import {
 export class AdminService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(Section) private readonly sectionRepo: Repository<Section>,
     @InjectRepository(Unit) private readonly unitRepo: Repository<Unit>,
     @InjectRepository(Lesson) private readonly lessonRepo: Repository<Lesson>,
     @InjectRepository(Exercise) private readonly exerciseRepo: Repository<Exercise>,
@@ -272,7 +278,16 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateUnits(units: { titleCyrillic: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string; icon?: string }[]): Promise<{ created: number; updated: number }> {
+  async bulkCreateUnits(
+    units: {
+      titleCyrillic: string;
+      titleLatin?: string;
+      titleTranslationRu?: string;
+      titleTranslationEn?: string;
+      icon?: string;
+      sectionTitle?: string;
+    }[],
+  ): Promise<{ created: number; updated: number }> {
     const maxOrder = (await this.unitRepo.find({
       order: { order: 'DESC' },
       select: ['order'],
@@ -282,22 +297,338 @@ export class AdminService {
     let created = 0;
     let updated = 0;
 
+    // sectionTitle is a CSV-only key — resolve (or auto-create, so the CSV
+    // cycle passes even without sections.csv) before touching units.
+    const sectionIdsByTitle = new Map<string, string>();
+    let nextSectionOrder = (await this.sectionRepo.find({
+      order: { order: 'DESC' },
+      select: ['order'],
+      take: 1,
+    }))[0]?.order ?? 0;
     for (const dto of units) {
+      if (!dto.sectionTitle || sectionIdsByTitle.has(dto.sectionTitle)) continue;
+      let section = await this.sectionRepo.findOne({
+        where: { titleCyrillic: dto.sectionTitle },
+      });
+      if (!section) {
+        nextSectionOrder++;
+        section = this.sectionRepo.create({
+          titleCyrillic: dto.sectionTitle,
+          level: 'A1',
+          order: nextSectionOrder,
+        });
+        await this.sectionRepo.save(section);
+      }
+      sectionIdsByTitle.set(dto.sectionTitle, section.id);
+    }
+
+    for (const dto of units) {
+      const { sectionTitle, ...unitData } = dto;
+      const sectionId = sectionTitle ? sectionIdsByTitle.get(sectionTitle) : undefined;
       const existing = await this.unitRepo.findOne({
         where: { titleCyrillic: dto.titleCyrillic },
       });
       if (existing) {
-        Object.assign(existing, dto);
+        Object.assign(existing, unitData);
+        if (sectionId) existing.sectionId = sectionId;
         await this.unitRepo.save(existing);
         updated++;
       } else {
         nextOrder++;
-        const unit = this.unitRepo.create({ ...dto, order: nextOrder });
+        const unit = this.unitRepo.create({ ...unitData, order: nextOrder, sectionId });
         await this.unitRepo.save(unit);
         created++;
       }
     }
     return { created, updated };
+  }
+
+  // ── Sections ───────────────────────────────────────────────
+
+  async listSections(pagination: PaginationDto): Promise<PaginatedResponse<SectionAdminResponseDto>> {
+    const { page, limit } = this.getP(pagination);
+    const [sections, total] = await this.sectionRepo.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { order: 'ASC' },
+    });
+    return PaginatedResponse.from(
+      sections.map((s) => this.mapSection(s)),
+      total,
+      page,
+      limit,
+    );
+  }
+
+  async createSection(dto: CreateSectionDto): Promise<SectionAdminResponseDto> {
+    const maxOrder = (await this.sectionRepo.find({
+      order: { order: 'DESC' },
+      select: ['order'],
+      take: 1,
+    }))[0];
+    const section = this.sectionRepo.create({
+      ...dto,
+      level: dto.level ?? 'A1',
+      order: (maxOrder?.order ?? 0) + 1,
+    });
+    await this.sectionRepo.save(section);
+    return this.mapSection(section);
+  }
+
+  async getSection(sectionId: string): Promise<SectionAdminResponseDto> {
+    const section = await this.sectionRepo.findOne({ where: { id: sectionId } });
+    if (!section) throw new NotFoundException('Section not found');
+
+    const units = await this.unitRepo.find({
+      where: { sectionId: section.id },
+      order: { order: 'ASC' },
+    });
+    const lessons = units.length
+      ? await this.lessonRepo.find({
+          where: { unitId: In(units.map((u) => u.id)) },
+          order: { order: 'ASC' },
+        })
+      : [];
+    const lessonsByUnit = new Map<string, Lesson[]>();
+    for (const lesson of lessons) {
+      const unitId = lesson.unitId!;
+      if (!lessonsByUnit.has(unitId)) lessonsByUnit.set(unitId, []);
+      lessonsByUnit.get(unitId)!.push(lesson);
+    }
+
+    return {
+      ...this.mapSection(section),
+      units: units.map((u) => this.mapUnitWithLessons(u, lessonsByUnit.get(u.id) ?? [])),
+    };
+  }
+
+  async updateSection(sectionId: string, dto: UpdateSectionDto): Promise<SectionAdminResponseDto> {
+    const section = await this.sectionRepo.findOne({ where: { id: sectionId } });
+    if (!section) throw new NotFoundException('Section not found');
+    Object.assign(section, dto);
+    await this.sectionRepo.save(section);
+    return this.mapSection(section);
+  }
+
+  async deleteSection(
+    sectionId: string,
+  ): Promise<{ deleted: true; deletedCheckpoints: number; deletedExercises: number }> {
+    const section = await this.sectionRepo.findOne({ where: { id: sectionId } });
+    if (!section) throw new NotFoundException('Section not found');
+    // Checkpoint lessons are owned by the section: the FK cascade removes
+    // them, their materialized exercises, and the user answers referencing
+    // them, in the same statement. The UI warns before the delete with its
+    // confirm dialog; the counters in the response record what was lost for
+    // API consumers and logs.
+    const checkpoints = await this.lessonRepo.find({
+      where: { sectionId, kind: 'checkpoint' },
+      select: { id: true },
+    });
+    const deletedExercises =
+      checkpoints.length > 0
+        ? await this.exerciseRepo.count({
+            where: { lessonId: In(checkpoints.map((l) => l.id)) },
+          })
+        : 0;
+    // Detach units instead of cascading the delete into them.
+    await this.unitRepo.update({ sectionId }, { sectionId: null });
+    await this.sectionRepo.remove(section);
+    return {
+      deleted: true,
+      deletedCheckpoints: checkpoints.length,
+      deletedExercises,
+    };
+  }
+
+  async bulkCreateSections(dtos: CreateSectionDto[]): Promise<{ created: number; updated: number }> {
+    const maxOrder = (await this.sectionRepo.find({
+      order: { order: 'DESC' },
+      select: ['order'],
+      take: 1,
+    }))[0];
+    let nextOrder = maxOrder?.order ?? 0;
+    let created = 0;
+    let updated = 0;
+
+    for (const dto of dtos) {
+      const existing = await this.sectionRepo.findOne({
+        where: { titleCyrillic: dto.titleCyrillic },
+      });
+      if (existing) {
+        Object.assign(existing, dto);
+        await this.sectionRepo.save(existing);
+        updated++;
+      } else {
+        nextOrder++;
+        const section = this.sectionRepo.create({
+          ...dto,
+          level: dto.level ?? 'A1',
+          order: nextOrder,
+        });
+        await this.sectionRepo.save(section);
+        created++;
+      }
+    }
+    return { created, updated };
+  }
+
+  /**
+   * Publishes each unit's lessons and the units that reached their lesson
+   * minimum. Returns per-section counters for the caller to aggregate.
+   */
+  private async publishSectionUnits(
+    section: Section,
+    skipped: PublishIssueDto[],
+  ): Promise<{ publishedUnits: number; publishedLessons: number; publishedExercises: number }> {
+    let publishedUnits = 0;
+    let publishedLessons = 0;
+    let publishedExercises = 0;
+
+    for (const unit of section.units ?? []) {
+      const result = await this.publishUnitLessons(unit.lessons, skipped);
+      if (result.publishedLessons === 0) {
+        skipped.push({
+          kind: 'unit',
+          id: unit.id,
+          reason: 'min_lessons',
+          detail: 'needs at least one published lesson',
+        });
+        continue;
+      }
+      unit.status = ContentStatus.PUBLISHED;
+      await this.unitRepo.save(unit);
+      publishedUnits++;
+      publishedLessons += result.publishedLessons;
+      publishedExercises += result.publishedExercises;
+    }
+
+    return { publishedUnits, publishedLessons, publishedExercises };
+  }
+
+  /**
+   * Publishes the section's checkpoint when the section has at least one
+   * published lesson AND one published exercise (the checkpoint's vocabulary
+   * exercises are built from the section's words, which come from its
+   * exercises); otherwise it is skipped with a reason.
+   */
+  private async publishSectionCheckpoint(
+    section: Section,
+    publishedLessons: number,
+    publishedExercises: number,
+    skipped: PublishIssueDto[],
+  ): Promise<void> {
+    const checkpoint = await this.lessonRepo.findOne({
+      where: { sectionId: section.id, kind: 'checkpoint' },
+      order: { order: 'ASC' },
+    });
+    if (!checkpoint) return;
+
+    if (publishedLessons > 0 && publishedExercises > 0) {
+      if (checkpoint.status !== ContentStatus.PUBLISHED) {
+        checkpoint.status = ContentStatus.PUBLISHED;
+        await this.lessonRepo.save(checkpoint);
+      }
+      return;
+    }
+    skipped.push({
+      kind: 'lesson',
+      id: checkpoint.id,
+      reason: 'checkpoint_not_ready',
+      detail: 'needs at least one published lesson and one exercise in the section',
+    });
+  }
+
+  async publishSection(sectionId: string): Promise<SectionPublishResultDto> {
+    const section = await this.sectionRepo.findOne({
+      where: { id: sectionId },
+      relations: { units: { lessons: { exercises: true } } },
+    });
+    if (!section) throw new NotFoundException('Section not found');
+
+    const skipped: PublishIssueDto[] = [];
+    const { publishedUnits, publishedLessons, publishedExercises } =
+      await this.publishSectionUnits(section, skipped);
+    await this.publishSectionCheckpoint(section, publishedLessons, publishedExercises, skipped);
+
+    if (publishedUnits === 0) {
+      throw new BadRequestException(
+        skipped.length
+          ? `Section needs at least one published unit (skipped: ${skipped.map((s) => s.id).join(', ')})`
+          : 'Section needs at least one published unit',
+      );
+    }
+
+    section.status = ContentStatus.PUBLISHED;
+    await this.sectionRepo.save(section);
+    return {
+      section: this.mapSection(section),
+      publishedUnits,
+      publishedLessons,
+      publishedExercises,
+      skipped,
+    };
+  }
+
+  async publishAllSections(): Promise<PublishAllResultDto> {
+    const sections = await this.sectionRepo.find({
+      relations: { units: { lessons: { exercises: true } } },
+      order: { order: 'ASC' },
+    });
+
+    const skipped: PublishIssueDto[] = [];
+    let publishedSections = 0;
+    let publishedUnitsTotal = 0;
+    let publishedLessonsTotal = 0;
+    let publishedExercisesTotal = 0;
+
+    for (const section of sections) {
+      // An already-published section is re-processed only when it gained
+      // unpublished content (a new draft unit or lesson); a fully published
+      // one has nothing to do and would only inflate the counters.
+      const hasUnpublished =
+        section.status !== ContentStatus.PUBLISHED ||
+        (section.units ?? []).some(
+          (unit) =>
+            unit.status !== ContentStatus.PUBLISHED ||
+            unit.lessons.some((lesson) => lesson.status !== ContentStatus.PUBLISHED),
+        );
+      if (!hasUnpublished) continue;
+
+      const { publishedUnits, publishedLessons, publishedExercises } =
+        await this.publishSectionUnits(section, skipped);
+      await this.publishSectionCheckpoint(
+        section,
+        publishedLessons,
+        publishedExercises,
+        skipped,
+      );
+
+      if (publishedUnits === 0) {
+        skipped.push({
+          kind: 'section',
+          id: section.id,
+          reason: 'min_lessons',
+          detail: 'needs at least one published unit',
+        });
+        continue;
+      }
+      section.status = ContentStatus.PUBLISHED;
+      await this.sectionRepo.save(section);
+      publishedSections++;
+      publishedUnitsTotal += publishedUnits;
+      publishedLessonsTotal += publishedLessons;
+      publishedExercisesTotal += publishedExercises;
+    }
+
+    return {
+      published: {
+        units: publishedUnitsTotal,
+        sections: publishedSections,
+        lessons: publishedLessonsTotal,
+        exercises: publishedExercisesTotal,
+      },
+      skipped,
+    };
   }
 
   // ── Lessons ────────────────────────────────────────────────
@@ -368,15 +699,44 @@ export class AdminService {
     return { deleted: true };
   }
 
-  async bulkCreateLessons(lessons: { unitId: string; title: string; titleLatin?: string; titleTranslationRu?: string; titleTranslationEn?: string; descriptionRu?: string; descriptionEn?: string; minExercises?: number; xpReward?: number }[]): Promise<{ created: number; updated: number }> {
+  async bulkCreateLessons(
+    lessons: {
+      unitId?: string;
+      sectionId?: string;
+      sectionTitle?: string;
+      kind?: string;
+      title: string;
+      titleLatin?: string;
+      titleTranslationRu?: string;
+      titleTranslationEn?: string;
+      descriptionRu?: string;
+      descriptionEn?: string;
+      minExercises?: number;
+      xpReward?: number;
+    }[],
+  ): Promise<{ created: number; updated: number }> {
     let created = 0;
     let updated = 0;
 
-    // Group by unitId to assign order
-    const byUnit = new Map<string, typeof lessons[number][]>();
-    for (const dto of lessons) {
-      if (!byUnit.has(dto.unitId)) byUnit.set(dto.unitId, []);
-      byUnit.get(dto.unitId)!.push(dto);
+    const checkpointRows: typeof lessons = [];
+    const regularRows: typeof lessons = [];
+    const unitlessRegular: typeof lessons = [];
+    for (const l of lessons) {
+      if (l.kind === 'checkpoint') checkpointRows.push(l);
+      else if (l.unitId) regularRows.push(l);
+      else unitlessRegular.push(l);
+    }
+    if (unitlessRegular.length > 0) {
+      throw new BadRequestException(
+        `Regular lessons need a unitId: ${unitlessRegular.map((l) => l.title).join(', ')}`,
+      );
+    }
+
+    // Regular lessons: group by unitId to assign order.
+    const byUnit = new Map<string, typeof regularRows>();
+    for (const dto of regularRows) {
+      if (!byUnit.has(dto.unitId!)) byUnit.set(dto.unitId!, []);
+      byUnit.get(dto.unitId!)!.push(dto);
     }
 
     for (const [unitId, dtos] of byUnit) {
@@ -422,7 +782,84 @@ export class AdminService {
         }
       }
     }
+
+    // Checkpoint lessons: one per section, resolved by id or titleCyrillic
+    // (auto-created, so the CSV cycle passes even without sections.csv).
+    for (const dto of checkpointRows) {
+      const sectionId = await this.resolveSectionForBulk(dto.sectionId, dto.sectionTitle);
+
+      const existing = await this.lessonRepo.findOne({
+        where: { sectionId, kind: 'checkpoint' },
+      });
+      if (existing) {
+        Object.assign(existing, {
+          title: dto.title,
+          titleLatin: dto.titleLatin ?? existing.titleLatin,
+          titleTranslationRu: dto.titleTranslationRu ?? existing.titleTranslationRu,
+          titleTranslationEn: dto.titleTranslationEn ?? existing.titleTranslationEn,
+          xpReward: dto.xpReward ?? existing.xpReward,
+        });
+        await this.lessonRepo.save(existing);
+        updated++;
+        continue;
+      }
+
+      const maxOrderRow = await this.lessonRepo
+        .createQueryBuilder('l')
+        .leftJoin('l.unit', 'u')
+        .select('COALESCE(MAX(l.order), 0)', 'max')
+        .where('(l.sectionId = :sectionId OR u.sectionId = :sectionId)', { sectionId })
+        .getRawOne();
+      const lesson = this.lessonRepo.create({
+        unitId: null,
+        sectionId,
+        kind: 'checkpoint',
+        title: dto.title,
+        titleLatin: dto.titleLatin ?? '',
+        titleTranslationRu: dto.titleTranslationRu ?? '',
+        titleTranslationEn: dto.titleTranslationEn ?? '',
+        descriptionRu: dto.descriptionRu ?? '',
+        descriptionEn: dto.descriptionEn ?? '',
+        minExercises: dto.minExercises ?? 5,
+        order: Number(maxOrderRow?.max ?? 0) + 1,
+        xpReward: dto.xpReward ?? 10,
+      });
+      await this.lessonRepo.save(lesson);
+      created++;
+    }
+
     return { created, updated };
+  }
+
+  private async resolveSectionForBulk(
+    sectionId: string | undefined,
+    sectionTitle: string | undefined,
+  ): Promise<string> {
+    if (sectionId) {
+      const section = await this.sectionRepo.findOne({ where: { id: sectionId } });
+      if (!section) throw new NotFoundException(`Section ${sectionId} not found`);
+      return section.id;
+    }
+    if (sectionTitle) {
+      let section = await this.sectionRepo.findOne({
+        where: { titleCyrillic: sectionTitle },
+      });
+      if (!section) {
+        const maxOrder = (await this.sectionRepo.find({
+          order: { order: 'DESC' },
+          select: ['order'],
+          take: 1,
+        }))[0];
+        section = this.sectionRepo.create({
+          titleCyrillic: sectionTitle,
+          level: 'A1',
+          order: (maxOrder?.order ?? 0) + 1,
+        });
+        await this.sectionRepo.save(section);
+      }
+      return section.id;
+    }
+    throw new BadRequestException('Checkpoint lesson needs a section (sectionId or sectionTitle)');
   }
 
   // ── Exercises ──────────────────────────────────────────────
@@ -446,7 +883,8 @@ export class AdminService {
     const qb = this.exerciseRepo
       .createQueryBuilder('e')
       .innerJoinAndSelect('e.lesson', 'lesson')
-      .innerJoin('lesson.unit', 'unit')
+      // Checkpoint exercises belong to lessons without a unit — must not drop them.
+      .leftJoin('lesson.unit', 'unit')
       .orderBy('lesson.order', 'ASC')
       .addOrderBy('e.order', 'ASC');
 
@@ -555,41 +993,11 @@ export class AdminService {
     };
   }
 
+  // Legacy pre-sections endpoint kept for the units-page button. Visibility
+  // on clients is governed by section status, so publishing units alone
+  // cannot make content visible — delegate to the section-aware flow.
   async publishAllUnits(): Promise<PublishAllResultDto> {
-    const units = await this.unitRepo.find({
-      relations: { lessons: { exercises: true } },
-      order: { order: 'ASC' },
-    });
-
-    const skipped: PublishIssueDto[] = [];
-    let publishedUnits = 0;
-    let publishedLessons = 0;
-    let publishedExercises = 0;
-
-    for (const unit of units) {
-      if (unit.status === ContentStatus.PUBLISHED) continue;
-
-      const result = await this.publishUnitLessons(unit.lessons, skipped);
-      if (result.publishedLessons === 0) {
-        skipped.push({
-          kind: 'unit',
-          id: unit.id,
-          reason: 'min_lessons',
-          detail: 'needs at least one published lesson',
-        });
-        continue;
-      }
-      unit.status = ContentStatus.PUBLISHED;
-      await this.unitRepo.save(unit);
-      publishedUnits++;
-      publishedLessons += result.publishedLessons;
-      publishedExercises += result.publishedExercises;
-    }
-
-    return {
-      published: { units: publishedUnits, lessons: publishedLessons, exercises: publishedExercises },
-      skipped,
-    };
+    return this.publishAllSections();
   }
 
   async publishAllWords(): Promise<PublishWordsResultDto> {
@@ -1103,9 +1511,23 @@ export class AdminService {
     }));
   }
 
+  private mapSection(s: Section): SectionAdminResponseDto {
+    return {
+      id: s.id,
+      titleCyrillic: s.titleCyrillic,
+      titleLatin: s.titleLatin,
+      titleTranslationRu: s.titleTranslationRu,
+      titleTranslationEn: s.titleTranslationEn,
+      level: s.level,
+      status: s.status,
+      order: s.order,
+    };
+  }
+
   private mapUnit(u: Unit): UnitAdminResponseDto {
     return {
       id: u.id,
+      sectionId: u.sectionId,
       titleCyrillic: u.titleCyrillic,
       titleLatin: u.titleLatin,
       titleTranslationRu: u.titleTranslationRu,
@@ -1127,6 +1549,8 @@ export class AdminService {
     return {
       id: l.id,
       unitId: l.unitId,
+      sectionId: l.sectionId,
+      kind: l.kind,
       title: l.title,
       titleLatin: l.titleLatin,
       titleTranslationRu: l.titleTranslationRu,
