@@ -121,4 +121,26 @@
         <item>С</item>
         <item>Н</item>
     </string-array>
+<string name="dict_title">Речник</string>
+    <string name="dict_flashcards">Понављање речи</string>
+    <string name="dict_search_hint">Претражите речи</string>
+    <string name="dict_error_load">Није успело учитавање речника.</string>
+    <string name="dict_empty">Ништа није пронађено</string>
+    <string name="dict_speak">Изговори реч</string>
+    <string name="dict_back">Назад</string>
+    <string name="dict_field_part_of_speech">Врста речи</string>
+    <string name="dict_field_gender">Род</string>
+    <string name="dict_field_number">Број</string>
+    <string name="dict_field_declension">Деклинација</string>
+    <string name="dict_field_conjugation">Конјугација</string>
+    <string name="profile_language">Језик</string>
+    <string name="auth_language_label">Језик превода</string>
+    <string name="auth_privacy_prefix">Притиском на дугме прихватате</string>
+    <string name="auth_privacy_link">политику приватности</string>
+    <string name="legal_privacy_title">Политика приватности</string>
+    <string name="legal_done">Готово</string>
+    <string name="legal_load_error">Није успело учитавање документа.</string>
+    <string name="lesson_locked_title">Раздео је закључан</string>
+    <string name="lesson_locked_message">Прво положите чекпоинт претходног раздела.</string>
+    <string name="lesson_locked_ok">У реду</string>
 </resources>

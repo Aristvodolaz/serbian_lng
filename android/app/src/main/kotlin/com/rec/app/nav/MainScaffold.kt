@@ -5,18 +5,27 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.rec.app.R
@@ -29,6 +38,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rec.app.di.LocalAppContainer
 import com.rec.app.di.ViewModelFactory
+import com.rec.app.ui.screens.dictionary.DictionaryScreen
+import com.rec.app.ui.screens.dictionary.DictionaryViewModel
 import com.rec.app.ui.screens.home.HomeScreen
 import com.rec.app.ui.screens.home.HomeViewModel
 import com.rec.app.ui.screens.lesson.LessonScreen
@@ -105,10 +116,25 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
                 )
             }
             composable(Routes.VOCABULARY) {
-                val vm: VocabularyViewModel = viewModel(
+                val dictVm: DictionaryViewModel = viewModel(
+                    factory = ViewModelFactory { DictionaryViewModel(container.vocabularyRepository, container.userRepository) },
+                )
+                val flashVm: VocabularyViewModel = viewModel(
                     factory = ViewModelFactory { VocabularyViewModel(container.vocabularyRepository) },
                 )
-                VocabularyScreen(viewModel = vm)
+                var showFlashcards by rememberSaveable { mutableStateOf(false) }
+                if (showFlashcards) {
+                    // Flashcards are a deck opened from the dictionary, not a tab of their own.
+                    BackHandler { showFlashcards = false }
+                    Column(Modifier.fillMaxSize()) {
+                        IconButton(onClick = { showFlashcards = false }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.dict_back))
+                        }
+                        Box(Modifier.weight(1f)) { VocabularyScreen(viewModel = flashVm) }
+                    }
+                } else {
+                    DictionaryScreen(viewModel = dictVm, onOpenFlashcards = { showFlashcards = true })
+                }
             }
             composable(Routes.PROFILE) {
                 val vm: ProfileViewModel = viewModel(
@@ -128,7 +154,7 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
             ) { entry ->
                 val lessonId = entry.arguments?.getString("lessonId") ?: return@composable
                 val vm: LessonViewModel = viewModel(
-                    factory = ViewModelFactory { LessonViewModel(container.contentRepository) },
+                    factory = ViewModelFactory { LessonViewModel(container.contentRepository, container.userRepository) },
                 )
                 LessonScreen(
                     lessonId = lessonId,

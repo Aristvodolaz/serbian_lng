@@ -93,4 +93,26 @@
         <item>S</item>
         <item>S</item>
     </string-array>
+<string name="dict_title">Dictionary</string>
+    <string name="dict_flashcards">Review words</string>
+    <string name="dict_search_hint">Search words</string>
+    <string name="dict_error_load">Could not load the dictionary.</string>
+    <string name="dict_empty">Nothing found</string>
+    <string name="dict_speak">Pronounce the word</string>
+    <string name="dict_back">Back</string>
+    <string name="dict_field_part_of_speech">Part of speech</string>
+    <string name="dict_field_gender">Gender</string>
+    <string name="dict_field_number">Number</string>
+    <string name="dict_field_declension">Declension</string>
+    <string name="dict_field_conjugation">Conjugation</string>
+    <string name="profile_language">Language</string>
+    <string name="auth_language_label">Translation language</string>
+    <string name="auth_privacy_prefix">By tapping the button you accept the</string>
+    <string name="auth_privacy_link">privacy policy</string>
+    <string name="legal_privacy_title">Privacy policy</string>
+    <string name="legal_done">Done</string>
+    <string name="legal_load_error">Could not load the document.</string>
+    <string name="lesson_locked_title">Section locked</string>
+    <string name="lesson_locked_message">Pass the checkpoint of the previous section first.</string>
+    <string name="lesson_locked_ok">OK</string>
 </resources>
