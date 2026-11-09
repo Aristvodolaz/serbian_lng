@@ -34,6 +34,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -48,6 +51,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rec.app.R
 import com.rec.app.ui.common.asString
+import com.rec.app.ui.components.LanguageChip
+import com.rec.app.ui.components.LegalDocumentDialog
 import com.rec.app.ui.components.PageDots
 import com.rec.app.ui.components.RecGhostButton
 import com.rec.app.ui.components.RecPrimaryButton
@@ -344,6 +349,7 @@ private fun ScriptStep(state: AuthFormState, viewModel: AuthViewModel) {
 @Composable
 private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
     val colors = RecTheme.colors
+    var showPrivacy by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -419,6 +425,12 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
             val (scriptLabel, scriptSample) = scriptSummary(state.scriptPreference)
             ScriptSummaryChip(label = scriptLabel, sample = scriptSample, onClick = viewModel::backToScript)
 
+            Text(stringResource(R.string.auth_language_label), style = MaterialTheme.typography.labelMedium, color = colors.inkSoft)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                LanguageChip("Русский", selected = state.languagePreference == "ru", onClick = { viewModel.updateLanguagePreference("ru") })
+                LanguageChip("English", selected = state.languagePreference == "en", onClick = { viewModel.updateLanguagePreference("en") })
+            }
+
             state.error?.let {
                 Text(it.asString(), color = colors.oxblood, style = MaterialTheme.typography.bodySmall)
             }
@@ -435,7 +447,26 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
                     enabled = state.displayName.isNotBlank() && state.email.isNotBlank() && state.password.length >= 8,
                 )
             }
+
+            Text(
+                stringResource(R.string.auth_privacy_prefix),
+                style = MaterialTheme.typography.bodySmall,
+                color = colors.inkSoft,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            TextButton(onClick = { showPrivacy = true }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.auth_privacy_link), color = colors.indigo)
+            }
         }
+    }
+
+    if (showPrivacy) {
+        LegalDocumentDialog(
+            assetPath = "legal/privacy-policy-pdn.md",
+            title = stringResource(R.string.legal_privacy_title),
+            onDismiss = { showPrivacy = false },
+        )
     }
 }
 

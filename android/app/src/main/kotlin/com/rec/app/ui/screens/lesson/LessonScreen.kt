@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.rec.app.R
+import com.rec.app.ui.common.AnswerSound
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.common.rememberAnswerHaptics
 import com.rec.app.ui.common.rememberCelebrationHaptic
@@ -72,6 +73,12 @@ fun LessonScreen(
                 CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is LessonUiState.Error -> ErrorContent(s.message.asString(), onRetry = { viewModel.load(lessonId) })
+            is LessonUiState.Locked -> AlertDialog(
+                onDismissRequest = onClose,
+                confirmButton = { TextButton(onClick = onClose) { Text(stringResource(R.string.lesson_locked_ok)) } },
+                title = { Text(stringResource(R.string.lesson_locked_title)) },
+                text = { Text(stringResource(R.string.lesson_locked_message)) },
+            )
             is LessonUiState.InProgress -> ExerciseContent(s, viewModel, onClose)
             is LessonUiState.Finished -> FinishedContent(s, onFinished)
         }
@@ -87,7 +94,10 @@ private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonVi
     // a wrong answer should feel different from a right one, not just look it.
     LaunchedEffect(state.correctChoiceId) {
         val correct = state.isCorrect
-        if (state.correctChoiceId != null && correct != null) playAnswerHaptic(correct)
+        if (state.correctChoiceId != null && correct != null) {
+            playAnswerHaptic(correct)
+            AnswerSound.play(correct)
+        }
     }
 
     if (showExitConfirm) {

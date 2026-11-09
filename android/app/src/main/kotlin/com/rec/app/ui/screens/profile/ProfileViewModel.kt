@@ -28,6 +28,7 @@ sealed interface ProfileUiState {
         val weeksActive: Int,
         val week: List<DayUi>,
         val badges: List<EarnedBadgeUi>,
+        val english: Boolean,
     ) : ProfileUiState
 }
 
@@ -61,7 +62,17 @@ class ProfileViewModel(
                 weeksActive = stats.weeksActive,
                 week = week.days.map { DayUi(it.weekday, it.active) },
                 badges = badges.orEmpty().map { EarnedBadgeUi(it.titleCyrillic, it.titleLatin) },
+                english = me.languagePreference == "en",
             )
+        }
+    }
+
+    /** Saves the interface language to the profile; the screens that show translations read it on their next load. */
+    fun setLanguage(english: Boolean) {
+        val current = _state.value as? ProfileUiState.Success ?: return
+        _state.value = current.copy(english = english)
+        viewModelScope.launch {
+            userRepository.updateLanguage(if (english) "en" else "ru")
         }
     }
 

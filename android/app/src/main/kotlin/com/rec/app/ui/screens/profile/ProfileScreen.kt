@@ -1,6 +1,7 @@
 package com.rec.app.ui.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import com.rec.app.R
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.BadgeDiamond
 import com.rec.app.ui.components.ErrorContent
+import com.rec.app.ui.components.LanguageChip
 import com.rec.app.ui.components.StatCard
 import com.rec.app.ui.components.StreakPill
 import com.rec.app.ui.theme.RecTheme
@@ -51,13 +53,17 @@ fun ProfileScreen(viewModel: ProfileViewModel, onLoggedOut: () -> Unit) {
                 androidx.compose.material3.CircularProgressIndicator(color = RecTheme.colors.indigo)
             }
             is ProfileUiState.Error -> ErrorContent(s.message.asString(), onRetry = viewModel::load)
-            is ProfileUiState.Success -> ProfileContent(s, onLogout = { viewModel.logout(); onLoggedOut() })
+            is ProfileUiState.Success -> ProfileContent(
+                s,
+                onLogout = { viewModel.logout(); onLoggedOut() },
+                onLanguage = viewModel::setLanguage,
+            )
         }
     }
 }
 
 @Composable
-private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit) {
+private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit, onLanguage: (Boolean) -> Unit) {
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Box(
@@ -129,6 +135,12 @@ private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit) 
         }
 
         Spacer(Modifier.weight(1f))
+        Text(stringResource(R.string.profile_language), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            LanguageChip("Русский", selected = !state.english, onClick = { onLanguage(false) })
+            LanguageChip("English", selected = state.english, onClick = { onLanguage(true) })
+        }
+        Spacer(Modifier.height(12.dp))
         TextButton(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.profile_logout), color = RecTheme.colors.inkSoft)
         }

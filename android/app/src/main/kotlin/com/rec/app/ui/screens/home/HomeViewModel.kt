@@ -3,7 +3,8 @@ package com.rec.app.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.remote.dto.UnitPathDto
+import com.rec.app.data.remote.dto.LessonSummaryDto
+import com.rec.app.data.remote.dto.SectionPathDto
 import com.rec.app.data.repository.ContentRepository
 import com.rec.app.data.repository.UserRepository
 import com.rec.app.ui.common.UiText
@@ -69,7 +70,8 @@ class HomeViewModel(
                 return@launch
             }
 
-            val units = path.units.map { it.toUi() }
+            val en = user.languagePreference == "en"
+            val units = path.sections.sortedBy { it.order }.flatMap { it.toUnits(en) }
             val allLessons = units.flatMap { it.lessons }
 
             _state.value = HomeUiState.Success(
@@ -84,23 +86,42 @@ class HomeViewModel(
     }
 }
 
-private fun UnitPathDto.toUi() = UnitUi(
-    id = id,
-    titleCyrillic = titleCyrillic,
-    titleLatin = titleLatin,
-    titleTranslation = titleTranslation,
-    lessons = lessons.map {
-        LessonUi(
-            id = it.id,
-            title = it.title,
-            titleLatin = it.titleLatin,
-            titleTranslation = it.titleTranslation,
-            xpReward = it.xpReward,
-            status = when (it.status) {
-                "done" -> LessonPathStatus.DONE
-                "current" -> LessonPathStatus.CURRENT
-                else -> LessonPathStatus.LOCKED
-            },
+/**
+ * Flattens a section into the unit list the home screen renders. The section's
+ * checkpoint lesson sits after its last unit's lessons, as on iOS
+ * (`LearningPath.lessons`); a section without units gets a unit of its own to hold it.
+ */
+private fun SectionPathDto.toUnits(en: Boolean): List<UnitUi> {
+    val result = units.sortedBy { it.order }.map { unit ->
+        UnitUi(
+            id = unit.id,
+            titleCyrillic = unit.titleCyrillic,
+            titleLatin = unit.titleLatin,
+            titleTranslation = if (en) unit.titleTranslationEn else unit.titleTranslationRu,
+            lessons = unit.lessons.sortedBy { it.order }.map { it.toUi(en) },
         )
+    }.toMutableList()
+    checkpoint?.let { cp ->
+        val lesson = cp.toUi(en)
+        if (result.isNotEmpty()) {
+            val last = result.last()
+            result[result.lastIndex] = last.copy(lessons = last.lessons + lesson)
+        } else {
+            result += UnitUi(id, titleCyrillic, titleLatin, if (en) titleTranslationEn else titleTranslationRu, listOf(lesson))
+        }
+    }
+    return result
+}
+
+private fun LessonSummaryDto.toUi(en: Boolean) = LessonUi(
+    id = id,
+    title = title,
+    titleLatin = titleLatin,
+    titleTranslation = if (en) titleTranslationEn else titleTranslationRu,
+    xpReward = xpReward,
+    status = when (status) {
+        "done" -> LessonPathStatus.DONE
+        "current" -> LessonPathStatus.CURRENT
+        else -> LessonPathStatus.LOCKED
     },
 )

@@ -58,6 +58,16 @@ interface RecApi {
         @Body body: SubmitReviewRequest,
     ): SubmitReviewResponse
 
+    @GET("words")
+    suspend fun getWords(
+        @Query("search") search: String? = null,
+        @Query("limit") limit: Int = 50,
+        @Query("offset") offset: Int = 0,
+    ): WordsResponse
+
+    @GET("words/attributes")
+    suspend fun getWordAttributes(): WordAttributesDto
+
     @GET("badges")
     suspend fun getBadgeCatalog(): List<BadgeDto>
 

@@ -21,6 +21,8 @@ data class AuthFormState(
     val password: String = "",
     val displayName: String = "",
     val scriptPreference: String = "both",
+    /** "ru" | "en": the language of translations, chosen at registration. */
+    val languagePreference: String = "ru",
     val isLoading: Boolean = false,
     val error: UiText? = null,
 )
@@ -38,6 +40,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun updatePassword(value: String) = _state.update { it.copy(password = value, error = null) }
     fun updateDisplayName(value: String) = _state.update { it.copy(displayName = value, error = null) }
     fun updateScriptPreference(value: String) = _state.update { it.copy(scriptPreference = value) }
+    fun updateLanguagePreference(value: String) = _state.update { it.copy(languagePreference = value) }
 
     fun proceedToCredentials() = _state.update { it.copy(stage = AuthStage.CREDENTIALS, error = null) }
 
@@ -63,7 +66,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
-            authRepository.register(s.email, s.password, s.displayName, s.scriptPreference)
+            authRepository.register(s.email, s.password, s.displayName, s.scriptPreference, s.languagePreference)
                 .onFailure { _state.update { form -> form.copy(isLoading = false, error = mapError(it)) } }
                 .onSuccess { _state.update { form -> form.copy(isLoading = false) } }
         }

@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class UpdateUserRequest(
     val displayName: String? = null,
     val scriptPreference: String? = null,
+    val languagePreference: String? = null,
 )
 
 @Serializable

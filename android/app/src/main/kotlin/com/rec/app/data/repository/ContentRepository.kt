@@ -14,8 +14,8 @@ class ContentRepository(private val api: RecApi) {
     suspend fun getLesson(lessonId: String): Result<LessonDetailResponse> =
         runCatching { api.getLesson(lessonId) }
 
-    suspend fun answerExercise(lessonId: String, exerciseId: String, choiceId: String): Result<AnswerResultResponse> =
-        runCatching { api.answerExercise(lessonId, exerciseId, AnswerExerciseRequest(choiceId)) }
+    suspend fun answerExercise(lessonId: String, exerciseId: String, answerId: String): Result<AnswerResultResponse> =
+        runCatching { api.answerExercise(lessonId, exerciseId, AnswerExerciseRequest(answerId)) }
 
     suspend fun completeLesson(lessonId: String, correctCount: Int, totalCount: Int): Result<CompleteLessonResponse> =
         runCatching { api.completeLesson(lessonId, CompleteLessonRequest(correctCount, totalCount)) }

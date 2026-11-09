@@ -92,4 +92,26 @@
         <item>С</item>
         <item>В</item>
     </string-array>
+<string name="dict_title">Словарь</string>
+    <string name="dict_flashcards">Повторение слов</string>
+    <string name="dict_search_hint">Поиск слов</string>
+    <string name="dict_error_load">Не удалось загрузить словарь.</string>
+    <string name="dict_empty">Ничего не найдено</string>
+    <string name="dict_speak">Произнести слово</string>
+    <string name="dict_back">Назад</string>
+    <string name="dict_field_part_of_speech">Часть речи</string>
+    <string name="dict_field_gender">Род</string>
+    <string name="dict_field_number">Число</string>
+    <string name="dict_field_declension">Склонение</string>
+    <string name="dict_field_conjugation">Спряжение</string>
+    <string name="profile_language">Язык</string>
+    <string name="auth_language_label">Язык переводов</string>
+    <string name="auth_privacy_prefix">Нажимая «Создать аккаунт», вы принимаете</string>
+    <string name="auth_privacy_link">политику конфиденциальности</string>
+    <string name="legal_privacy_title">Политика конфиденциальности</string>
+    <string name="legal_done">Готово</string>
+    <string name="legal_load_error">Не удалось загрузить документ.</string>
+    <string name="lesson_locked_title">Раздел закрыт</string>
+    <string name="lesson_locked_message">Сначала пройдите чекпоинт предыдущего раздела.</string>
+    <string name="lesson_locked_ok">Понятно</string>
 </resources>

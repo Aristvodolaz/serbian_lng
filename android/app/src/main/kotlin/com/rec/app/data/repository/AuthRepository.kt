@@ -19,8 +19,9 @@ class AuthRepository(
         password: String,
         displayName: String,
         scriptPreference: String,
+        languagePreference: String,
     ): Result<AuthResponse> = runCatching {
-        val response = api.register(RegisterRequest(email, password, displayName, scriptPreference))
+        val response = api.register(RegisterRequest(email, password, displayName, scriptPreference, languagePreference))
         tokenStore.save(response.accessToken, response.refreshToken)
         response
     }

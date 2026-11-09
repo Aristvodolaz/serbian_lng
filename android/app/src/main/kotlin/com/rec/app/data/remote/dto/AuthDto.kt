@@ -8,6 +8,7 @@ data class RegisterRequest(
     val password: String,
     val displayName: String,
     val scriptPreference: String? = null,
+    val languagePreference: String? = null,
 )
 
 @Serializable
@@ -29,6 +30,7 @@ data class UserDto(
     val email: String,
     val displayName: String,
     val scriptPreference: String,
+    val languagePreference: String = "ru",
     val xp: Int,
     val streakDays: Int,
     val lastActivityDate: String? = null,
