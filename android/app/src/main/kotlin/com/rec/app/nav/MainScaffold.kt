@@ -13,8 +13,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import com.rec.app.ui.components.GlassNavBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Box
@@ -68,23 +67,17 @@ fun MainScaffold(onLoggedOut: () -> Unit) {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    bottomTabs.forEach { tab ->
-                        val selected = currentRoute?.hierarchy?.any { it.route == tab.route } == true
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(tab.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = { Icon(tab.icon, contentDescription = stringResource(tab.labelRes)) },
-                            label = { Text(stringResource(tab.labelRes)) },
-                        )
-                    }
-                }
+                GlassNavBar(
+                    items = bottomTabs.map { it.icon to stringResource(it.labelRes) },
+                    selectedIndex = bottomTabs.indexOfFirst { tab -> currentRoute?.hierarchy?.any { it.route == tab.route } == true }.coerceAtLeast(0),
+                    onSelect = { index ->
+                        navController.navigate(bottomTabs[index].route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
             }
         },
     ) { padding ->

@@ -11,6 +11,11 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -147,30 +152,60 @@ private fun ExerciseContent(state: LessonUiState.InProgress, viewModel: LessonVi
             modifier = Modifier.weight(1f),
             label = "exercise",
         ) {
-            Column {
-                Text(stringResource(R.string.lesson_prompt_label), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
-                Text(state.exercise.promptCyrillic, style = MaterialTheme.typography.displayMedium, color = RecTheme.colors.ink)
-                Text(
-                    state.exercise.promptLatin,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontStyle = FontStyle.Italic,
-                    color = RecTheme.colors.oxblood,
-                )
-
-                Spacer(Modifier.height(24.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    state.exercise.choices.forEach { choice ->
-                        val choiceState = when {
-                            state.correctChoiceId == null -> if (choice.id == state.selectedChoiceId) ChoiceState.SELECTED else ChoiceState.NEUTRAL
-                            choice.id == state.correctChoiceId -> ChoiceState.CORRECT
-                            choice.id == state.selectedChoiceId -> ChoiceState.WRONG
-                            else -> ChoiceState.NEUTRAL
-                        }
-                        ChoiceCard(
-                            text = choice.text,
-                            state = choiceState,
-                            onClick = { viewModel.selectChoice(choice.id) },
+            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                // Question sits on a white hero card, like the reference's prompt panel.
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(28.dp),
+                    color = RecTheme.colors.surface,
+                    shadowElevation = 6.dp,
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            stringResource(R.string.lesson_prompt_label),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = RecTheme.colors.inkSoft,
+                            textAlign = TextAlign.Center,
                         )
+                        Text(
+                            state.exercise.promptCyrillic,
+                            style = MaterialTheme.typography.displayMedium,
+                            color = RecTheme.colors.ink,
+                            textAlign = TextAlign.Center,
+                        )
+                        Text(
+                            state.exercise.promptLatin,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic,
+                            color = RecTheme.colors.oxblood,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+
+                // Choices live in a 2-column grid, matching the reference's answer pills.
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    state.exercise.choices.chunked(2).forEach { pair ->
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            pair.forEach { choice ->
+                                val choiceState = when {
+                                    state.correctChoiceId == null -> if (choice.id == state.selectedChoiceId) ChoiceState.SELECTED else ChoiceState.NEUTRAL
+                                    choice.id == state.correctChoiceId -> ChoiceState.CORRECT
+                                    choice.id == state.selectedChoiceId -> ChoiceState.WRONG
+                                    else -> ChoiceState.NEUTRAL
+                                }
+                                ChoiceCard(
+                                    text = choice.text,
+                                    state = choiceState,
+                                    onClick = { viewModel.selectChoice(choice.id) },
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                            if (pair.size == 1) Spacer(Modifier.weight(1f))
+                        }
                     }
                 }
             }
@@ -203,12 +238,19 @@ private fun FinishedContent(state: LessonUiState.Finished, onFinished: () -> Uni
         verticalArrangement = Arrangement.Center,
     ) {
         AnimatedVisibility(visible = true, enter = scaleIn(tween(420)) + fadeIn(tween(420))) {
-            Icon(
-                Icons.Filled.EmojiEvents,
-                contentDescription = null,
-                tint = RecTheme.colors.ochre,
-                modifier = Modifier.size(56.dp),
-            )
+            Box(
+                modifier = Modifier
+                    .size(104.dp)
+                    .background(Brush.linearGradient(listOf(RecTheme.colors.ochre, RecTheme.colors.oxblood)), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Filled.EmojiEvents,
+                    contentDescription = null,
+                    tint = RecTheme.colors.cream,
+                    modifier = Modifier.size(52.dp),
+                )
+            }
         }
         Spacer(Modifier.height(12.dp))
         Text(stringResource(R.string.lesson_finished_title), style = MaterialTheme.typography.headlineSmall, color = RecTheme.colors.ink)

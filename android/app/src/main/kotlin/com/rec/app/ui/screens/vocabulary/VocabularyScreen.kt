@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -92,9 +91,9 @@ private fun ReviewingContent(state: FlashcardsUiState.Reviewing, viewModel: Voca
 
         Surface(
             modifier = Modifier.fillMaxWidth().weight(1f),
-            shape = RoundedCornerShape(18.dp),
-            color = RecTheme.colors.surface2,
-            border = BorderStroke(1.5.dp, RecTheme.colors.thread.copy(alpha = 0.5f)),
+            shape = RoundedCornerShape(28.dp),
+            color = RecTheme.colors.surface,
+            shadowElevation = 8.dp,
         ) {
             // Keyed on wordId, not the whole state, so only an actual card
             // change slides — isSubmitting flipping true/false stays static.

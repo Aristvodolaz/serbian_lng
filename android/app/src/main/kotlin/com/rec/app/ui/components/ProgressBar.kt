@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import com.rec.app.ui.theme.RecTheme
 
@@ -29,17 +30,17 @@ fun RecProgressBar(progress: Float, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(8.dp)
-            .clip(RoundedCornerShape(6.dp))
-            .background(colors.thread.copy(alpha = 0.35f)),
+            .height(10.dp)
+            .clip(RoundedCornerShape(50))
+            .background(colors.indigo.copy(alpha = 0.12f)),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(animatedProgress)
                 .align(Alignment.CenterStart)
-                .clip(RoundedCornerShape(6.dp))
-                .background(colors.ochre),
+                .clip(RoundedCornerShape(50))
+                .background(Brush.horizontalGradient(listOf(colors.indigoSoft, colors.indigo))),
         )
     }
 }

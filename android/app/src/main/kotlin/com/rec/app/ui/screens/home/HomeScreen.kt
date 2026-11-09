@@ -56,7 +56,12 @@ fun HomeScreen(viewModel: HomeViewModel, onLessonClick: (String) -> Unit, onProf
 
     LaunchedEffect(Unit) { viewModel.load() }
 
-    Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
+    // Soft periwinkle wash at the top fading into the ground — the reference's hero glow.
+    Box(
+        modifier = Modifier.fillMaxSize().background(
+            Brush.verticalGradient(listOf(RecTheme.colors.indigoSoft.copy(alpha = 0.22f), RecTheme.colors.ground), endY = 700f),
+        ),
+    ) {
         when (val s = state) {
             is HomeUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
                 CircularProgressIndicator(color = RecTheme.colors.indigo)

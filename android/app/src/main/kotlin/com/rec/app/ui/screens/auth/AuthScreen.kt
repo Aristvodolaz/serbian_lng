@@ -9,6 +9,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rec.app.R
 import com.rec.app.ui.common.asString
-import com.rec.app.ui.components.LanguageChip
+import com.rec.app.ui.components.LanguageSwitch
 import com.rec.app.ui.components.LegalDocumentDialog
 import com.rec.app.ui.components.PageDots
 import com.rec.app.ui.components.RecGhostButton
@@ -61,7 +65,6 @@ import com.rec.app.ui.components.ScriptCard
 import com.rec.app.ui.components.ScriptSummaryChip
 import com.rec.app.ui.components.WeaveDots
 import com.rec.app.ui.theme.RecColors
-import com.rec.app.ui.theme.RecPalette
 import com.rec.app.ui.theme.RecTheme
 
 // The whole onboarding/auth flow is a fixed-dark "moment" independent of the
@@ -130,7 +133,7 @@ private fun WelcomeStep(viewModel: AuthViewModel) {
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(colors.indigoSoft, colors.indigo, Color(0xFF101728)),
+                    colors = listOf(colors.indigoSoft, colors.indigo, Color(0xFF1B3BB8)),
                 ),
             ),
     ) {
@@ -190,12 +193,14 @@ private fun WelcomeStep(viewModel: AuthViewModel) {
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(22.dp))
-            RecPrimaryButton(
-                text = stringResource(R.string.auth_get_started),
+            Button(
                 onClick = viewModel::goToRegister,
-                containerColor = colors.cream,
-                contentColor = RecPalette.DarkGround,
-            )
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = colors.indigo),
+            ) {
+                Text(stringResource(R.string.auth_get_started), fontWeight = FontWeight.Bold)
+            }
             Spacer(Modifier.height(10.dp))
             RecGhostButton(
                 text = stringResource(R.string.auth_have_account),
@@ -426,10 +431,10 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
             ScriptSummaryChip(label = scriptLabel, sample = scriptSample, onClick = viewModel::backToScript)
 
             Text(stringResource(R.string.auth_language_label), style = MaterialTheme.typography.labelMedium, color = colors.inkSoft)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                LanguageChip("Русский", selected = state.languagePreference == "ru", onClick = { viewModel.updateLanguagePreference("ru") })
-                LanguageChip("English", selected = state.languagePreference == "en", onClick = { viewModel.updateLanguagePreference("en") })
-            }
+            LanguageSwitch(
+                english = state.languagePreference == "en",
+                onSelect = { viewModel.updateLanguagePreference(if (it) "en" else "ru") },
+            )
 
             state.error?.let {
                 Text(it.asString(), color = colors.oxblood, style = MaterialTheme.typography.bodySmall)
@@ -473,7 +478,7 @@ private fun CredentialsStep(state: AuthFormState, viewModel: AuthViewModel) {
 private data class FieldColors(val field: Color, val label: Color, val text: Color, val placeholder: Color)
 
 private fun fieldColors(colors: RecColors) = FieldColors(
-    field = colors.surface2,
+    field = colors.surface,
     label = colors.inkSoft,
     text = colors.ink,
     placeholder = colors.inkSoft.copy(alpha = 0.5f),

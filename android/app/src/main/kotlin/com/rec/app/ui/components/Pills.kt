@@ -1,6 +1,5 @@
 package com.rec.app.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -38,8 +37,8 @@ private fun RecPill(icon: ImageVector, value: String, tint: Color, modifier: Mod
     Surface(
         modifier = modifier,
         shape = CircleShape,
-        color = RecTheme.colors.surface2,
-        border = BorderStroke(1.dp, RecTheme.colors.thread.copy(alpha = 0.5f)),
+        color = RecTheme.colors.surface,
+        shadowElevation = 4.dp,
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
