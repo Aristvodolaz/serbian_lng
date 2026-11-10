@@ -65,15 +65,25 @@ struct FlashcardsScreen: View {
 
             if model.isRevealed {
                 HStack(spacing: 10) {
-                    Button(ReviewOutcome.learning.title) {
-                        Task { await model.submit(.learning, using: session.api) }
+                    Button(ReviewOutcome.again.title) {
+                        Task { await model.submit(.again, using: session.api) }
+                    }
+                    .buttonStyle(.recGhost(Palette.oxblood))
+
+                    Button(ReviewOutcome.hard.title) {
+                        Task { await model.submit(.hard, using: session.api) }
                     }
                     .buttonStyle(.recGhost)
 
-                    Button(ReviewOutcome.know.title) {
-                        Task { await model.submit(.know, using: session.api) }
+                    Button(ReviewOutcome.good.title) {
+                        Task { await model.submit(.good, using: session.api) }
                     }
                     .buttonStyle(.recPrimary)
+
+                    Button(ReviewOutcome.easy.title) {
+                        Task { await model.submit(.easy, using: session.api) }
+                    }
+                    .buttonStyle(.recGhost)
                 }
                 .disabled(model.isSubmitting)
             } else {
@@ -166,6 +176,8 @@ private struct FlashcardView: View {
                 .accessibilityLabel("Изговори реч")
 
                 if isRevealed {
+                    WordImageView(url: word.imageUrl)
+
                     Text(word.translation(matching: languagePreference))
                         .font(.recCalloutStrong)
                         .foregroundStyle(Palette.inkSoft)

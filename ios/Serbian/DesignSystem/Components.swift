@@ -28,18 +28,21 @@ struct RecPrimaryButtonStyle: ButtonStyle {
 }
 
 struct RecGhostButtonStyle: ButtonStyle {
+    var tint: Color = Palette.inkSoft
+
     func makeBody(configuration: Configuration) -> some View {
-        StyleBody(configuration: configuration)
+        StyleBody(configuration: configuration, tint: tint)
     }
 
     private struct StyleBody: View {
         let configuration: ButtonStyleConfiguration
+        let tint: Color
         @Environment(\.isEnabled) private var isEnabled
 
         var body: some View {
             configuration.label
                 .font(.recButton)
-                .foregroundStyle(Palette.inkSoft)
+                .foregroundStyle(tint)
                 .frame(maxWidth: .infinity, minHeight: Metrics.minimumTapTarget)
                 .background(
                     RoundedRectangle(cornerRadius: Metrics.cardCorner, style: .continuous)
@@ -88,6 +91,7 @@ extension ButtonStyle where Self == RecPrimaryButtonStyle {
 
 extension ButtonStyle where Self == RecGhostButtonStyle {
     static var recGhost: RecGhostButtonStyle { RecGhostButtonStyle() }
+    static func recGhost(_ tint: Color) -> RecGhostButtonStyle { RecGhostButtonStyle(tint: tint) }
 }
 
 // MARK: - Status pills

@@ -162,16 +162,4 @@ final class RecAPI {
     func earnedBadges() async throws -> [EarnedBadge] {
         try await client.send(.get("badges/me"), as: [EarnedBadge].self)
     }
-
-    // MARK: - tts
-
-    func speak(_ text: String) async throws -> Data {
-        try await client.send(
-            .get(
-                "tts/speak",
-                query: [URLQueryItem(name: "text", value: text)],
-                authenticated: false
-            )
-        )
-    }
 }

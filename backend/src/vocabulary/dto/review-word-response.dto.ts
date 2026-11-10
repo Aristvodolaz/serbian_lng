@@ -11,6 +11,7 @@ export class ReviewWordResponseDto {
   @ApiProperty({ type: String, nullable: true }) exampleTranslationRu: string | null;
   @ApiProperty({ type: String, nullable: true }) exampleTranslationEn: string | null;
   @ApiProperty({ type: String, nullable: true }) audioUrl: string | null;
+  @ApiProperty({ type: String, nullable: true }) imageUrl: string | null;
   @ApiProperty({ enum: WordProgressStatus })
   status: WordProgressStatus;
 }

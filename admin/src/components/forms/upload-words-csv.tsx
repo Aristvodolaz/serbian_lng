@@ -52,6 +52,7 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
           const exampleRu = row.exampleTranslationRu?.trim();
           const exampleEn = row.exampleTranslationEn?.trim();
           const audio = row.audioUrl?.trim();
+          const image = row.imageUrl?.trim();
           const partOfSpeech = row.partOfSpeech?.trim();
           const gender = row.gender?.trim();
           const number = row.number?.trim();
@@ -61,6 +62,7 @@ export function UploadWordsCsv({ unitId }: { unitId?: string }) {
           if (exampleRu) word.exampleTranslationRu = exampleRu;
           if (exampleEn) word.exampleTranslationEn = exampleEn;
           if (audio) word.audioUrl = audio;
+          if (image) word.imageUrl = image;
           if (partOfSpeech) word.partOfSpeech = partOfSpeech;
           if (gender) word.gender = gender;
           if (number) word.number = number;

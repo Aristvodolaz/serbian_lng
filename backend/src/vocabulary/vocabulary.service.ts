@@ -11,10 +11,14 @@ import { getWordAttributesResponse } from '../admin/word-attributes';
 import { ContentStatus } from '../common/enums/content-status.enum';
 import { BadgesService } from '../badges/badges.service';
 import { User } from '../users/entities/user.entity';
+import { Grade, DEFAULT_EASE, nextEase, nextIntervalMs } from './srs';
 
-// Simple spaced-repetition ladder, in hours, indexed by review count so far.
-const KNOWN_INTERVALS_HOURS = [24, 72, 168, 336]; // 1d, 3d, 7d, 14d
-const RELEARN_INTERVAL_MINUTES = 10;
+const GRADE_BY_RESULT: Record<ReviewResult, Grade> = {
+  [ReviewResult.AGAIN]: Grade.AGAIN,
+  [ReviewResult.HARD]: Grade.HARD,
+  [ReviewResult.GOOD]: Grade.GOOD,
+  [ReviewResult.EASY]: Grade.EASY,
+};
 
 @Injectable()
 export class VocabularyService {
@@ -83,15 +87,20 @@ export class VocabularyService {
     progress.lastReviewedAt = now;
     progress.reviewCount += 1;
 
-    if (result === ReviewResult.KNOW) {
-      progress.status = WordProgressStatus.KNOWN;
-      const stepIndex = Math.min(progress.reviewCount - 1, KNOWN_INTERVALS_HOURS.length - 1);
-      const hours = KNOWN_INTERVALS_HOURS[stepIndex];
-      progress.nextReviewAt = new Date(now.getTime() + hours * 60 * 60 * 1000);
-    } else {
-      progress.status = WordProgressStatus.LEARNING;
-      progress.nextReviewAt = new Date(now.getTime() + RELEARN_INTERVAL_MINUTES * 60 * 1000);
-    }
+    const grade = GRADE_BY_RESULT[result];
+    const previousIntervalMs = progress.intervalMs != null ? Number(progress.intervalMs) : 0;
+    const ease = nextEase(progress.easeFactor ?? DEFAULT_EASE, grade);
+    const intervalMs = nextIntervalMs(previousIntervalMs, ease, grade);
+
+    progress.easeFactor = ease;
+    progress.intervalMs = intervalMs;
+    progress.status =
+      grade === Grade.AGAIN
+        ? WordProgressStatus.LEARNING
+        : grade === Grade.GOOD || grade === Grade.EASY
+          ? WordProgressStatus.KNOWN
+          : progress.status;
+    progress.nextReviewAt = new Date(now.getTime() + intervalMs);
 
     await this.progressRepository.save(progress);
 
@@ -162,6 +171,7 @@ function toDto(word: Word, status: WordProgressStatus): ReviewWordResponseDto {
     exampleTranslationRu: word.exampleTranslationRu,
     exampleTranslationEn: word.exampleTranslationEn,
     audioUrl: word.audioUrl,
+    imageUrl: word.imageUrl,
     status,
   };
 }

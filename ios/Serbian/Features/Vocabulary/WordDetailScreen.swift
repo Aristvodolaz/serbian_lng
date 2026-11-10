@@ -29,6 +29,8 @@ struct WordDetailScreen: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Metrics.tight) {
+            WordImageView(url: word.imageUrl)
+
             DualScriptText(
                 cyrillic: word.cyrillic,
                 latin: word.latin,

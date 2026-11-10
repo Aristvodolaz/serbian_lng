@@ -148,6 +148,14 @@ struct LessonScreen: View {
         }
         .animation(.easeOut(duration: 0.2), value: model.result)
         .animation(.easeOut(duration: 0.15), value: model.selectedAnswerID)
+        .onChange(of: model.result) { _, result in
+            guard let result,
+                  exercise.payload.settings?.playAudio != false,
+                  let correct = result.correctAnswer,
+                  let serbian = correct.serbian(script: .cyrillic), !serbian.isEmpty
+            else { return }
+            SpeechService.shared.pronounce(serbian, latinFallback: correct.serbian(script: .latin))
+        }
     }
 
     /// «Тачан одговор: шумa · лес» — Serbian in the learner's script plus the

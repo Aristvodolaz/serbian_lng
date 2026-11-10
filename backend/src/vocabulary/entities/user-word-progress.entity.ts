@@ -45,4 +45,12 @@ export class UserWordProgress {
 
   @Column({ type: 'timestamptz', nullable: true })
   nextReviewAt: Date | null;
+
+  // SM-2 state: ease factor and the interval the next GOOD/EASY multiplies.
+  @Column({ type: 'real', default: 2.5 })
+  easeFactor: number;
+
+  // Previous interval in ms; pg returns bigint as string, so keep loose typing.
+  @Column({ type: 'bigint', nullable: true })
+  intervalMs: string | number | null;
 }

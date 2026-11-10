@@ -1,23 +1,17 @@
 import AVFoundation
 import Foundation
 
-/// Pronunciation for flashcards. Uses the backend TTS endpoint (Google Cloud)
-/// for real Serbian speech. Falls back to on-device synthesis if offline.
+/// On-device pronunciation (AVSpeechSynthesizer, sr-RS). `latinFallback` is
+/// spoken when only a non-Serbian voice is available, since those voices
+/// garble Cyrillic.
 final class SpeechService: NSObject {
     static let shared = SpeechService()
 
     private let synthesizer = AVSpeechSynthesizer()
-    private var player: AVAudioPlayer?
-    private var api: RecAPI?
 
     private override init() {
         super.init()
         synthesizer.delegate = self
-    }
-
-    /// Set the API so we can call the backend TTS endpoint.
-    func configure(api: RecAPI) {
-        self.api = api
     }
 
     func pronounce(_ word: ReviewWord) {
@@ -28,33 +22,9 @@ final class SpeechService: NSObject {
         pronounce(word.cyrillic, latinFallback: word.latin)
     }
 
-    /// Prefer backend TTS (real Serbian) — fall back to on-device if it fails.
-    /// `latinFallback` is spoken when only a non-Serbian on-device voice is
-    /// available, since those voices garble Cyrillic.
-    private func pronounce(_ text: String, latinFallback: String?) {
+    func pronounce(_ text: String, latinFallback: String? = nil) {
         activateSession()
 
-        Task {
-            do {
-                guard let api else { throw CocoaError(.fileReadUnknown) }
-                let data = try await api.speak(text)
-                try play(data)
-            } catch {
-                print("SpeechService: backend TTS failed (\(error)), using on-device fallback")
-                speakWithTTS(text, latinFallback: latinFallback)
-            }
-        }
-    }
-
-    private func play(_ data: Data) throws {
-        player = try AVAudioPlayer(data: data)
-        player?.prepareToPlay()
-        player?.play()
-    }
-
-    // MARK: - On-device fallback
-
-    private func speakWithTTS(_ text: String, latinFallback: String?) {
         guard let voice = serbianVoice() else {
             print("SpeechService: no Serbian voice available")
             return

@@ -14,7 +14,6 @@ struct SerbianApp: App {
             RootView()
                 .environment(session)
                 .task {
-                    SpeechService.shared.configure(api: session.api)
                     await session.restore()
                 }
         }

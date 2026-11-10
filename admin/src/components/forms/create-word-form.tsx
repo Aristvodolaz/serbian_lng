@@ -12,6 +12,8 @@ export function CreateWordForm() {
           ?.split('=')[1];
 
         const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+        const imageUrl = String(formData.get('imageUrl') || '').trim();
+        const audioUrl = String(formData.get('audioUrl') || '').trim();
         await fetch(`${BACKEND_URL}/admin/words`, {
           method: 'POST',
           headers: {
@@ -23,6 +25,8 @@ export function CreateWordForm() {
             latin: formData.get('latin'),
             translationRu: formData.get('translationRu'),
             translationEn: formData.get('translationEn'),
+            ...(imageUrl && { imageUrl }),
+            ...(audioUrl && { audioUrl }),
           }),
         });
         window.location.reload();
@@ -51,6 +55,16 @@ export function CreateWordForm() {
         name="translationEn"
         placeholder="Translation EN"
         required
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+      />
+      <input
+        name="imageUrl"
+        placeholder="Image URL"
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+      />
+      <input
+        name="audioUrl"
+        placeholder="Audio URL"
         className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
       />
       <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">

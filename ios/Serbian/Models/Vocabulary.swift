@@ -13,15 +13,19 @@ enum WordStatus: String, Codable, Sendable {
     }
 }
 
-/// The two buttons on a flashcard: "Учим" and "Знам".
+/// The four flashcard grades: "Опет", "Тешко", "Добро", "Лако".
 enum ReviewOutcome: String, Encodable, Sendable {
-    case learning
-    case know
+    case again
+    case hard
+    case good
+    case easy
 
     var title: String {
         switch self {
-        case .learning: String(localized: "Учим")
-        case .know: String(localized: "Знам")
+        case .again: String(localized: "Опет")
+        case .hard: String(localized: "Тешко")
+        case .good: String(localized: "Добро")
+        case .easy: String(localized: "Лако")
         }
     }
 }
@@ -37,6 +41,7 @@ struct ReviewWord: Codable, Identifiable, Equatable, Sendable {
     let exampleTranslationRu: String?
     let exampleTranslationEn: String?
     let audioUrl: String?
+    let imageUrl: String?
     let status: WordStatus
 
     var id: String { wordId }

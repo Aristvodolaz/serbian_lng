@@ -2,12 +2,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
 
 export enum ReviewResult {
-  KNOW = 'know',
-  LEARNING = 'learning',
+  AGAIN = 'again',
+  HARD = 'hard',
+  GOOD = 'good',
+  EASY = 'easy',
 }
 
 export class SubmitReviewDto {
-  @ApiProperty({ enum: ReviewResult, description: '"Знам" vs "Учим" on the flashcard' })
+  @ApiProperty({
+    enum: ReviewResult,
+    description: 'Flashcard grading: again / hard / good / easy (SM-2)',
+  })
   @IsEnum(ReviewResult)
   result: ReviewResult;
 }
