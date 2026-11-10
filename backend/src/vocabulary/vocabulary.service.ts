@@ -11,14 +11,7 @@ import { getWordAttributesResponse } from '../admin/word-attributes';
 import { ContentStatus } from '../common/enums/content-status.enum';
 import { BadgesService } from '../badges/badges.service';
 import { User } from '../users/entities/user.entity';
-import { Grade, DEFAULT_EASE, nextEase, nextIntervalMs } from './srs';
-
-const GRADE_BY_RESULT: Record<ReviewResult, Grade> = {
-  [ReviewResult.AGAIN]: Grade.AGAIN,
-  [ReviewResult.HARD]: Grade.HARD,
-  [ReviewResult.GOOD]: Grade.GOOD,
-  [ReviewResult.EASY]: Grade.EASY,
-};
+import { DEFAULT_EASE, nextEase, nextIntervalMs, nextStatus } from './srs';
 
 @Injectable()
 export class VocabularyService {
@@ -80,6 +73,7 @@ export class VocabularyService {
         user: { id: userId } as User,
         word,
         reviewCount: 0,
+        status: WordProgressStatus.LEARNING,
       });
     }
 
@@ -87,19 +81,14 @@ export class VocabularyService {
     progress.lastReviewedAt = now;
     progress.reviewCount += 1;
 
-    const grade = GRADE_BY_RESULT[result];
     const previousIntervalMs = progress.intervalMs != null ? Number(progress.intervalMs) : 0;
-    const ease = nextEase(progress.easeFactor ?? DEFAULT_EASE, grade);
-    const intervalMs = nextIntervalMs(previousIntervalMs, ease, grade);
+    const wasLearning = progress.status === WordProgressStatus.LEARNING;
+    const ease = nextEase(progress.easeFactor ?? DEFAULT_EASE, result);
+    const intervalMs = nextIntervalMs(previousIntervalMs, ease, result, wasLearning);
 
     progress.easeFactor = ease;
     progress.intervalMs = intervalMs;
-    progress.status =
-      grade === Grade.AGAIN
-        ? WordProgressStatus.LEARNING
-        : grade === Grade.GOOD || grade === Grade.EASY
-          ? WordProgressStatus.KNOWN
-          : progress.status;
+    progress.status = nextStatus(progress.status, result);
     progress.nextReviewAt = new Date(now.getTime() + intervalMs);
 
     await this.progressRepository.save(progress);

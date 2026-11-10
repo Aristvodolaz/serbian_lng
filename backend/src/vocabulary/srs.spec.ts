@@ -1,4 +1,11 @@
-import { Grade, RELEARN_INTERVAL_MS, MAX_INTERVAL_MS, nextEase, nextIntervalMs } from './srs';
+import {
+  Grade,
+  RELEARN_INTERVAL_MS,
+  MAX_INTERVAL_MS,
+  nextEase,
+  nextIntervalMs,
+  nextStatus,
+} from './srs';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
@@ -52,5 +59,32 @@ describe('nextIntervalMs', () => {
 
   it('clamps to the 365 day maximum', () => {
     expect(nextIntervalMs(400 * DAY_MS, 2.8, Grade.EASY)).toBe(MAX_INTERVAL_MS);
+  });
+
+  it('graduates a learning word to the base interval on GOOD/EASY', () => {
+    // A word that lapsed into learning still carries an old interval value;
+    // the graduation must ignore it, not multiply it.
+    expect(nextIntervalMs(30 * DAY_MS, 2.5, Grade.GOOD, true)).toBe(DAY_MS);
+    expect(nextIntervalMs(30 * DAY_MS, 2.5, Grade.EASY, true)).toBe(3 * DAY_MS);
+  });
+
+  it('HARD on a learning word holds the 1-day step instead of scaling', () => {
+    expect(nextIntervalMs(RELEARN_INTERVAL_MS, 2.5, Grade.HARD, true)).toBe(DAY_MS);
+  });
+});
+
+describe('nextStatus', () => {
+  it('AGAIN sends the word back to learning', () => {
+    expect(nextStatus('known', Grade.AGAIN)).toBe('learning');
+  });
+
+  it('GOOD/EASY graduate a learning word to known', () => {
+    expect(nextStatus('learning', Grade.GOOD)).toBe('known');
+    expect(nextStatus('learning', Grade.EASY)).toBe('known');
+  });
+
+  it('HARD keeps the current status', () => {
+    expect(nextStatus('learning', Grade.HARD)).toBe('learning');
+    expect(nextStatus('known', Grade.HARD)).toBe('known');
   });
 });

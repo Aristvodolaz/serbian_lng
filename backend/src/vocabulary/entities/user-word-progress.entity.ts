@@ -9,10 +9,14 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { Word } from './word.entity';
 
-export enum WordProgressStatus {
-  LEARNING = 'learning',
-  KNOWN = 'known',
-}
+// A const object, not a TS enum: its values are then the same string-literal
+// union as srs.ProgressStatus, so no cast is needed to pass them between the
+// scheduling math and the entity.
+export const WordProgressStatus = {
+  LEARNING: 'learning',
+  KNOWN: 'known',
+} as const;
+export type WordProgressStatus = (typeof WordProgressStatus)[keyof typeof WordProgressStatus];
 
 @Entity('user_word_progress')
 @Unique(['userId', 'wordId'])

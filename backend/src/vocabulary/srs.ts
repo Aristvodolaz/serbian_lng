@@ -30,16 +30,33 @@ export function nextEase(ease: number, grade: Grade): number {
   return Math.min(MAX_EASE, Math.max(MIN_EASE, ease + delta));
 }
 
-export function nextIntervalMs(currentMs: number, ease: number, grade: Grade): number {
+// A word in the learning state has no established interval: the next GOOD/EASY
+// graduates it to the base interval (Anki relearns this way after a lapse).
+export type ProgressStatus = 'learning' | 'known';
+
+export function nextStatus(current: ProgressStatus, grade: Grade): ProgressStatus {
+  if (grade === Grade.AGAIN) return 'learning';
+  if (grade === Grade.HARD) return current;
+  return 'known';
+}
+
+export function nextIntervalMs(
+  currentMs: number,
+  ease: number,
+  grade: Grade,
+  wasLearning = false,
+): number {
   let interval: number;
-  const established = currentMs > 0;
+  const established = !wasLearning && currentMs > 0;
 
   switch (grade) {
     case Grade.AGAIN:
       interval = RELEARN_INTERVAL_MS;
       break;
     case Grade.HARD:
-      interval = Math.max(currentMs, DAY_MS) * HARD_FACTOR;
+      // A learning word has no established interval to scale; a HARD success
+      // holds the 1-day step instead of inventing 29h of dead interval data.
+      interval = wasLearning ? GOOD_BASE_MS : Math.max(currentMs, DAY_MS) * HARD_FACTOR;
       break;
     case Grade.GOOD:
       interval = established ? currentMs * ease : GOOD_BASE_MS;

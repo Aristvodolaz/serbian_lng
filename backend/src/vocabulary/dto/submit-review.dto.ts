@@ -1,12 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
+import { Grade as ReviewResult } from '../srs';
 
-export enum ReviewResult {
-  AGAIN = 'again',
-  HARD = 'hard',
-  GOOD = 'good',
-  EASY = 'easy',
-}
+// Same enum object as srs.Grade — the wire values are the scheduling grades.
+export { ReviewResult };
 
 export class SubmitReviewDto {
   @ApiProperty({
