@@ -66,6 +66,7 @@ const makeService = (repos: Repos) => {
     sectionRepository as never,
     lessonRepository as never,
     {} as never, // exerciseRepository
+    {} as never, // theoryRepository
     progressRepository as never,
     {} as never, // answerRepository
     {} as never, // userRepository

@@ -10,11 +10,17 @@ import { Unit } from './entities/unit.entity';
 import { Section } from './entities/section.entity';
 import { Lesson } from './entities/lesson.entity';
 import { Exercise } from './entities/exercise.entity';
+import { TheoryTopic } from './entities/theory-topic.entity';
 import { UserLessonProgress } from './entities/user-lesson-progress.entity';
 import { UserExerciseAnswer } from './entities/user-exercise-answer.entity';
 import { Word } from '../vocabulary/entities/word.entity';
 import { ContentStatus } from '../common/enums/content-status.enum';
 import { PathResponseDto } from './dto/path-response.dto';
+import {
+  TheoryLibraryResponseDto,
+  TheoryTopicDto,
+  TheoryTopicSummaryDto,
+} from './dto/theory-response.dto';
 import { LessonDetailResponseDto } from './dto/lesson-detail-response.dto';
 import { AnswerResultResponseDto } from './dto/answer-result-response.dto';
 import { CompleteLessonResponseDto } from './dto/complete-lesson-response.dto';
@@ -50,6 +56,8 @@ export class ContentService {
     private readonly lessonRepository: Repository<Lesson>,
     @InjectRepository(Exercise)
     private readonly exerciseRepository: Repository<Exercise>,
+    @InjectRepository(TheoryTopic)
+    private readonly theoryRepository: Repository<TheoryTopic>,
     @InjectRepository(UserLessonProgress)
     private readonly progressRepository: Repository<UserLessonProgress>,
     @InjectRepository(UserExerciseAnswer)
@@ -82,7 +90,79 @@ export class ContentService {
     const completions = await this.progressRepository.find({ where: { userId } });
     const completedLessonIds = new Set(completions.map((c) => c.lessonId));
 
-    return assemblePath({ sections, orphanUnits, checkpointLessons, completedLessonIds });
+    const theoryTopics =
+      sections.length > 0
+        ? await this.theoryRepository.find({
+            where: {
+              sectionId: In(sections.map((s) => s.id)),
+              status: ContentStatus.PUBLISHED,
+            },
+            order: { order: 'ASC' },
+          })
+        : [];
+
+    return assemblePath({ sections, orphanUnits, checkpointLessons, theoryTopics, completedLessonIds });
+  }
+
+  async getTheoryLibrary(): Promise<TheoryLibraryResponseDto> {
+    const sections = await this.sectionRepository.find({
+      where: { status: ContentStatus.PUBLISHED },
+      order: { order: 'ASC' },
+    });
+    const topics =
+      sections.length > 0
+        ? await this.theoryRepository.find({
+            where: {
+              sectionId: In(sections.map((s) => s.id)),
+              status: ContentStatus.PUBLISHED,
+            },
+            order: { order: 'ASC' },
+          })
+        : [];
+    return {
+      sections: sections.map((s) => ({
+        id: s.id,
+        titleCyrillic: s.titleCyrillic,
+        titleLatin: s.titleLatin,
+        titleTranslationRu: s.titleTranslationRu,
+        titleTranslationEn: s.titleTranslationEn,
+        order: s.order,
+        topics: topics
+          .filter((t) => t.sectionId === s.id)
+          .map(
+            (t): TheoryTopicSummaryDto => ({
+              id: t.id,
+              titleCyrillic: t.titleCyrillic,
+              titleLatin: t.titleLatin,
+              order: t.order,
+            }),
+          ),
+      })),
+    };
+  }
+
+  async getTheoryTopic(id: string): Promise<TheoryTopicDto> {
+    const topic = await this.theoryRepository.findOne({
+      where: { id },
+      relations: { section: true },
+    });
+    if (
+      !topic ||
+      topic.status !== ContentStatus.PUBLISHED ||
+      topic.section?.status !== ContentStatus.PUBLISHED
+    ) {
+      throw new NotFoundException('Theory topic not found');
+    }
+    return {
+      id: topic.id,
+      sectionId: topic.sectionId,
+      titleCyrillic: topic.titleCyrillic,
+      titleLatin: topic.titleLatin,
+      titleTranslationRu: topic.titleTranslationRu,
+      titleTranslationEn: topic.titleTranslationEn,
+      payload: topic.payload,
+      order: topic.order,
+    };
   }
 
   async getLessonDetail(userId: string, lessonId: string): Promise<LessonDetailResponseDto> {

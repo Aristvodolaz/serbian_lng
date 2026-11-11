@@ -1,6 +1,7 @@
 import { Lesson } from './entities/lesson.entity';
 import { Section } from './entities/section.entity';
 import { Unit } from './entities/unit.entity';
+import { TheoryTopic } from './entities/theory-topic.entity';
 import { ContentStatus } from '../common/enums/content-status.enum';
 import { assemblePath, LEGACY_SECTION_ID } from './path-assembly';
 import { LessonPathStatus } from './dto/path-response.dto';
@@ -48,6 +49,7 @@ describe('assemblePath', () => {
       sections: [s1, s2],
       orphanUnits: [],
       checkpointLessons: [],
+      theoryTopics: [],
       completedLessonIds: new Set(),
     });
     expect(path.sections.map((s) => s.id)).toEqual(['s2', 's1']);
@@ -63,6 +65,7 @@ describe('assemblePath', () => {
       sections: [s1],
       orphanUnits: [],
       checkpointLessons: [cp],
+      theoryTopics: [],
       completedLessonIds: new Set(),
     });
     expect(path.sections[0].units[0].lessons.map((l) => l.id)).toEqual(['l1']);
@@ -76,6 +79,7 @@ describe('assemblePath', () => {
       sections: [s1],
       orphanUnits: [],
       checkpointLessons: [draftCp],
+      theoryTopics: [],
       completedLessonIds: new Set(),
     });
     expect(path.sections[0].checkpoint).toBeNull();
@@ -88,6 +92,7 @@ describe('assemblePath', () => {
       sections: [s1],
       orphanUnits: [orphan],
       checkpointLessons: [],
+      theoryTopics: [],
       completedLessonIds: new Set(),
     });
     expect(path.sections).toHaveLength(2);
@@ -99,7 +104,7 @@ describe('assemblePath', () => {
   });
 
   it('emits no pseudo-section when there are no orphan units', () => {
-    const path = assemblePath({ sections: [], orphanUnits: [], checkpointLessons: [], completedLessonIds: new Set() });
+    const path = assemblePath({ sections: [], orphanUnits: [], checkpointLessons: [], theoryTopics: [], completedLessonIds: new Set() });
     expect(path.sections).toEqual([]);
   });
 
@@ -110,6 +115,7 @@ describe('assemblePath', () => {
       sections: [s1],
       orphanUnits: [],
       checkpointLessons: [cp],
+      theoryTopics: [],
       completedLessonIds: new Set(['l1']),
     });
     const lessons = path.sections[0].units[0].lessons;
@@ -125,6 +131,7 @@ describe('assemblePath', () => {
       sections: [s1],
       orphanUnits: [],
       checkpointLessons: [cp],
+      theoryTopics: [],
       completedLessonIds: new Set(['l1', 'l2']),
     });
     expect(path.sections[0].checkpoint?.status).toEqual(LessonPathStatus.CURRENT);
@@ -137,6 +144,7 @@ describe('assemblePath', () => {
       sections: [],
       orphanUnits: [],
       checkpointLessons: [orphanCp],
+      theoryTopics: [],
       completedLessonIds: new Set(),
     });
     expect(path.sections).toEqual([]);
@@ -154,6 +162,7 @@ describe('assemblePath', () => {
       sections: [s1],
       orphanUnits: [],
       checkpointLessons: [],
+      theoryTopics: [],
       completedLessonIds: new Set(['u1-l1']),
     });
     const lessons = path.sections[0].units.flatMap((u) => u.lessons.map((l) => l.id));
@@ -162,5 +171,25 @@ describe('assemblePath', () => {
     // not the lowest-order uncompleted lesson of another unit (u2-l1).
     expect(path.sections[0].units[0].lessons[1].status).toEqual(LessonPathStatus.CURRENT);
     expect(path.sections[0].units[1].lessons[0].status).toEqual(LessonPathStatus.LOCKED);
+  });
+
+  it('attaches published theory topics per section and never to the legacy tail', () => {
+    const makeTheory = (id: string, sectionId: string | null, order: number, status = ContentStatus.PUBLISHED) =>
+      ({ id, sectionId, order, status, titleCyrillic: 'Т', titleLatin: 'T' }) as unknown as TheoryTopic;
+    const s1 = makeSection('s1', 0, [makeUnit('u1', 1, [makeLesson('l1', 1)])]);
+    const path = assemblePath({
+      sections: [s1],
+      orphanUnits: [makeUnit('u-orphan', 5, [makeLesson('l-orphan', 6)])],
+      checkpointLessons: [],
+      theoryTopics: [
+        makeTheory('t2', 's1', 2),
+        makeTheory('t1', 's1', 1),
+        makeTheory('t-draft', 's1', 3, ContentStatus.DRAFT),
+        makeTheory('t-orphan', null, 0),
+      ],
+      completedLessonIds: new Set(),
+    });
+    expect(path.sections[0].theory.map((t) => t.id)).toEqual(['t1', 't2']);
+    expect(path.sections[1].theory).toEqual([]);
   });
 });

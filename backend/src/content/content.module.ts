@@ -4,6 +4,8 @@ import { Unit } from './entities/unit.entity';
 import { Lesson } from './entities/lesson.entity';
 import { Section } from './entities/section.entity';
 import { Exercise } from './entities/exercise.entity';
+import { TheoryTopic } from './entities/theory-topic.entity';
+import { TheoryController } from './theory.controller';
 import { UserLessonProgress } from './entities/user-lesson-progress.entity';
 import { UserExerciseAnswer } from './entities/user-exercise-answer.entity';
 import { Word } from '../vocabulary/entities/word.entity';
@@ -20,6 +22,7 @@ import { BadgesModule } from '../badges/badges.module';
       Unit,
       Lesson,
       Exercise,
+      TheoryTopic,
       UserLessonProgress,
       UserExerciseAnswer,
       Word,
@@ -27,7 +30,7 @@ import { BadgesModule } from '../badges/badges.module';
     ]),
     BadgesModule,
   ],
-  controllers: [UnitsController, LessonsController],
+  controllers: [UnitsController, LessonsController, TheoryController],
   providers: [ContentService],
   exports: [ContentService],
 })

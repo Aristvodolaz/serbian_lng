@@ -31,6 +31,7 @@ import {
   CreateExerciseDto,
   CreateLessonDto,
   CreateSectionDto,
+  CreateTheoryTopicDto,
   CreateUnitDto,
   CreateWordDto,
   ExerciseAdminResponseDto,
@@ -38,16 +39,19 @@ import {
   LessonAdminResponseDto,
   LessonPublishResultDto,
   ListExercisesQueryDto,
+  ListTheoryQueryDto,
   PublishAllResultDto,
   PublishWordsResultDto,
   SectionAdminResponseDto,
   SectionPublishResultDto,
+  TheoryAdminResponseDto,
   UnitAdminResponseDto,
   UnitPublishResultDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
   UpdateSectionDto,
+  UpdateTheoryTopicDto,
   UpdateUnitDto,
   UpdateWordDto,
   WordAdminResponseDto,
@@ -224,6 +228,55 @@ export class AdminController {
     @Body() dto: { sections: CreateSectionDto[] },
   ): Promise<{ created: number; updated: number }> {
     return this.adminService.bulkCreateSections(dto.sections);
+  }
+
+  // ── Theory topics ──────────────────────────────────────────
+
+  @Get('theory')
+  @ApiOkResponse({ type: PaginatedResponse })
+  listTheory(
+    @Query() pagination: PaginationDto,
+    @Query() query: ListTheoryQueryDto,
+  ): Promise<PaginatedResponse<TheoryAdminResponseDto>> {
+    return this.adminService.listTheory(pagination, query);
+  }
+
+  @Post('theory')
+  @ApiOkResponse({ type: TheoryAdminResponseDto })
+  createTheory(@Body() dto: CreateTheoryTopicDto): Promise<TheoryAdminResponseDto> {
+    return this.adminService.createTheory(dto);
+  }
+
+  @Get('theory/:id')
+  @ApiOkResponse({ type: TheoryAdminResponseDto })
+  getTheory(@Param('id', ParseUUIDPipe) id: string): Promise<TheoryAdminResponseDto> {
+    return this.adminService.getTheory(id);
+  }
+
+  @Patch('theory/:id')
+  @ApiOkResponse({ type: TheoryAdminResponseDto })
+  updateTheory(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateTheoryTopicDto,
+  ): Promise<TheoryAdminResponseDto> {
+    return this.adminService.updateTheory(id, dto);
+  }
+
+  @Delete('theory/:id')
+  deleteTheory(@Param('id', ParseUUIDPipe) id: string): Promise<{ deleted: true }> {
+    return this.adminService.deleteTheory(id);
+  }
+
+  @Post('theory/:id/publish')
+  @ApiOkResponse({ type: TheoryAdminResponseDto })
+  publishTheory(@Param('id', ParseUUIDPipe) id: string): Promise<TheoryAdminResponseDto> {
+    return this.adminService.publishTheory(id);
+  }
+
+  @Post('theory/:id/unpublish')
+  @ApiOkResponse({ type: TheoryAdminResponseDto })
+  unpublishTheory(@Param('id', ParseUUIDPipe) id: string): Promise<TheoryAdminResponseDto> {
+    return this.adminService.unpublishTheory(id);
   }
 
   // ── Lessons ────────────────────────────────────────────────

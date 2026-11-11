@@ -6,12 +6,14 @@
 import { Section } from './entities/section.entity';
 import { Unit } from './entities/unit.entity';
 import { Lesson } from './entities/lesson.entity';
+import { TheoryTopic } from './entities/theory-topic.entity';
 import { ContentStatus } from '../common/enums/content-status.enum';
 import {
   LessonPathStatus,
   LessonSummaryDto,
   PathResponseDto,
   SectionPathDto,
+  TheorySummaryDto,
   UnitPathDto,
 } from './dto/path-response.dto';
 
@@ -24,6 +26,7 @@ export interface PathSourceData {
   sections: Section[];
   orphanUnits: Unit[];
   checkpointLessons: Lesson[];
+  theoryTopics: TheoryTopic[];
   completedLessonIds: Set<string>;
 }
 
@@ -32,6 +35,16 @@ export function assemblePath(data: PathSourceData): PathResponseDto {
   const checkpointLessons = [...data.checkpointLessons]
     .filter((l) => l.status === ContentStatus.PUBLISHED)
     .sort((a, b) => a.order - b.order);
+
+  // Theory topics ride along per section; they never affect gating or the
+  // current-lesson calculation.
+  const theoryTopics = [...data.theoryTopics]
+    .filter((t) => t.status === ContentStatus.PUBLISHED)
+    .sort((a, b) => a.order - b.order);
+  const theoryDto = (sectionId: string): TheorySummaryDto[] =>
+    theoryTopics
+      .filter((t) => t.sectionId === sectionId)
+      .map((t) => ({ id: t.id, titleCyrillic: t.titleCyrillic, titleLatin: t.titleLatin, order: t.order }));
 
   const published = (lessons: Lesson[]): Lesson[] =>
     lessons.filter((l) => l.status === ContentStatus.PUBLISHED);
@@ -108,6 +121,7 @@ export function assemblePath(data: PathSourceData): PathResponseDto {
       level: section.level,
       order: section.order,
       units,
+      theory: theoryDto(section.id),
       checkpoint: checkpoint ? summary(checkpoint) : null,
     };
   });
@@ -122,6 +136,7 @@ export function assemblePath(data: PathSourceData): PathResponseDto {
       level: null,
       order: sections.length > 0 ? Math.max(...sections.map((s) => s.order)) + 1 : 0,
       units: orphanUnits.map(unitDto),
+      theory: [],
       checkpoint: null,
     });
   }

@@ -181,6 +181,7 @@ describe('checkpoint materialization (freeze + idempotency)', () => {
       { findOne: jest.fn().mockResolvedValue(section) } as never, // sectionRepository
       {} as never, // lessonRepository
       {} as never, // exerciseRepository
+      {} as never, // theoryRepository
       {} as never, // progressRepository
       { count: jest.fn().mockResolvedValue(outsideAnswers) } as never, // answerRepository
       {} as never, // userRepository
