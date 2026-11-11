@@ -1,78 +1,86 @@
 package com.rec.app.ui.screens.profile
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.data.repository.AuthRepository
-import com.rec.app.data.repository.BadgesRepository
-import com.rec.app.data.repository.UserRepository
+import com.rec.app.domain.model.ProfileOverview
+import com.rec.app.domain.repository.AuthRepository
+import com.rec.app.domain.repository.UserRepository
+import com.rec.app.domain.usecase.GetProfileOverviewUseCase
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@Immutable
 data class DayUi(val weekday: Int, val active: Boolean)
-data class EarnedBadgeUi(val titleCyrillic: String, val titleLatin: String)
 
-sealed interface ProfileUiState {
-    data object Loading : ProfileUiState
-    data class Error(val message: UiText) : ProfileUiState
-    data class Success(
-        val displayName: String,
-        val streakDays: Int,
-        val wordsLearned: Int,
-        val accuracy: Int,
-        val lessonsCompleted: Int,
-        val weeksActive: Int,
-        val week: List<DayUi>,
-        val badges: List<EarnedBadgeUi>,
-        val english: Boolean,
-    ) : ProfileUiState
-}
+@Immutable
+data class BadgeUi(val titleCyrillic: String, val titleLatin: String)
+
+@Immutable
+data class ProfileContentUi(
+    val displayName: String,
+    val streakDays: Int,
+    val xp: Int,
+    val wordsLearned: Int,
+    val accuracy: Int,
+    val lessonsCompleted: Int,
+    val weeksActive: Int,
+    val week: List<DayUi>,
+    val badges: List<BadgeUi>,
+    val english: Boolean,
+)
+
+@Immutable
+data class ProfileUiState(
+    val content: ProfileContentUi? = null,
+    val isLoading: Boolean = true,
+    val error: UiText? = null,
+)
 
 class ProfileViewModel(
+    private val getProfileOverview: GetProfileOverviewUseCase,
     private val userRepository: UserRepository,
-    private val badgesRepository: BadgesRepository,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    private val _state = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
+    private val _state = MutableStateFlow(ProfileUiState())
     val state: StateFlow<ProfileUiState> = _state.asStateFlow()
 
-    fun load() {
-        viewModelScope.launch {
-            _state.value = ProfileUiState.Loading
-            val me = userRepository.getMe().getOrNull()
-            val stats = userRepository.getStats().getOrNull()
-            val week = userRepository.getWeek().getOrNull()
-            val badges = badgesRepository.getMyBadges().getOrNull()
+    private var loadJob: Job? = null
 
-            if (me == null || stats == null || week == null) {
-                _state.value = ProfileUiState.Error(uiText(R.string.profile_error_load))
-                return@launch
-            }
-
-            _state.value = ProfileUiState.Success(
-                displayName = me.displayName,
-                streakDays = stats.streakDays,
-                wordsLearned = stats.wordsLearned,
-                accuracy = stats.accuracy,
-                lessonsCompleted = stats.lessonsCompleted,
-                weeksActive = stats.weeksActive,
-                week = week.days.map { DayUi(it.weekday, it.active) },
-                badges = badges.orEmpty().map { EarnedBadgeUi(it.titleCyrillic, it.titleLatin) },
-                english = me.languagePreference == "en",
-            )
+    fun refresh() {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            getProfileOverview()
+                .onSuccess { overview ->
+                    _state.value = ProfileUiState(content = overview.toUi(), isLoading = false)
+                }
+                .onFailure {
+                    _state.update { it.copy(isLoading = false, error = uiText(R.string.profile_error_load)) }
+                }
         }
     }
 
-    /** Saves the interface language to the profile; the screens that show translations read it on their next load. */
+    /**
+     * Saves the interface language to the profile; the screens that show
+     * translations read it on their next load. The switch moves at once and
+     * moves back if the server refuses.
+     */
     fun setLanguage(english: Boolean) {
-        val current = _state.value as? ProfileUiState.Success ?: return
-        _state.value = current.copy(english = english)
+        val content = _state.value.content ?: return
+        if (content.english == english) return
+        _state.update { it.copy(content = content.copy(english = english)) }
         viewModelScope.launch {
-            userRepository.updateLanguage(if (english) "en" else "ru")
+            userRepository.updateLanguage(if (english) "en" else "ru").onFailure {
+                _state.update { state -> state.copy(content = state.content?.copy(english = content.english)) }
+            }
         }
     }
 
@@ -80,3 +88,16 @@ class ProfileViewModel(
         viewModelScope.launch { authRepository.logout() }
     }
 }
+
+private fun ProfileOverview.toUi() = ProfileContentUi(
+    displayName = user.displayName,
+    streakDays = stats.streakDays,
+    xp = stats.xp,
+    wordsLearned = stats.wordsLearned,
+    accuracy = stats.accuracy,
+    lessonsCompleted = stats.lessonsCompleted,
+    weeksActive = stats.weeksActive,
+    week = week.map { DayUi(it.weekday, it.active) },
+    badges = badges.map { BadgeUi(it.titleCyrillic, it.titleLatin) },
+    english = user.languagePreference == "en",
+)

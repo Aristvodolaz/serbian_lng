@@ -1,5 +1,6 @@
 package com.rec.app.ui.common
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -21,5 +22,11 @@ fun uiText(value: String): UiText = UiText.Dynamic(value)
 @Composable
 fun UiText.asString(): String = when (this) {
     is UiText.Resource -> stringResource(resId, *args.toTypedArray())
+    is UiText.Dynamic -> value
+}
+
+/** For one-shot messages shown outside composition (toasts). */
+fun UiText.resolve(context: Context): String = when (this) {
+    is UiText.Resource -> context.getString(resId, *args.toTypedArray())
     is UiText.Dynamic -> value
 }

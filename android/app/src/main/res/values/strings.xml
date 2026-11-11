@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">РЕЧ</string>
+    <string name="app_name" translatable="false">РЕЧ</string>
 
     <!-- Bottom navigation -->
     <string name="nav_home">Учење</string>
@@ -14,11 +14,11 @@
     <!-- Auth — brand block, fixed across locales: this is the app's own
          name/tagline, not UI chrome, so it is intentionally NOT overridden
          in values-en or values-ru. -->
-    <string name="auth_eyebrow">УЧИТЕ СРПСКИ · РЕЧ ПО РЕЧ</string>
-    <string name="auth_wordmark_cyr">РЕЧ</string>
-    <string name="auth_wordmark_lat">REČ</string>
-    <string name="auth_tagline">Учите српски, реч по реч.</string>
-    <string name="auth_tagline_en">Learn Serbian, word by word.</string>
+    <string name="auth_eyebrow" translatable="false">УЧИТЕ СРПСКИ · РЕЧ ПО РЕЧ</string>
+    <string name="auth_wordmark_cyr" translatable="false">РЕЧ</string>
+    <string name="auth_wordmark_lat" translatable="false">REČ</string>
+    <string name="auth_tagline" translatable="false">Учите српски, реч по реч.</string>
+    <string name="auth_tagline_en" translatable="false">Learn Serbian, word by word.</string>
 
     <!-- Auth — Welcome -->
     <string name="auth_dual_script_explainer">Оба писма стоје једно уз друго — ћирилица и латиница се уче заједно, а не одвојено.</string>
@@ -44,9 +44,9 @@
     <!-- Script samples are a literal demonstration of each script, so they
          stay fixed Serbian text in every locale — translating them would
          defeat the point of showing what the script looks like. -->
-    <string name="script_sample_cyrillic">Здраво, како си?</string>
-    <string name="script_sample_latin">Zdravo, kako si?</string>
-    <string name="script_sample_both">Здраво / Zdravo</string>
+    <string name="script_sample_cyrillic" translatable="false">Здраво, како си?</string>
+    <string name="script_sample_latin" translatable="false">Zdravo, kako si?</string>
+    <string name="script_sample_both" translatable="false">Здраво / Zdravo</string>
     <string name="auth_script_helper">Избор одређује сваку следећу лекцију. Може се променити у профилу.</string>
     <string name="auth_continue">Настави</string>
 
@@ -54,9 +54,9 @@
     <string name="auth_register_title">Направите налог</string>
     <string name="auth_register_subtitle">Напредак и серија дана се чувају на серверу.</string>
     <string name="field_name">Име</string>
-    <string name="field_name_placeholder">Милица</string>
+    <string name="field_name_placeholder" translatable="false">Милица</string>
     <string name="field_email">Е-пошта</string>
-    <string name="field_email_placeholder">milica@example.com</string>
+    <string name="field_email_placeholder" translatable="false">milica@example.com</string>
     <string name="field_password">Лозинка</string>
     <string name="field_password_helper">Најмање 8 знакова.</string>
     <string name="auth_register_submit">Направи налог</string>
@@ -93,7 +93,6 @@
     <!-- Vocabulary -->
     <string name="vocab_empty_title">Све речи су прегледане</string>
     <string name="vocab_empty_subtitle">Вратите се касније за нове речи за понављање.</string>
-    <string name="vocab_progress_format">%1$d / %2$d речи</string>
     <string name="cd_pronounce">Изговор</string>
     <string name="vocab_learning">Учим</string>
     <string name="vocab_know">Знам</string>
@@ -127,7 +126,6 @@
     <string name="dict_error_load">Није успело учитавање речника.</string>
     <string name="dict_empty">Ништа није пронађено</string>
     <string name="dict_speak">Изговори реч</string>
-    <string name="dict_back">Назад</string>
     <string name="dict_field_part_of_speech">Врста речи</string>
     <string name="dict_field_gender">Род</string>
     <string name="dict_field_number">Број</string>
@@ -143,4 +141,30 @@
     <string name="lesson_locked_title">Раздео је закључан</string>
     <string name="lesson_locked_message">Прво положите чекпоинт претходног раздела.</string>
     <string name="lesson_locked_ok">У реду</string>
+
+    <!-- Redesign: home hero, lesson feedback, profile, accessibility labels -->
+    <string name="home_greeting">Здраво, %1$s</string>
+    <string name="home_continue_label">Наставите учење</string>
+    <string name="home_continue_cta">Настави</string>
+    <string name="home_all_done_title">Све лекције су завршене</string>
+    <string name="home_all_done_subtitle">Поновите речи док не стигну нове лекције.</string>
+    <string name="lesson_feedback_correct">Тачно!</string>
+    <string name="lesson_feedback_wrong">Нетачно</string>
+    <string name="lesson_xp_earned_format">+%1$d XP</string>
+    <string name="profile_week">Ова недеља</string>
+    <string name="profile_xp_format">%1$d XP</string>
+    <string name="cd_streak_format">Серија: %1$d дана</string>
+    <string name="cd_xp_format">Поени: %1$d</string>
+    <string name="cd_lesson_done">Завршено</string>
+    <string name="cd_lesson_current">Следећа лекција</string>
+    <string name="cd_lesson_locked">Закључано</string>
+    <string name="cd_show_password">Прикажи лозинку</string>
+    <string name="cd_hide_password">Сакриј лозинку</string>
+    <string name="cd_clear_search">Обриши претрагу</string>
+    <string name="cd_day_active">Активан дан</string>
+    <string name="cd_day_inactive">Без активности</string>
+    <string name="dict_example">Пример</string>
+    <string name="dict_grammar">Граматика</string>
+    <string name="home_empty_title">Лекције стижу ускоро</string>
+    <string name="home_empty_subtitle">У програму још нема лекција.</string>
 </resources>

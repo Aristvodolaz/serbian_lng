@@ -1,33 +1,38 @@
 package com.rec.app.ui.screens.dictionary
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rec.app.data.remote.dto.WordAttributesDto
-import com.rec.app.data.remote.dto.WordDto
-import com.rec.app.data.repository.UserRepository
-import com.rec.app.data.repository.VocabularyRepository
+import com.rec.app.domain.model.Word
+import com.rec.app.domain.model.WordAttributes
+import com.rec.app.domain.repository.UserRepository
+import com.rec.app.domain.repository.VocabularyRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@Immutable
 data class DictionaryUiState(
-    val words: List<WordDto> = emptyList(),
+    val words: List<Word> = emptyList(),
     val total: Int = 0,
     val search: String = "",
     val loading: Boolean = true,
     val loadingMore: Boolean = false,
     val error: Boolean = false,
-    val attributes: WordAttributesDto? = null,
+    val attributes: WordAttributes? = null,
     /** Word shown in the card; null means the list. */
-    val selected: WordDto? = null,
+    val selected: Word? = null,
     /** Script ("cyrillic" | "latin" | "both") and interface language from the profile. */
     val script: String = "both",
     val english: Boolean = false,
-)
+) {
+    val canLoadMore: Boolean get() = !loading && !loadingMore && words.size < total
+}
 
 /**
  * Backs the dictionary tab, mirroring iOS `WordsViewModel`: a server-side search
@@ -44,33 +49,48 @@ class DictionaryViewModel(
     /** Bumped on every replacing fetch, so a stale response can't overwrite a newer search. */
     private var generation = 0
 
-    fun load() {
+    init {
+        // Script and translation language follow the profile as soon as they change.
         viewModelScope.launch {
-            userRepository.getMe().onSuccess { user ->
+            userRepository.user.filterNotNull().collect { user ->
                 _state.update {
                     it.copy(script = user.scriptPreference, english = user.languagePreference == "en")
                 }
             }
-            fetch(replace = true)
         }
+    }
+
+    /**
+     * Called on every visit to the tab. The word list is fetched only when
+     * there is nothing to show, so coming back keeps the list and its scroll position.
+     */
+    fun onEnter() {
+        viewModelScope.launch {
+            // Makes sure the user is loaded at least once; the collector above applies it.
+            userRepository.getMe(forceRefresh = false)
+            if (_state.value.words.isEmpty()) fetch(replace = true)
+        }
+    }
+
+    fun retry() {
+        viewModelScope.launch { fetch(replace = true) }
     }
 
     fun onSearchChange(text: String) {
         _state.update { it.copy(search = text) }
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(300)
+            delay(SEARCH_DEBOUNCE_MS)
             fetch(replace = true)
         }
     }
 
     fun loadMore() {
-        val s = _state.value
-        if (s.loading || s.loadingMore || s.words.size >= s.total) return
+        if (!_state.value.canLoadMore) return
         viewModelScope.launch { fetch(replace = false) }
     }
 
-    fun select(word: WordDto?) = _state.update { it.copy(selected = word) }
+    fun select(word: Word?) = _state.update { it.copy(selected = word) }
 
     private suspend fun fetch(replace: Boolean) {
         val gen = if (replace) ++generation else generation
@@ -89,7 +109,8 @@ class DictionaryViewModel(
                 if (gen != generation) return
                 _state.update { s ->
                     s.copy(
-                        words = if (replace) page.items else s.words + page.items,
+                        // Pages can overlap if the catalog changes between requests; ids must stay unique as list keys.
+                        words = if (replace) page.items else (s.words + page.items).distinctBy { it.id },
                         total = page.total,
                         loading = false,
                         loadingMore = false,
@@ -101,5 +122,9 @@ class DictionaryViewModel(
                 if (gen != generation) return
                 _state.update { s -> s.copy(loading = false, loadingMore = false, error = replace) }
             }
+    }
+
+    private companion object {
+        const val SEARCH_DEBOUNCE_MS = 300L
     }
 }

@@ -66,7 +66,6 @@
 
     <string name="vocab_empty_title">All words reviewed</string>
     <string name="vocab_empty_subtitle">Come back later for new words to review.</string>
-    <string name="vocab_progress_format">%1$d / %2$d words</string>
     <string name="cd_pronounce">Pronounce</string>
     <string name="vocab_learning">Still learning</string>
     <string name="vocab_know">I know it</string>
@@ -99,7 +98,6 @@
     <string name="dict_error_load">Could not load the dictionary.</string>
     <string name="dict_empty">Nothing found</string>
     <string name="dict_speak">Pronounce the word</string>
-    <string name="dict_back">Back</string>
     <string name="dict_field_part_of_speech">Part of speech</string>
     <string name="dict_field_gender">Gender</string>
     <string name="dict_field_number">Number</string>
@@ -115,4 +113,30 @@
     <string name="lesson_locked_title">Section locked</string>
     <string name="lesson_locked_message">Pass the checkpoint of the previous section first.</string>
     <string name="lesson_locked_ok">OK</string>
+
+    <!-- Redesign: home hero, lesson feedback, profile, accessibility labels -->
+    <string name="home_greeting">Hello, %1$s</string>
+    <string name="home_continue_label">Continue learning</string>
+    <string name="home_continue_cta">Continue</string>
+    <string name="home_all_done_title">All lessons complete</string>
+    <string name="home_all_done_subtitle">Review your words until new lessons arrive.</string>
+    <string name="lesson_feedback_correct">Correct!</string>
+    <string name="lesson_feedback_wrong">Not quite</string>
+    <string name="lesson_xp_earned_format">+%1$d XP</string>
+    <string name="profile_week">This week</string>
+    <string name="profile_xp_format">%1$d XP</string>
+    <string name="cd_streak_format">Streak: %1$d days</string>
+    <string name="cd_xp_format">Points: %1$d</string>
+    <string name="cd_lesson_done">Completed</string>
+    <string name="cd_lesson_current">Next lesson</string>
+    <string name="cd_lesson_locked">Locked</string>
+    <string name="cd_show_password">Show password</string>
+    <string name="cd_hide_password">Hide password</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_day_active">Active day</string>
+    <string name="cd_day_inactive">No activity</string>
+    <string name="dict_example">Example</string>
+    <string name="dict_grammar">Grammar</string>
+    <string name="home_empty_title">Lessons are coming soon</string>
+    <string name="home_empty_subtitle">There are no lessons in the path yet.</string>
 </resources>
