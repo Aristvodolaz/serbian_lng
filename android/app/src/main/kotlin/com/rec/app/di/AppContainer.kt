@@ -13,6 +13,8 @@ import com.rec.app.domain.repository.BadgesRepository
 import com.rec.app.domain.repository.ContentRepository
 import com.rec.app.domain.repository.UserRepository
 import com.rec.app.domain.repository.VocabularyRepository
+import com.rec.app.domain.usecase.GetHomeOverviewUseCase
+import com.rec.app.domain.usecase.GetProfileOverviewUseCase
 
 /**
  * Hand-rolled service locator — deliberately not Hilt/Koin. At this app's
@@ -26,9 +28,14 @@ class AppContainer(context: Context) {
     val tokenStore = TokenStore(context.applicationContext)
     private val api = RecApiClient.create(tokenStore)
 
-    val authRepository: AuthRepository = AuthRepositoryImpl(api, tokenStore)
-    val userRepository: UserRepository = UserRepositoryImpl(api)
+    private val userRepositoryImpl = UserRepositoryImpl(api, tokenStore)
+
+    val userRepository: UserRepository = userRepositoryImpl
+    val authRepository: AuthRepository = AuthRepositoryImpl(api, tokenStore, onSessionChanged = userRepositoryImpl::invalidate)
     val contentRepository: ContentRepository = ContentRepositoryImpl(api)
     val vocabularyRepository: VocabularyRepository = VocabularyRepositoryImpl(api)
     val badgesRepository: BadgesRepository = BadgesRepositoryImpl(api)
+
+    val getHomeOverview = GetHomeOverviewUseCase(contentRepository, userRepository)
+    val getProfileOverview = GetProfileOverviewUseCase(userRepository, badgesRepository)
 }

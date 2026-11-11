@@ -1,5 +1,6 @@
 package com.rec.app.ui.screens.vocabulary
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+@Immutable
 data class CardUi(
     val wordId: String,
     val cyrillic: String,
@@ -25,11 +27,15 @@ sealed interface FlashcardsUiState {
     data object Loading : FlashcardsUiState
     data object Empty : FlashcardsUiState
     data class Error(val message: UiText) : FlashcardsUiState
+
+    @Immutable
     data class Reviewing(val card: CardUi, val index: Int, val total: Int, val isSubmitting: Boolean = false) : FlashcardsUiState
+
+    @Immutable
     data class Done(val reviewedCount: Int, val newBadgeTitles: List<String>) : FlashcardsUiState
 }
 
-class VocabularyViewModel(
+class FlashcardsViewModel(
     private val vocabularyRepository: VocabularyRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow<FlashcardsUiState>(FlashcardsUiState.Loading)
@@ -39,12 +45,16 @@ class VocabularyViewModel(
     private var index = 0
     private val earnedBadgeTitles = mutableListOf<String>()
 
+    init {
+        load()
+    }
+
     fun load() {
         viewModelScope.launch {
             _state.value = FlashcardsUiState.Loading
             index = 0
             earnedBadgeTitles.clear()
-            vocabularyRepository.getReviewQueue(limit = 15)
+            vocabularyRepository.getReviewQueue(limit = QUEUE_SIZE)
                 .onSuccess { words ->
                     queue = words
                     if (words.isEmpty()) _state.value = FlashcardsUiState.Empty else showCurrent()
@@ -55,6 +65,7 @@ class VocabularyViewModel(
 
     fun submitReview(result: String) {
         val current = _state.value as? FlashcardsUiState.Reviewing ?: return
+        if (current.isSubmitting) return
         viewModelScope.launch {
             _state.value = current.copy(isSubmitting = true)
             vocabularyRepository.submitReview(current.card.wordId, result)
@@ -85,5 +96,9 @@ class VocabularyViewModel(
             index = index + 1,
             total = queue.size,
         )
+    }
+
+    private companion object {
+        const val QUEUE_SIZE = 15
     }
 }

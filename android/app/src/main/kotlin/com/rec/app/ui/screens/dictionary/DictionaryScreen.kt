@@ -1,25 +1,27 @@
 package com.rec.app.ui.screens.dictionary
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -27,211 +29,359 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rec.app.R
 import com.rec.app.domain.model.AttributeOption
 import com.rec.app.domain.model.Word
 import com.rec.app.domain.model.WordAttributes
 import com.rec.app.ui.common.rememberSerbianSpeaker
+import com.rec.app.ui.components.EmptyState
 import com.rec.app.ui.components.ErrorContent
+import com.rec.app.ui.components.LocalBottomBarInset
+import com.rec.app.ui.components.RecCard
+import com.rec.app.ui.components.RecIconButton
+import com.rec.app.ui.components.RecSearchField
+import com.rec.app.ui.components.RecTopBar
+import com.rec.app.ui.components.SectionLabel
+import com.rec.app.ui.components.SkeletonBlock
+import com.rec.app.ui.theme.Elevation
+import com.rec.app.ui.theme.Motion
+import com.rec.app.ui.theme.PillShape
+import com.rec.app.ui.theme.Radius
 import com.rec.app.ui.theme.RecTheme
+import com.rec.app.ui.theme.Spacing
 
-/** Dictionary tab: searchable word list, tap a row to open its card. The toolbar opens flashcards. */
+/** How close to the end of the list the next page is requested. */
+private const val LOAD_MORE_THRESHOLD = 10
+
 @Composable
-fun DictionaryScreen(viewModel: DictionaryViewModel, onOpenFlashcards: () -> Unit) {
-    val state by viewModel.state.collectAsState()
-    LaunchedEffect(Unit) { viewModel.load() }
+fun DictionaryRoute(viewModel: DictionaryViewModel, onOpenFlashcards: () -> Unit) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(viewModel) { viewModel.onEnter() }
+    DictionaryScreen(
+        state = state,
+        onSearchChange = viewModel::onSearchChange,
+        onSelect = viewModel::select,
+        onLoadMore = viewModel::loadMore,
+        onRetry = viewModel::retry,
+        onOpenFlashcards = onOpenFlashcards,
+    )
+}
 
-    val selected = state.selected
-    if (selected != null) {
-        BackHandler { viewModel.select(null) }
-        WordCard(word = selected, script = state.script, english = state.english, attributes = state.attributes)
-        return
+/** Dictionary tab: a searchable word list; tapping a row slides its card in over the list. */
+@Composable
+fun DictionaryScreen(
+    state: DictionaryUiState,
+    onSearchChange: (String) -> Unit,
+    onSelect: (Word?) -> Unit,
+    onLoadMore: () -> Unit,
+    onRetry: () -> Unit,
+    onOpenFlashcards: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // Hoisted above the list/detail switch so the scroll position survives opening a word.
+    val listState = rememberLazyListState()
+    BackHandler(enabled = state.selected != null) { onSelect(null) }
+
+    AnimatedContent(
+        targetState = state.selected,
+        contentKey = { it?.id },
+        transitionSpec = {
+            val opening = targetState != null
+            (slideInHorizontally(Motion.slow()) { if (opening) it / 4 else -it / 4 } + fadeIn(Motion.base())) togetherWith
+                (slideOutHorizontally(Motion.base()) { if (opening) -it / 4 else it / 4 } + fadeOut(Motion.fast()))
+        },
+        modifier = modifier.fillMaxSize().background(RecTheme.colors.ground),
+        label = "dictionary",
+    ) { selected ->
+        if (selected == null) {
+            WordListPane(state, listState, onSearchChange, onSelect, onLoadMore, onRetry, onOpenFlashcards)
+        } else {
+            WordDetailPane(
+                word = selected,
+                script = state.script,
+                english = state.english,
+                attributes = state.attributes,
+                onBack = { onSelect(null) },
+            )
+        }
     }
+}
 
-    Column(
-        modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground).padding(horizontal = 16.dp),
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+@Composable
+private fun WordListPane(
+    state: DictionaryUiState,
+    listState: LazyListState,
+    onSearchChange: (String) -> Unit,
+    onSelect: (Word?) -> Unit,
+    onLoadMore: () -> Unit,
+    onRetry: () -> Unit,
+    onOpenFlashcards: () -> Unit,
+) {
+    val colors = RecTheme.colors
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = Spacing.screen)) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = Spacing.lg, bottom = Spacing.md),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Text(
                 stringResource(R.string.dict_title),
-                style = MaterialTheme.typography.titleLarge,
-                color = RecTheme.colors.ink,
-                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.displaySmall,
+                color = colors.ink,
+                modifier = Modifier.weight(1f).semantics { heading() },
             )
-            IconButton(onClick = onOpenFlashcards) {
-                Icon(Icons.Filled.Style, contentDescription = stringResource(R.string.dict_flashcards), tint = RecTheme.colors.indigo)
+            RecIconButton(
+                icon = Icons.Filled.Style,
+                contentDescription = stringResource(R.string.dict_flashcards),
+                onClick = onOpenFlashcards,
+                containerColor = colors.primary,
+                tint = colors.onPrimary,
+            )
+        }
+        RecSearchField(
+            value = state.search,
+            onValueChange = onSearchChange,
+            placeholder = stringResource(R.string.dict_search_hint),
+        )
+        // A thin bar instead of a spinner when a search refreshes a list that is already showing.
+        Box(Modifier.fillMaxWidth().height(Spacing.md), contentAlignment = Alignment.Center) {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = state.loading && state.words.isNotEmpty(),
+                enter = fadeIn(Motion.fast()),
+                exit = fadeOut(Motion.fast()),
+            ) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(0.4f).height(3.dp).clip(PillShape),
+                    color = colors.primary,
+                    trackColor = colors.primary.copy(alpha = 0.14f),
+                )
             }
         }
-        TextField(
-            value = state.search,
-            onValueChange = viewModel::onSearchChange,
-            singleLine = true,
-            placeholder = { Text(stringResource(R.string.dict_search_hint), color = RecTheme.colors.inkSoft) },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = RecTheme.colors.inkSoft) },
-            shape = RoundedCornerShape(50),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = RecTheme.colors.surface,
-                unfocusedContainerColor = RecTheme.colors.surface,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedTextColor = RecTheme.colors.ink,
-                unfocusedTextColor = RecTheme.colors.ink,
-            ),
-            modifier = Modifier.fillMaxWidth().shadow(6.dp, RoundedCornerShape(50), clip = false),
-        )
-        Spacer(Modifier.height(8.dp))
 
         when {
-            state.error -> ErrorContent(stringResource(R.string.dict_error_load), onRetry = viewModel::load)
-            state.loading && state.words.isEmpty() -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                CircularProgressIndicator(color = RecTheme.colors.indigo)
-            }
-            state.words.isEmpty() -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                Text(stringResource(R.string.dict_empty), color = RecTheme.colors.inkSoft, textAlign = TextAlign.Center)
-            }
-            else -> WordList(state.words, state.script, state.english, onSelect = viewModel::select, onNearEnd = viewModel::loadMore, loadingMore = state.loadingMore)
+            state.error -> ErrorContent(stringResource(R.string.dict_error_load), onRetry = onRetry)
+            state.loading && state.words.isEmpty() -> WordListSkeleton()
+            state.words.isEmpty() -> EmptyState(
+                icon = Icons.Filled.SearchOff,
+                title = stringResource(R.string.dict_empty),
+                tint = colors.inkSoft,
+            )
+            else -> WordList(state, listState, onSelect, onLoadMore)
         }
     }
 }
 
 @Composable
 private fun WordList(
-    words: List<Word>,
-    script: String,
-    english: Boolean,
-    onSelect: (Word) -> Unit,
-    onNearEnd: () -> Unit,
-    loadingMore: Boolean,
+    state: DictionaryUiState,
+    listState: LazyListState,
+    onSelect: (Word?) -> Unit,
+    onLoadMore: () -> Unit,
 ) {
-    val listState = rememberLazyListState()
-    LaunchedEffect(listState, words.size) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .collect { last -> if (last != null && last >= words.size - 10) onNearEnd() }
+    // derivedStateOf: scrolling changes the layout info every frame, this flips only at the threshold.
+    val nearEnd by remember {
+        derivedStateOf {
+            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            lastVisible >= listState.layoutInfo.totalItemsCount - LOAD_MORE_THRESHOLD
+        }
     }
+    LaunchedEffect(nearEnd, state.words.size) {
+        if (nearEnd) onLoadMore()
+    }
+
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(Spacing.sm + Spacing.xxs),
+        contentPadding = PaddingValues(top = Spacing.xs, bottom = Spacing.xxl + LocalBottomBarInset.current),
     ) {
-        items(words, key = { it.id }) { word ->
-            // Each word is its own white card, like the reference's course tiles.
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(3.dp, RoundedCornerShape(20.dp), clip = false)
-                    .background(RecTheme.colors.surface, RoundedCornerShape(20.dp))
-                    .clickable { onSelect(word) }
-                    .padding(horizontal = 18.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        if (script == "latin") word.latin else word.cyrillic,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = RecTheme.colors.ink,
-                    )
-                    if (script == "both" && word.latin != word.cyrillic) {
-                        Text(word.latin, style = MaterialTheme.typography.bodySmall, fontStyle = FontStyle.Italic, color = RecTheme.colors.oxblood)
-                    }
-                }
-                Text(
-                    if (english) word.translationEn else word.translationRu,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = RecTheme.colors.inkSoft,
-                    textAlign = TextAlign.End,
-                )
-            }
+        items(state.words, key = { it.id }, contentType = { "word" }) { word ->
+            WordRow(word, state.script, state.english, onClick = { onSelect(word) }, modifier = Modifier.animateItem())
         }
-        if (loadingMore) {
-            item {
-                Box(Modifier.fillMaxWidth().padding(16.dp), Alignment.Center) {
-                    CircularProgressIndicator(color = RecTheme.colors.indigo)
+        if (state.loadingMore) {
+            item(key = "loading-more", contentType = "loading") {
+                Box(Modifier.fillMaxWidth().padding(Spacing.lg), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = RecTheme.colors.primary)
                 }
             }
         }
     }
 }
 
+@Composable
+private fun WordRow(word: Word, script: String, english: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val colors = RecTheme.colors
+    RecCard(modifier = modifier.fillMaxWidth(), onClick = onClick, shape = RoundedCornerShape(Radius.md)) {
+        Row(
+            modifier = Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.lg),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    if (script == "latin") word.latin else word.cyrillic,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = colors.ink,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (script == "both" && word.latin != word.cyrillic) {
+                    Text(
+                        word.latin,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontStyle = FontStyle.Italic,
+                        color = colors.primary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+            Text(
+                if (english) word.translationEn else word.translationRu,
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.inkSoft,
+                textAlign = TextAlign.End,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(start = Spacing.md).widthIn(max = 160.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun WordListSkeleton() {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm + Spacing.xxs), modifier = Modifier.padding(top = Spacing.xs)) {
+        repeat(8) {
+            SkeletonBlock(Modifier.fillMaxWidth().height(64.dp))
+        }
+    }
+}
+
 /** A single word: both scripts, translation, spoken pronunciation, example and grammar. */
 @Composable
-private fun WordCard(word: Word, script: String, english: Boolean, attributes: WordAttributes?) {
+private fun WordDetailPane(
+    word: Word,
+    script: String,
+    english: Boolean,
+    attributes: WordAttributes?,
+    onBack: () -> Unit,
+) {
+    val colors = RecTheme.colors
     val speak = rememberSerbianSpeaker()
     val translation = if (english) word.translationEn else word.translationRu
     val exampleTranslation = if (english) word.exampleTranslationEn else word.exampleTranslationRu
 
     Column(
-        modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground).verticalScroll(rememberScrollState()).padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = Spacing.screen),
     ) {
-        Text(
-            if (script == "latin") word.latin else word.cyrillic,
-            style = MaterialTheme.typography.displaySmall,
-            color = RecTheme.colors.ink,
-        )
-        if (script == "both" && word.latin != word.cyrillic) {
-            Text(word.latin, style = MaterialTheme.typography.titleMedium, fontStyle = FontStyle.Italic, color = RecTheme.colors.oxblood)
-        }
-        Text(translation, style = MaterialTheme.typography.bodyLarge, color = RecTheme.colors.inkSoft)
-        IconButton(onClick = { speak(word.latin) }) {
-            Icon(
-                Icons.AutoMirrored.Filled.VolumeUp,
-                contentDescription = stringResource(R.string.dict_speak),
-                tint = RecTheme.colors.indigo,
-                modifier = Modifier.size(28.dp),
-            )
+        RecTopBar(onBack = onBack)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(Radius.xl))
+                .background(colors.heroBrush),
+        ) {
+            Row(modifier = Modifier.padding(Spacing.xxl), verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                    Text(
+                        if (script == "latin") word.latin else word.cyrillic,
+                        style = MaterialTheme.typography.displayMedium,
+                        color = colors.onHero,
+                        modifier = Modifier.semantics { heading() },
+                    )
+                    if (script == "both" && word.latin != word.cyrillic) {
+                        Text(
+                            word.latin,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontStyle = FontStyle.Italic,
+                            color = colors.onHero.copy(alpha = 0.85f),
+                        )
+                    }
+                    Text(translation, style = MaterialTheme.typography.bodyLarge, color = colors.onHero.copy(alpha = 0.92f))
+                }
+                // Latin form: device voices read it far more reliably than Cyrillic.
+                RecIconButton(
+                    icon = Icons.AutoMirrored.Filled.VolumeUp,
+                    contentDescription = stringResource(R.string.dict_speak),
+                    onClick = { speak(word.latin) },
+                    containerColor = colors.onHero.copy(alpha = 0.22f),
+                    tint = colors.onHero,
+                    elevated = false,
+                )
+            }
         }
 
         val example = word.exampleCyrillic
         if (!example.isNullOrBlank()) {
-            Surface(shape = RoundedCornerShape(22.dp), color = RecTheme.colors.surface, shadowElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(18.dp)) {
-                    Text(example, style = MaterialTheme.typography.bodyLarge, color = RecTheme.colors.ink)
-                    exampleTranslation?.let {
-                        Text(it, style = MaterialTheme.typography.bodySmall, color = RecTheme.colors.inkSoft)
+            Spacer(Modifier.height(Spacing.xxl))
+            SectionLabel(stringResource(R.string.dict_example))
+            RecCard(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(Spacing.lg), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                    Text(example, style = MaterialTheme.typography.bodyLarge, color = colors.ink)
+                    if (!exampleTranslation.isNullOrBlank()) {
+                        Text(exampleTranslation, style = MaterialTheme.typography.bodyMedium, color = colors.inkSoft)
                     }
                 }
             }
         }
 
-        val rows = listOf(
+        val grammar = listOf(
             R.string.dict_field_part_of_speech to word.partOfSpeech.label(attributes?.partOfSpeech, english),
             R.string.dict_field_gender to word.gender.label(attributes?.gender, english),
             R.string.dict_field_number to word.number.label(attributes?.number, english),
             R.string.dict_field_declension to word.declension.label(attributes?.declension, english),
             R.string.dict_field_conjugation to word.conjugation.label(attributes?.conjugation, english),
-        ).filter { it.second != null }
+        ).mapNotNull { (labelRes, value) -> value?.let { labelRes to it } }
 
-        if (rows.isNotEmpty()) {
-            Surface(shape = RoundedCornerShape(22.dp), color = RecTheme.colors.surface, shadowElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    rows.forEach { (labelRes, value) ->
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(stringResource(labelRes), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
-                            Text(value.orEmpty(), style = MaterialTheme.typography.titleSmall, color = RecTheme.colors.ink, textAlign = TextAlign.End)
+        if (grammar.isNotEmpty()) {
+            Spacer(Modifier.height(Spacing.xxl))
+            SectionLabel(stringResource(R.string.dict_grammar))
+            RecCard(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(horizontal = Spacing.lg)) {
+                    grammar.forEachIndexed { index, (labelRes, value) ->
+                        if (index > 0) HorizontalDivider(color = colors.outline.copy(alpha = 0.6f))
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.md),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(stringResource(labelRes), style = MaterialTheme.typography.bodyMedium, color = colors.inkSoft)
+                            Text(
+                                value,
+                                style = MaterialTheme.typography.titleSmall,
+                                color = colors.ink,
+                                textAlign = TextAlign.End,
+                                modifier = Modifier.padding(start = Spacing.md),
+                            )
                         }
                     }
                 }
             }
         }
+        Spacer(Modifier.height(Spacing.xxl + LocalBottomBarInset.current))
     }
 }
 

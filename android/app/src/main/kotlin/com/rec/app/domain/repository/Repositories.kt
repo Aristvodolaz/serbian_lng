@@ -13,6 +13,7 @@ import com.rec.app.domain.model.UserStats
 import com.rec.app.domain.model.WordAttributes
 import com.rec.app.domain.model.WordPage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 // Contracts the presentation layer depends on. Implementations live in the data layer.
 
@@ -28,7 +29,25 @@ interface ContentRepository {
 }
 
 interface UserRepository {
-    suspend fun getMe(): Result<User>
+    /**
+     * The last known signed-in user, null until first loaded. Preference changes
+     * land here at once, so screens showing translations can follow them without
+     * waiting for their own reload.
+     */
+    val user: StateFlow<User?>
+
+    /**
+     * The interface language ("ru" | "en") of the signed-in user, remembered
+     * across launches; null when signed out, which means "follow the system".
+     */
+    val interfaceLanguage: Flow<String?>
+
+    /**
+     * The signed-in user. With [forceRefresh] false the last fetched copy is
+     * returned when there is one — enough for reading preferences (script,
+     * language) without another round trip.
+     */
+    suspend fun getMe(forceRefresh: Boolean = true): Result<User>
     suspend fun getStats(): Result<UserStats>
     suspend fun getWeek(): Result<List<DayActivity>>
     suspend fun updateLanguage(language: String): Result<User>

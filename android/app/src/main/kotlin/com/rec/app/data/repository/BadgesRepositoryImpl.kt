@@ -7,5 +7,5 @@ import com.rec.app.domain.repository.BadgesRepository
 
 class BadgesRepositoryImpl(private val api: RecApi) : BadgesRepository {
     override suspend fun getMyBadges(): Result<List<EarnedBadge>> =
-        runCatching { api.getMyBadges().map { it.toDomain() } }
+        apiCall { api.getMyBadges().map { it.toDomain() } }
 }

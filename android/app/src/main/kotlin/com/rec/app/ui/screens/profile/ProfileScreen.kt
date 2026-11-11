@@ -1,171 +1,325 @@
 package com.rec.app.ui.screens.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Diamond
+import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.TrackChanges
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rec.app.R
 import com.rec.app.ui.common.asString
-import com.rec.app.ui.components.BadgeDiamond
+import com.rec.app.ui.components.BadgeMedal
 import com.rec.app.ui.components.ErrorContent
-import com.rec.app.ui.components.LanguageSwitch
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material3.Icon
-import com.rec.app.ui.components.StatCard
-import com.rec.app.ui.components.StreakPill
+import com.rec.app.ui.components.InitialAvatar
+import com.rec.app.ui.components.LocalBottomBarInset
+import com.rec.app.ui.components.RecCard
+import com.rec.app.ui.components.RecSecondaryButton
+import com.rec.app.ui.components.SectionLabel
+import com.rec.app.ui.components.SegmentedSwitch
+import com.rec.app.ui.components.SkeletonBlock
+import com.rec.app.ui.components.StatTile
+import com.rec.app.ui.theme.Elevation
+import com.rec.app.ui.theme.NumberStyle
+import com.rec.app.ui.theme.PillShape
+import com.rec.app.ui.theme.Radius
 import com.rec.app.ui.theme.RecTheme
+import com.rec.app.ui.theme.Spacing
+
+// Language names are shown in their own language, so they are not translated resources.
+private val LanguageOptions = listOf("Русский", "English")
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel, onLoggedOut: () -> Unit) {
-    val state by viewModel.state.collectAsState()
-    LaunchedEffect(Unit) { viewModel.load() }
+fun ProfileRoute(viewModel: ProfileViewModel) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(viewModel) { viewModel.refresh() }
+    ProfileScreen(
+        state = state,
+        onRetry = viewModel::refresh,
+        onLanguage = viewModel::setLanguage,
+        onLogout = viewModel::logout,
+    )
+}
 
-    Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
-        when (val s = state) {
-            is ProfileUiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                androidx.compose.material3.CircularProgressIndicator(color = RecTheme.colors.indigo)
-            }
-            is ProfileUiState.Error -> ErrorContent(s.message.asString(), onRetry = viewModel::load)
-            is ProfileUiState.Success -> ProfileContent(
-                s,
-                onLogout = { viewModel.logout(); onLoggedOut() },
-                onLanguage = viewModel::setLanguage,
-            )
+@Composable
+fun ProfileScreen(
+    state: ProfileUiState,
+    onRetry: () -> Unit,
+    onLanguage: (english: Boolean) -> Unit,
+    onLogout: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxSize().background(RecTheme.colors.ground)) {
+        val content = state.content
+        when {
+            content != null -> ProfileContent(content, onLanguage, onLogout)
+            state.error != null -> ErrorContent(state.error.asString(), onRetry = onRetry)
+            else -> ProfileSkeleton()
         }
     }
 }
 
 @Composable
-private fun ProfileContent(state: ProfileUiState.Success, onLogout: () -> Unit, onLanguage: (Boolean) -> Unit) {
-    Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
-        // Blue hero card with the avatar, name and streak — the reference's header block.
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Brush.linearGradient(listOf(RecTheme.colors.indigoSoft, RecTheme.colors.indigo)), RoundedCornerShape(28.dp))
-                .padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            Box(
-                modifier = Modifier.size(56.dp).background(RecTheme.colors.cream.copy(alpha = 0.22f), CircleShape),
-                contentAlignment = Alignment.Center,
+private fun ProfileContent(content: ProfileContentUi, onLanguage: (Boolean) -> Unit, onLogout: () -> Unit) {
+    val colors = RecTheme.colors
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = Spacing.screen, vertical = Spacing.lg)
+            .padding(bottom = LocalBottomBarInset.current),
+    ) {
+        ProfileHero(content)
+
+        Spacer(Modifier.height(Spacing.lg))
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
+            StatTile(
+                icon = Icons.AutoMirrored.Filled.MenuBook,
+                value = content.wordsLearned.toString(),
+                label = stringResource(R.string.stat_words),
+                tint = colors.primary,
+                modifier = Modifier.weight(1f),
+            )
+            StatTile(
+                icon = Icons.Filled.TrackChanges,
+                value = "${content.accuracy}%",
+                label = stringResource(R.string.stat_accuracy),
+                tint = colors.success,
+                modifier = Modifier.weight(1f),
+            )
+        }
+        Spacer(Modifier.height(Spacing.md))
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
+            StatTile(
+                icon = Icons.Filled.School,
+                value = content.lessonsCompleted.toString(),
+                label = stringResource(R.string.stat_lessons),
+                tint = colors.accent,
+                modifier = Modifier.weight(1f),
+            )
+            StatTile(
+                icon = Icons.Filled.CalendarMonth,
+                value = content.weeksActive.toString(),
+                label = stringResource(R.string.stat_weeks),
+                tint = colors.danger,
+                modifier = Modifier.weight(1f),
+            )
+        }
+
+        if (content.week.isNotEmpty()) {
+            Spacer(Modifier.height(Spacing.xxl))
+            SectionLabel(stringResource(R.string.profile_week))
+            WeekStrip(content.week)
+        }
+
+        if (content.badges.isNotEmpty()) {
+            Spacer(Modifier.height(Spacing.xxl))
+            SectionLabel(stringResource(R.string.profile_badges))
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(Spacing.md),
+                contentPadding = PaddingValues(vertical = Spacing.xs),
             ) {
-                Text(
-                    state.displayName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = RecTheme.colors.cream,
-                )
-            }
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(state.displayName, style = MaterialTheme.typography.titleLarge, color = RecTheme.colors.cream)
-                StreakPill(days = state.streakDays)
-            }
-        }
-
-        Spacer(Modifier.height(20.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.height(168.dp),
-        ) {
-            item { StatCard(value = state.wordsLearned.toString(), label = stringResource(R.string.stat_words)) }
-            item { StatCard(value = "${state.accuracy}%", label = stringResource(R.string.stat_accuracy)) }
-            item { StatCard(value = state.lessonsCompleted.toString(), label = stringResource(R.string.stat_lessons)) }
-            item { StatCard(value = state.weeksActive.toString(), label = stringResource(R.string.stat_weeks)) }
-        }
-
-        Spacer(Modifier.height(20.dp))
-        val weekdayLetters = stringArrayResource(R.array.weekday_letters)
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            state.week.forEach { day ->
-                Surface(
-                    shape = CircleShape,
-                    color = if (day.active) RecTheme.colors.good else RecTheme.colors.surface,
-                    modifier = Modifier.size(36.dp),
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            weekdayLetters.getOrElse(day.weekday - 1) { "" },
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (day.active) androidx.compose.ui.graphics.Color.White else RecTheme.colors.inkSoft,
-                        )
-                    }
-                }
-            }
-        }
-
-        if (state.badges.isNotEmpty()) {
-            Spacer(Modifier.height(24.dp))
-            Text(stringResource(R.string.profile_badges), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
-            Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                state.badges.forEach { badge ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(64.dp)) {
-                        BadgeDiamond(modifier = Modifier.width(36.dp))
-                        Spacer(Modifier.height(4.dp))
+                itemsIndexed(content.badges, key = { index, badge -> "$index-${badge.titleCyrillic}" }) { _, badge ->
+                    Column(
+                        modifier = Modifier.width(84.dp).semantics(mergeDescendants = true) { },
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        BadgeMedal()
+                        Spacer(Modifier.height(Spacing.sm))
                         Text(
                             badge.titleCyrillic,
                             style = MaterialTheme.typography.labelSmall,
-                            color = RecTheme.colors.inkSoft,
+                            color = colors.inkSoft,
                             textAlign = TextAlign.Center,
                             maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
             }
         }
 
-        Spacer(Modifier.weight(1f))
-        Text(stringResource(R.string.profile_language), style = MaterialTheme.typography.labelMedium, color = RecTheme.colors.inkSoft)
-        LanguageSwitch(english = state.english, onSelect = onLanguage)
-        Spacer(Modifier.height(14.dp))
-        // Quiet but clearly an action: a white pill with a coral outline, not a faint text link.
-        Surface(
+        Spacer(Modifier.height(Spacing.xxl))
+        SectionLabel(stringResource(R.string.profile_language))
+        SegmentedSwitch(
+            options = LanguageOptions,
+            selectedIndex = if (content.english) 1 else 0,
+            onSelect = { onLanguage(it == 1) },
+        )
+
+        Spacer(Modifier.height(Spacing.xxl))
+        RecSecondaryButton(
+            text = stringResource(R.string.profile_logout),
             onClick = onLogout,
-            modifier = Modifier.fillMaxWidth().height(52.dp),
-            shape = RoundedCornerShape(50),
-            color = RecTheme.colors.surface,
-            border = BorderStroke(1.5.dp, RecTheme.colors.oxblood.copy(alpha = 0.4f)),
-            shadowElevation = 3.dp,
+            contentColor = colors.danger,
+            borderColor = colors.danger.copy(alpha = 0.4f),
+            leadingIcon = Icons.AutoMirrored.Filled.Logout,
+        )
+    }
+}
+
+@Composable
+private fun ProfileHero(content: ProfileContentUi) {
+    val colors = RecTheme.colors
+    val shape = RoundedCornerShape(Radius.xl)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(Elevation.raised, shape, ambientColor = colors.primary, spotColor = colors.primary)
+            .clip(shape)
+            .background(colors.heroBrush),
+    ) {
+        Box(Modifier.matchParentSize()) {
+            Box(Modifier.size(160.dp).align(Alignment.TopEnd).offset(x = 50.dp, y = (-60).dp).background(colors.onHero.copy(alpha = 0.10f), CircleShape))
+        }
+        Row(
+            modifier = Modifier.padding(Spacing.xl),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.lg),
         ) {
-            Row(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterVertically) {
-                Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = RecTheme.colors.oxblood, modifier = Modifier.size(18.dp))
-                Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.profile_logout), style = MaterialTheme.typography.labelLarge, color = RecTheme.colors.oxblood)
+            InitialAvatar(
+                name = content.displayName,
+                size = 64.dp,
+                brush = SolidColor(colors.onHero.copy(alpha = 0.22f)),
+            )
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                Text(
+                    content.displayName,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colors.onHero,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.semantics { heading() },
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                    HeroChip(
+                        icon = Icons.Filled.LocalFireDepartment,
+                        text = content.streakDays.toString(),
+                        description = stringResource(R.string.cd_streak_format, content.streakDays),
+                    )
+                    HeroChip(
+                        icon = Icons.Filled.Diamond,
+                        text = stringResource(R.string.profile_xp_format, content.xp),
+                        description = stringResource(R.string.cd_xp_format, content.xp),
+                    )
+                }
             }
         }
+    }
+}
+
+/** Translucent chip on the hero gradient, like the glass controls on the reference's blue cards. */
+@Composable
+private fun HeroChip(icon: ImageVector, text: String, description: String) {
+    val colors = RecTheme.colors
+    Row(
+        modifier = Modifier
+            .background(colors.onHero.copy(alpha = 0.20f), PillShape)
+            .padding(horizontal = Spacing.md, vertical = Spacing.xs + Spacing.xxs)
+            .clearAndSetSemantics { contentDescription = description },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
+    ) {
+        Icon(icon, contentDescription = null, tint = colors.onHero, modifier = Modifier.size(16.dp))
+        Text(text, style = NumberStyle, color = colors.onHero)
+    }
+}
+
+/** The week as seven day markers in a white capsule; active days are filled and checked. */
+@Composable
+private fun WeekStrip(week: List<DayUi>) {
+    val colors = RecTheme.colors
+    val weekdayLetters = stringArrayResource(R.array.weekday_letters)
+    val activeLabel = stringResource(R.string.cd_day_active)
+    val inactiveLabel = stringResource(R.string.cd_day_inactive)
+    RecCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(Radius.xl)) {
+        Row(
+            modifier = Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.lg),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            week.forEach { day ->
+                val letter = weekdayLetters.getOrElse(day.weekday - 1) { "" }
+                Column(
+                    modifier = Modifier.clearAndSetSemantics {
+                        contentDescription = "$letter, ${if (day.active) activeLabel else inactiveLabel}"
+                    },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(Spacing.sm),
+                ) {
+                    Text(letter, style = MaterialTheme.typography.labelMedium, color = colors.inkSoft)
+                    Box(
+                        modifier = Modifier
+                            .size(34.dp)
+                            .background(if (day.active) colors.success else colors.surfaceMuted, CircleShape),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        if (day.active) {
+                            Icon(Icons.Filled.Check, contentDescription = null, tint = colors.surface, modifier = Modifier.size(18.dp))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileSkeleton() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(horizontal = Spacing.screen, vertical = Spacing.lg),
+        verticalArrangement = Arrangement.spacedBy(Spacing.md),
+    ) {
+        SkeletonBlock(Modifier.fillMaxWidth().height(104.dp), RoundedCornerShape(Radius.xl))
+        repeat(2) {
+            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
+                SkeletonBlock(Modifier.weight(1f).height(132.dp), RoundedCornerShape(Radius.lg))
+                SkeletonBlock(Modifier.weight(1f).height(132.dp), RoundedCornerShape(Radius.lg))
+            }
+        }
+        SkeletonBlock(Modifier.fillMaxWidth().height(96.dp), RoundedCornerShape(Radius.xl))
     }
 }

@@ -13,17 +13,17 @@ import com.rec.app.domain.repository.ContentRepository
 import retrofit2.HttpException
 
 class ContentRepositoryImpl(private val api: RecApi) : ContentRepository {
-    override suspend fun getPath(): Result<Path> = runCatching { api.getPath().toDomain() }
+    override suspend fun getPath(): Result<Path> = apiCall { api.getPath().toDomain() }
 
     override suspend fun getLesson(lessonId: String): Result<Lesson> =
-        runCatching { api.getLesson(lessonId).toDomain() }
+        apiCall { api.getLesson(lessonId).toDomain() }
             .recoverCatching { if (it.isSectionLocked()) throw SectionLockedException() else throw it }
 
     override suspend fun answerExercise(lessonId: String, exerciseId: String, answerId: String): Result<LessonResult> =
-        runCatching { api.answerExercise(lessonId, exerciseId, AnswerExerciseRequest(answerId)).toDomain() }
+        apiCall { api.answerExercise(lessonId, exerciseId, AnswerExerciseRequest(answerId)).toDomain() }
 
     override suspend fun completeLesson(lessonId: String, correctCount: Int, totalCount: Int): Result<CompletedLesson> =
-        runCatching { api.completeLesson(lessonId, CompleteLessonRequest(correctCount, totalCount)).toDomain() }
+        apiCall { api.completeLesson(lessonId, CompleteLessonRequest(correctCount, totalCount)).toDomain() }
 }
 
 /** The backend answers a lesson in a locked section with 403 and the message SECTION_LOCKED. */

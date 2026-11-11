@@ -1,88 +1,108 @@
 package com.rec.app.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.rec.app.ui.theme.Elevation
+import com.rec.app.ui.theme.Motion
+import com.rec.app.ui.theme.PillShape
 import com.rec.app.ui.theme.RecTheme
+import com.rec.app.ui.theme.Sizes
+import com.rec.app.ui.theme.Spacing
+
+/** Height the bar takes above the system navigation inset: item, capsule padding, outer padding. */
+val GlassNavBarHeight = Sizes.navItem + Spacing.sm * 2 + Spacing.md * 2
 
 /**
- * Floating frosted-glass tab bar from the reference: a translucent white capsule
- * with a light rim and soft shadow, floating above the ground. The selected tab
- * becomes a solid blue pill that holds its label.
+ * Space at the bottom of a tab screen that the floating bar covers. Scrolling
+ * content adds it as bottom padding so its last item can be scrolled clear of the bar.
+ */
+val LocalBottomBarInset = compositionLocalOf { 0.dp }
+
+@Immutable
+data class NavItem(val icon: ImageVector, val label: String)
+
+/**
+ * The floating glass tab bar from the reference: a translucent capsule of round
+ * icon buttons, the active one filled dark. Every item keeps a fixed size, so
+ * switching tabs only animates color and a small scale and never re-lays out
+ * the bar.
  */
 @Composable
 fun GlassNavBar(
-    items: List<Pair<ImageVector, String>>,
+    items: List<NavItem>,
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = RecTheme.colors
-    val capsule = RoundedCornerShape(36.dp)
-    // Ground behind the bar so the bottom inset never shows a white strip.
-    Box(modifier = modifier.fillMaxWidth().background(colors.ground).navigationBarsPadding()) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(vertical = Spacing.md),
+        contentAlignment = Alignment.Center,
+    ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 12.dp)
-                .shadow(18.dp, capsule, spotColor = colors.indigo)
-                .clip(capsule)
-                .background(
-                    Brush.verticalGradient(
-                        listOf(Color.White.copy(alpha = 0.88f), Color.White.copy(alpha = 0.62f)),
-                    ),
-                )
-                .border(1.dp, Color.White.copy(alpha = 0.9f), capsule)
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .shadow(Elevation.floating, PillShape, ambientColor = colors.primary, spotColor = colors.primary)
+                .clip(PillShape)
+                .background(colors.glass)
+                .border(1.dp, colors.glassBorder, PillShape)
+                .padding(Spacing.sm)
+                .selectableGroup(),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            items.forEachIndexed { index, (icon, label) ->
+            items.forEachIndexed { index, item ->
                 val selected = index == selectedIndex
-                val bg by animateColorAsState(if (selected) colors.indigo else Color.Transparent, tween(240), label = "nav-bg")
-                val fg by animateColorAsState(if (selected) colors.cream else colors.inkSoft, tween(240), label = "nav-fg")
-                Row(
+                val container by animateColorAsState(
+                    if (selected) colors.ink else colors.primary.copy(alpha = 0.10f),
+                    Motion.base(),
+                    label = "nav-container",
+                )
+                val content by animateColorAsState(if (selected) colors.ground else colors.inkSoft, Motion.base(), label = "nav-content")
+                val scale by animateFloatAsState(if (selected) 1f else 0.92f, Motion.settle(), label = "nav-scale")
+                Box(
                     modifier = Modifier
-                        .weight(if (selected) 1.6f else 1f)
-                        .height(52.dp)
-                        .clip(RoundedCornerShape(26.dp))
-                        .background(bg)
-                        .clickable { onSelect(index) }
-                        .padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
+                        .size(Sizes.navItem)
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                        .clip(CircleShape)
+                        .background(container)
+                        .selectable(selected = selected, role = Role.Tab, onClick = { onSelect(index) })
+                        .semantics { contentDescription = item.label },
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Icon(icon, contentDescription = label, tint = fg, modifier = Modifier.size(22.dp))
-                    if (selected) {
-                        Spacer(Modifier.width(6.dp))
-                        Text(label, style = MaterialTheme.typography.labelLarge, color = fg, maxLines = 1)
-                    }
+                    Icon(item.icon, contentDescription = null, tint = content, modifier = Modifier.size(24.dp))
                 }
             }
         }

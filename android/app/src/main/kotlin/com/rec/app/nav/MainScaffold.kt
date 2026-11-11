@@ -1,54 +1,61 @@
 package com.rec.app.nav
 
-import androidx.compose.animation.core.tween
+import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
-import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Style
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import com.rec.app.ui.components.GlassNavBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import com.rec.app.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rec.app.R
 import com.rec.app.di.LocalAppContainer
 import com.rec.app.di.ViewModelFactory
-import com.rec.app.ui.screens.dictionary.DictionaryScreen
+import com.rec.app.ui.components.GlassNavBar
+import com.rec.app.ui.components.GlassNavBarHeight
+import com.rec.app.ui.components.LocalBottomBarInset
+import com.rec.app.ui.components.NavItem
+import com.rec.app.ui.screens.dictionary.DictionaryRoute
 import com.rec.app.ui.screens.dictionary.DictionaryViewModel
-import com.rec.app.ui.screens.home.HomeScreen
+import com.rec.app.ui.screens.home.HomeRoute
 import com.rec.app.ui.screens.home.HomeViewModel
-import com.rec.app.ui.screens.lesson.LessonScreen
+import com.rec.app.ui.screens.lesson.LessonRoute
 import com.rec.app.ui.screens.lesson.LessonViewModel
-import com.rec.app.ui.screens.profile.ProfileScreen
+import com.rec.app.ui.screens.profile.ProfileRoute
 import com.rec.app.ui.screens.profile.ProfileViewModel
-import com.rec.app.ui.screens.vocabulary.VocabularyScreen
-import com.rec.app.ui.screens.vocabulary.VocabularyViewModel
+import com.rec.app.ui.screens.vocabulary.FlashcardsRoute
+import com.rec.app.ui.screens.vocabulary.FlashcardsViewModel
+import com.rec.app.ui.theme.Motion
+import com.rec.app.ui.theme.RecTheme
 
-private data class BottomTab(val route: String, @androidx.annotation.StringRes val labelRes: Int, val icon: androidx.compose.ui.graphics.vector.ImageVector)
+private data class BottomTab(val route: String, @StringRes val labelRes: Int, val icon: ImageVector)
 
 private val bottomTabs = listOf(
     BottomTab(Routes.HOME, R.string.nav_home, Icons.Filled.AutoStories),
@@ -56,106 +63,106 @@ private val bottomTabs = listOf(
     BottomTab(Routes.PROFILE, R.string.nav_profile, Icons.Filled.Person),
 )
 
+/** Switches top-level tabs the standard way: one copy of each, state kept across switches. */
+private fun NavHostController.navigateToTab(route: String) = navigate(route) {
+    popUpTo(graph.findStartDestination().id) { saveState = true }
+    launchSingleTop = true
+    restoreState = true
+}
+
 @Composable
-fun MainScaffold(onLoggedOut: () -> Unit) {
+fun MainScaffold() {
     val container = LocalAppContainer.current
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination
-    val showBottomBar = bottomTabs.any { tab -> currentRoute?.hierarchy?.any { it.route == tab.route } == true }
+    val destination = backStackEntry?.destination
+    val selectedTab = bottomTabs.indexOfFirst { tab -> destination?.hierarchy?.any { it.route == tab.route } == true }
+    // The bar belongs to the tabs only; pushed screens (lesson, flashcards) take the full height.
+    val showBottomBar = destination == null || selectedTab >= 0
+    val navItems = bottomTabs.map { NavItem(it.icon, stringResource(it.labelRes)) }
 
-    Scaffold(
-        bottomBar = {
-            if (showBottomBar) {
-                GlassNavBar(
-                    items = bottomTabs.map { it.icon to stringResource(it.labelRes) },
-                    selectedIndex = bottomTabs.indexOfFirst { tab -> currentRoute?.hierarchy?.any { it.route == tab.route } == true }.coerceAtLeast(0),
-                    onSelect = { index ->
-                        navController.navigate(bottomTabs[index].route) {
-                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                )
-            }
-        },
-    ) { padding ->
+    val systemNavInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    // The bar floats over the content instead of sitting in its own strip, so
+    // nothing behind it is cut off; tab screens pad their scrolling content by
+    // LocalBottomBarInset to let the last item clear it.
+    Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
+      CompositionLocalProvider(LocalBottomBarInset provides GlassNavBarHeight + systemNavInset) {
         NavHost(
             navController = navController,
             startDestination = Routes.HOME,
-            modifier = Modifier.padding(padding),
-            // Crossfade by default — plain jumps between bottom-tab
-            // destinations read as a glitch, not a "top-level switch".
-            enterTransition = { fadeIn(tween(200)) },
-            exitTransition = { fadeOut(tween(150)) },
-            popEnterTransition = { fadeIn(tween(200)) },
-            popExitTransition = { fadeOut(tween(150)) },
+            modifier = Modifier.fillMaxSize().statusBarsPadding(),
+            // Tabs are peers, so they crossfade; pushed screens override this with a slide.
+            enterTransition = { fadeIn(Motion.base()) },
+            exitTransition = { fadeOut(Motion.fast()) },
+            popEnterTransition = { fadeIn(Motion.base()) },
+            popExitTransition = { fadeOut(Motion.fast()) },
         ) {
             composable(Routes.HOME) {
-                val vm: HomeViewModel = viewModel(
-                    factory = ViewModelFactory { HomeViewModel(container.contentRepository, container.userRepository) },
-                )
-                HomeScreen(
-                    viewModel = vm,
+                val viewModel: HomeViewModel = viewModel(factory = ViewModelFactory { HomeViewModel(container.getHomeOverview, container.userRepository) })
+                HomeRoute(
+                    viewModel = viewModel,
                     onLessonClick = { navController.navigate(Routes.lesson(it)) },
-                    onProfileClick = {
-                        navController.navigate(Routes.PROFILE) {
-                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
+                    onProfileClick = { navController.navigateToTab(Routes.PROFILE) },
                 )
             }
             composable(Routes.VOCABULARY) {
-                val dictVm: DictionaryViewModel = viewModel(
+                val viewModel: DictionaryViewModel = viewModel(
                     factory = ViewModelFactory { DictionaryViewModel(container.vocabularyRepository, container.userRepository) },
                 )
-                val flashVm: VocabularyViewModel = viewModel(
-                    factory = ViewModelFactory { VocabularyViewModel(container.vocabularyRepository) },
-                )
-                var showFlashcards by rememberSaveable { mutableStateOf(false) }
-                if (showFlashcards) {
-                    // Flashcards are a deck opened from the dictionary, not a tab of their own.
-                    BackHandler { showFlashcards = false }
-                    Column(Modifier.fillMaxSize()) {
-                        IconButton(onClick = { showFlashcards = false }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.dict_back))
-                        }
-                        Box(Modifier.weight(1f)) { VocabularyScreen(viewModel = flashVm) }
-                    }
-                } else {
-                    DictionaryScreen(viewModel = dictVm, onOpenFlashcards = { showFlashcards = true })
-                }
+                DictionaryRoute(viewModel = viewModel, onOpenFlashcards = { navController.navigate(Routes.FLASHCARDS) })
             }
             composable(Routes.PROFILE) {
-                val vm: ProfileViewModel = viewModel(
+                val viewModel: ProfileViewModel = viewModel(
                     factory = ViewModelFactory {
-                        ProfileViewModel(container.userRepository, container.badgesRepository, container.authRepository)
+                        ProfileViewModel(container.getProfileOverview, container.userRepository, container.authRepository)
                     },
                 )
-                ProfileScreen(viewModel = vm, onLoggedOut = onLoggedOut)
+                ProfileRoute(viewModel = viewModel)
+            }
+            composable(
+                Routes.FLASHCARDS,
+                // A deck opened from the dictionary: it slides in from the side and back out.
+                enterTransition = { slideInHorizontally(Motion.slow()) { it / 4 } + fadeIn(Motion.base()) },
+                popExitTransition = { slideOutHorizontally(Motion.base()) { it / 4 } + fadeOut(Motion.fast()) },
+            ) {
+                val viewModel: FlashcardsViewModel = viewModel(
+                    factory = ViewModelFactory { FlashcardsViewModel(container.vocabularyRepository) },
+                )
+                Box(Modifier.navigationBarsPadding()) {
+                    FlashcardsRoute(viewModel = viewModel, onBack = { navController.popBackStack() })
+                }
             }
             composable(
                 Routes.LESSON,
-                // A lesson is a focused session pushed on top of the path,
-                // not another top-level tab — slides up like a sheet instead
-                // of crossfading, so it reads as "entering", not "switching".
-                enterTransition = { slideInVertically(tween(260)) { it / 4 } + fadeIn(tween(260)) },
-                popExitTransition = { slideOutVertically(tween(220)) { it / 4 } + fadeOut(tween(220)) },
+                // A lesson is a focused session on top of the path: it rises like a sheet.
+                enterTransition = { slideInVertically(Motion.slow()) { it / 6 } + fadeIn(Motion.base()) },
+                popExitTransition = { slideOutVertically(Motion.base()) { it / 6 } + fadeOut(Motion.fast()) },
             ) { entry ->
-                val lessonId = entry.arguments?.getString("lessonId") ?: return@composable
-                val vm: LessonViewModel = viewModel(
+                val lessonId = entry.arguments?.getString(Routes.LESSON_ID_ARG) ?: return@composable
+                val viewModel: LessonViewModel = viewModel(
                     factory = ViewModelFactory { LessonViewModel(container.contentRepository, container.userRepository) },
                 )
-                LessonScreen(
-                    lessonId = lessonId,
-                    viewModel = vm,
-                    onClose = { navController.popBackStack() },
-                    onFinished = { navController.popBackStack() },
-                )
+                Box(Modifier.navigationBarsPadding()) {
+                    LessonRoute(lessonId = lessonId, viewModel = viewModel, onClose = { navController.popBackStack() })
+                }
             }
+        }
+      }
+
+        AnimatedVisibility(
+            visible = showBottomBar,
+            modifier = Modifier.align(Alignment.BottomCenter),
+            enter = slideInVertically(Motion.base()) { it } + fadeIn(Motion.base()),
+            exit = slideOutVertically(Motion.base()) { it } + fadeOut(Motion.fast()),
+        ) {
+            GlassNavBar(
+                items = navItems,
+                selectedIndex = selectedTab.coerceAtLeast(0),
+                onSelect = { index ->
+                    if (index != selectedTab) navController.navigateToTab(bottomTabs[index].route)
+                },
+            )
         }
     }
 }

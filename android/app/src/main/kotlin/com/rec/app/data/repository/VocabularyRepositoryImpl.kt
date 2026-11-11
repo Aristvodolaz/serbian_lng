@@ -12,16 +12,16 @@ import com.rec.app.domain.repository.VocabularyRepository
 
 class VocabularyRepositoryImpl(private val api: RecApi) : VocabularyRepository {
     override suspend fun getReviewQueue(limit: Int): Result<List<ReviewCard>> =
-        runCatching { api.getReviewQueue(limit).map { it.toDomain() } }
+        apiCall { api.getReviewQueue(limit).map { it.toDomain() } }
 
     override suspend fun submitReview(wordId: String, result: String): Result<ReviewOutcome> =
-        runCatching { api.submitReview(wordId, SubmitReviewRequest(result)).toOutcome() }
+        apiCall { api.submitReview(wordId, SubmitReviewRequest(result)).toOutcome() }
 
     override suspend fun getWords(search: String?, offset: Int): Result<WordPage> =
-        runCatching { api.getWords(search?.takeIf { it.isNotBlank() }, PAGE_SIZE, offset).toDomain() }
+        apiCall { api.getWords(search?.takeIf { it.isNotBlank() }, PAGE_SIZE, offset).toDomain() }
 
     override suspend fun getWordAttributes(): Result<WordAttributes> =
-        runCatching { api.getWordAttributes().toDomain() }
+        apiCall { api.getWordAttributes().toDomain() }
 
     companion object {
         const val PAGE_SIZE = 50

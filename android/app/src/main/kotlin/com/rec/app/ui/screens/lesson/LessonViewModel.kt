@@ -1,23 +1,31 @@
 package com.rec.app.ui.screens.lesson
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rec.app.R
-import com.rec.app.domain.model.Exercise
-import com.rec.app.domain.model.ExerciseText
 import com.rec.app.domain.model.EarnedBadge
+import com.rec.app.domain.model.Exercise
 import com.rec.app.domain.model.SectionLockedException
 import com.rec.app.domain.repository.ContentRepository
 import com.rec.app.domain.repository.UserRepository
 import com.rec.app.ui.common.UiText
 import com.rec.app.ui.common.uiText
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@Immutable
 data class ChoiceUi(val id: String, val text: String)
+
+@Immutable
 data class ExerciseUi(val id: String, val promptCyrillic: String, val promptLatin: String, val choices: List<ChoiceUi>)
+
+@Immutable
 data class EarnedBadgeUi(val titleCyrillic: String, val titleLatin: String)
 
 sealed interface LessonUiState {
@@ -25,6 +33,8 @@ sealed interface LessonUiState {
     data class Error(val message: UiText) : LessonUiState
     /** The section's checkpoint isn't passed yet (403 SECTION_LOCKED); shown as an alert, as on iOS. */
     data object Locked : LessonUiState
+
+    @Immutable
     data class InProgress(
         val exercise: ExerciseUi,
         val exerciseNumber: Int,
@@ -33,7 +43,14 @@ sealed interface LessonUiState {
         val correctChoiceId: String? = null,
         val isCorrect: Boolean? = null,
         val isSubmitting: Boolean = false,
-    ) : LessonUiState
+    ) : LessonUiState {
+        val isAnswered: Boolean get() = correctChoiceId != null
+
+        /** Nothing would be lost by leaving, so no exit confirmation is needed. */
+        val isUntouched: Boolean get() = exerciseNumber == 1 && selectedChoiceId == null && !isAnswered
+    }
+
+    @Immutable
     data class Finished(
         val xpEarned: Int,
         val totalXp: Int,
@@ -42,6 +59,11 @@ sealed interface LessonUiState {
         val totalCount: Int,
         val newBadges: List<EarnedBadgeUi>,
     ) : LessonUiState
+}
+
+/** One-shot messages for the screen: things to show once, not state to render. */
+sealed interface LessonEffect {
+    data class ShowMessage(val message: UiText) : LessonEffect
 }
 
 /**
@@ -58,19 +80,23 @@ class LessonViewModel(
     private val _state = MutableStateFlow<LessonUiState>(LessonUiState.Loading)
     val state: StateFlow<LessonUiState> = _state.asStateFlow()
 
-    private lateinit var lessonId: String
+    private val _effects = Channel<LessonEffect>(Channel.BUFFERED)
+    val effects: Flow<LessonEffect> = _effects.receiveAsFlow()
+
+    private var lessonId: String? = null
     private var exercises: List<Exercise> = emptyList()
     private var index = 0
     private var correctCount = 0
     private var languageIsEn = false
     private var scriptIsLatin = false
 
+    /** Safe to call again for the same lesson: a rotation doesn't restart a lesson in progress. */
     fun load(lessonId: String) {
+        if (this.lessonId == lessonId && _state.value !is LessonUiState.Error) return
         this.lessonId = lessonId
         viewModelScope.launch {
             _state.value = LessonUiState.Loading
-            val user = userRepository.getMe().getOrNull()
-            if (user != null) {
+            userRepository.getMe(forceRefresh = false).getOrNull()?.let { user ->
                 languageIsEn = user.languagePreference == "en"
                 scriptIsLatin = user.scriptPreference == "latin"
             }
@@ -88,25 +114,37 @@ class LessonViewModel(
                     }
                 }
                 .onFailure {
-                    _state.value = if (it is SectionLockedException) LessonUiState.Locked else LessonUiState.Error(uiText(R.string.lesson_error_load))
+                    _state.value = if (it is SectionLockedException) {
+                        LessonUiState.Locked
+                    } else {
+                        LessonUiState.Error(uiText(R.string.lesson_error_load))
+                    }
                 }
         }
     }
 
+    fun retry() {
+        val id = lessonId ?: return
+        lessonId = null
+        load(id)
+    }
+
     fun selectChoice(choiceId: String) {
         val current = _state.value as? LessonUiState.InProgress ?: return
-        if (current.correctChoiceId != null) return // already answered
+        if (current.isAnswered || current.isSubmitting) return
         _state.value = current.copy(selectedChoiceId = choiceId)
     }
 
     fun submitAnswer() {
         val current = _state.value as? LessonUiState.InProgress ?: return
         val answerId = current.selectedChoiceId ?: return
+        val id = lessonId ?: return
+        if (current.isSubmitting || current.isAnswered) return
         val exercise = exercises[index]
 
         viewModelScope.launch {
             _state.value = current.copy(isSubmitting = true)
-            contentRepository.answerExercise(lessonId, exercise.id, answerId)
+            contentRepository.answerExercise(id, exercise.id, answerId)
                 .onSuccess { result ->
                     if (result.correct) correctCount++
                     _state.value = current.copy(
@@ -117,14 +155,17 @@ class LessonViewModel(
                 }
                 .onFailure {
                     _state.value = current.copy(isSubmitting = false)
+                    _effects.send(LessonEffect.ShowMessage(uiText(R.string.auth_error_network)))
                 }
         }
     }
 
     fun nextExercise() {
+        val current = _state.value as? LessonUiState.InProgress ?: return
+        if (current.isSubmitting) return
         index++
         if (index >= exercises.size) {
-            finish()
+            finish(current)
         } else {
             showCurrentExercise()
         }
@@ -132,7 +173,7 @@ class LessonViewModel(
 
     private fun showCurrentExercise() {
         val exercise = exercises[index]
-        val prompt: ExerciseText? = exercise.prompt
+        val prompt = exercise.prompt
         _state.value = LessonUiState.InProgress(
             exercise = ExerciseUi(
                 id = exercise.id,
@@ -153,9 +194,12 @@ class LessonViewModel(
         return (if (scriptIsLatin) srLat ?: srCyr else srCyr ?: srLat).orEmpty()
     }
 
-    private fun finish() {
+    private fun finish(last: LessonUiState.InProgress) {
+        val id = lessonId ?: return
         viewModelScope.launch {
-            contentRepository.completeLesson(lessonId, correctCount, exercises.size)
+            // Stay on the last exercise with a busy button while the result is saved.
+            _state.value = last.copy(isSubmitting = true)
+            contentRepository.completeLesson(id, correctCount, exercises.size)
                 .onSuccess { result ->
                     _state.value = LessonUiState.Finished(
                         xpEarned = result.xpEarned,
@@ -167,7 +211,10 @@ class LessonViewModel(
                     )
                 }
                 .onFailure {
-                    _state.value = LessonUiState.Error(uiText(R.string.lesson_error_save))
+                    // Step back so "Continue" can retry saving instead of losing the whole lesson.
+                    index = exercises.lastIndex
+                    _state.value = last.copy(isSubmitting = false)
+                    _effects.send(LessonEffect.ShowMessage(uiText(R.string.lesson_error_save)))
                 }
         }
     }

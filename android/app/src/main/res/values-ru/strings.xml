@@ -65,7 +65,6 @@
 
     <string name="vocab_empty_title">Все слова просмотрены</string>
     <string name="vocab_empty_subtitle">Возвращайтесь позже за новыми словами для повторения.</string>
-    <string name="vocab_progress_format">%1$d / %2$d слов</string>
     <string name="cd_pronounce">Произношение</string>
     <string name="vocab_learning">Учу</string>
     <string name="vocab_know">Знаю</string>
@@ -98,7 +97,6 @@
     <string name="dict_error_load">Не удалось загрузить словарь.</string>
     <string name="dict_empty">Ничего не найдено</string>
     <string name="dict_speak">Произнести слово</string>
-    <string name="dict_back">Назад</string>
     <string name="dict_field_part_of_speech">Часть речи</string>
     <string name="dict_field_gender">Род</string>
     <string name="dict_field_number">Число</string>
@@ -114,4 +112,30 @@
     <string name="lesson_locked_title">Раздел закрыт</string>
     <string name="lesson_locked_message">Сначала пройдите чекпоинт предыдущего раздела.</string>
     <string name="lesson_locked_ok">Понятно</string>
+
+    <!-- Redesign: home hero, lesson feedback, profile, accessibility labels -->
+    <string name="home_greeting">Привет, %1$s</string>
+    <string name="home_continue_label">Продолжить обучение</string>
+    <string name="home_continue_cta">Продолжить</string>
+    <string name="home_all_done_title">Все уроки пройдены</string>
+    <string name="home_all_done_subtitle">Повторяйте слова, пока не появятся новые уроки.</string>
+    <string name="lesson_feedback_correct">Верно!</string>
+    <string name="lesson_feedback_wrong">Неверно</string>
+    <string name="lesson_xp_earned_format">+%1$d XP</string>
+    <string name="profile_week">Эта неделя</string>
+    <string name="profile_xp_format">%1$d XP</string>
+    <string name="cd_streak_format">Серия: %1$d дней</string>
+    <string name="cd_xp_format">Очки: %1$d</string>
+    <string name="cd_lesson_done">Пройден</string>
+    <string name="cd_lesson_current">Следующий урок</string>
+    <string name="cd_lesson_locked">Закрыт</string>
+    <string name="cd_show_password">Показать пароль</string>
+    <string name="cd_hide_password">Скрыть пароль</string>
+    <string name="cd_clear_search">Очистить поиск</string>
+    <string name="cd_day_active">Активный день</string>
+    <string name="cd_day_inactive">Без активности</string>
+    <string name="dict_example">Пример</string>
+    <string name="dict_grammar">Грамматика</string>
+    <string name="home_empty_title">Уроки скоро появятся</string>
+    <string name="home_empty_subtitle">В программе пока нет уроков.</string>
 </resources>
