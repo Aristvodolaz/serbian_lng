@@ -1,1741 +1,1845 @@
 {
-  "sourceLanguage": "sr",
-  "strings": {
-    "": {},
-    "%@ · %lld XP": {
-      "localizations": {
-        "sr": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@ · %2$lld XP"
+  "sourceLanguage" : "sr",
+  "strings" : {
+    "" : {
+
+    },
+    "____" : {
+
+    },
+    "„%@“" : {
+      "comment" : "Quotation marks around a usage example; each locale uses its own.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@”"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«%@»"
+          }
+        }
+      }
+    },
+    "%@ · %lld XP" : {
+      "localizations" : {
+        "sr" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld XP"
           }
         }
       }
     },
-    "%@: %@": {
-      "localizations": {
-        "sr": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@: %2$@"
+    "%@: %@" : {
+      "localizations" : {
+        "sr" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
           }
         }
       }
     },
-    "%lld / %lld речи": {
-      "comment": "Position in the flashcard deck.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld / %lld words"
+    "%lld / %lld речи" : {
+      "comment" : "Position in the flashcard deck.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld words"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld / %lld слов"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld слов"
           }
         }
       }
     },
-    "%lld дана низа": {
-      "comment": "Streak line under the learner's name on the profile.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld day streak"
+    "%lld дана низа" : {
+      "comment" : "Streak line under the learner's name on the profile.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld day streak"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "серия: %lld дн."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "серия: %lld дн."
           }
         }
       }
     },
-    "%lld од %lld лекција": {
-      "comment": "Lessons completed out of the whole path.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld of %lld lessons"
+    "%lld од %lld лекција" : {
+      "comment" : "Lessons completed out of the whole path.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld of %lld lessons"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld из %lld уроков"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld из %lld уроков"
           }
         }
       }
     },
-    "%lld%%": {},
-    "Choose your script": {
-      "comment": "English gloss under the Serbian heading. Dropped once the heading itself is localized.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": ""
+    "%lld%%" : {
+
+    },
+    "••••••••" : {
+
+    },
+    "Choose your script" : {
+      "comment" : "English gloss under the Serbian heading. Dropped once the heading itself is localized.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": ""
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
           }
         }
       }
+    },
+    "English" : {
+
     },
-    "English": {},
-    "Latinica": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Latin"
+    "http://localhost:3000" : {
+
+    },
+    "Latinica" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latin"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Латиница"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Латиница"
           }
         }
       }
+    },
+    "Learn Serbian, word by word." : {
+
+    },
+    "Lekcija završena" : {
+
+    },
+    "milica@example.com" : {
+
+    },
+    "REČ" : {
+
+    },
+    "XP" : {
+      "shouldTranslate" : false
     },
-    "Learn Serbian, word by word.": {},
-    "Lekcija završena": {},
-    "REČ": {},
-    "XP": {
-      "shouldTranslate": false
+    "XP: %lld" : {
+
     },
-    "XP: %lld": {},
-    "http://localhost:3000": {},
-    "milica@example.com": {},
-    "Још једном — тачан одговор је означен.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not quite — the correct answer is marked."
+    "Адреса API-ја" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API address"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не совсем — правильный ответ отмечен."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адрес API"
           }
         }
       }
     },
-    "Ћирилица": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cyrillic"
+    "Адреса није исправна." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That address isn't valid."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Кириллица"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адрес неверный."
           }
         }
       }
     },
-    "Адреса API-ја": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "API address"
+    "активан дан" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "active day"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Адрес API"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "активный день"
           }
         }
       }
     },
-    "Адреса није исправна.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "That address isn't valid."
+    "без активности" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no activity"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Адрес неверный."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "без активности"
           }
         }
       }
     },
-    "Вежба": {},
-    "Већ имам налог": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I already have an account"
+    "Вежба" : {
+
+    },
+    "Већ имам налог" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I already have an account"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "У меня уже есть аккаунт"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У меня уже есть аккаунт"
           }
         }
       }
     },
-    "Врати подразумевано": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reset to default"
+    "Врати подразумевано" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset to default"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сбросить"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сбросить"
           }
         }
       }
     },
-    "Вратите се касније — распоред понављања ће донети нове речи.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Come back later for new words to review."
+    "Вратите се касније — распоред понављања ће донети нове речи." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Come back later for new words to review."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Возвращайтесь позже за новыми словами для повторения."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возвращайтесь позже за новыми словами для повторения."
           }
         }
       }
     },
-    "Готово": {},
-    "Готово за данас": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done for today"
+    "Готово" : {
+
+    },
+    "Готово за данас" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done for today"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "На сегодня всё"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На сегодня всё"
           }
         }
       }
     },
-    "Грешка на серверу. Пробајте касније.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Server error. Try again later."
+    "Грешка на серверу. Пробајте касније." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server error. Try again later."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ошибка сервера. Попробуйте позже."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка сервера. Попробуйте позже."
           }
         }
       }
+    },
+    "Добро" : {
+
     },
-    "Додирните да видите превод": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap to see the translation"
+    "Додирните да видите превод" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to see the translation"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нажмите, чтобы увидеть перевод"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажмите, чтобы увидеть перевод"
           }
         }
       }
     },
-    "Достигнућа": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Badges"
+    "Достигнућа" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Badges"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Значки"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Значки"
           }
         }
       }
     },
-    "Е-пошта": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Email"
+    "Е-пошта" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Эл. почта"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Эл. почта"
           }
         }
       }
     },
-    "Заврши": {
-      "comment": "Primary button on the last exercise of a lesson.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Finish"
+    "завршено" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "completed"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Завершить"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "завершено"
           }
         }
       }
     },
-    "Завршите проверу главе.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Finish the chapter checkpoint first."
+    "Заврши" : {
+      "comment" : "Primary button on the last exercise of a lesson.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пройдите проверку главы."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершить"
           }
         }
       }
     },
-    "Затвори": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close"
+    "Завршите проверу главе." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish the chapter checkpoint first."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Закрыть"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пройдите проверку главы."
           }
         }
       }
     },
-    "Затвори лекцију": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close the lesson"
+    "закључано" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "locked"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Закрыть урок"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "заблокировано"
           }
         }
       }
     },
-    "Захтев није успео (%lld).": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Request failed (%lld)."
+    "Затвори" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Запрос не выполнен (%lld)."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрыть"
           }
         }
       }
     },
-    "Знам": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I know it"
+    "Затвори лекцију" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close the lesson"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Знаю"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрыть урок"
           }
         }
       }
     },
-    "Изаберите писмо": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose your script"
+    "Затвори теорију" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close the theory"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Выберите алфавит"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрыть теорию"
           }
         }
       }
     },
-    "Избор одређује сваку следећу лекцију. Може се променити у профилу.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This sets every following lesson's script. You can change it later in your profile."
+    "Захтев није успео (%lld)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Request failed (%lld)."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Это определяет алфавит каждого следующего урока. Можно изменить позже в профиле."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запрос не выполнен (%lld)."
           }
         }
       }
     },
-    "Изговори реч": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pronounce"
+    "Знам" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I know it"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Произношение"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Знаю"
           }
         }
       }
     },
-    "Име": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
+    "Изаберите писмо" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose your script"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Имя"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите алфавит"
           }
         }
       }
     },
-    "Кораци": {
-      "comment": "Home tab and the heading above the lesson trail.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Learn"
+    "Избор одређује сваку следећу лекцију. Може се променити у профилу." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This sets every following lesson's script. You can change it later in your profile."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Учёба"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это определяет алфавит каждого следующего урока. Можно изменить позже в профиле."
           }
         }
       }
     },
-    "Лекција завршена": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lesson complete"
+    "Изговори реч" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronounce"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Урок завершён"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Произношение"
           }
         }
       }
     },
-    "Лекција је празна": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This lesson is empty"
+    "Име" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Урок пуст"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя"
           }
         }
       }
     },
-    "Лозинка": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password"
+    "Још једном — тачан одговор је означен." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not quite — the correct answer is marked."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пароль"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не совсем — правильный ответ отмечен."
           }
         }
       }
     },
-    "Милица": {
-      "comment": "Name field placeholder.",
-      "shouldTranslate": false
-    },
-    "Нажимая продолжить, вы принимаете ": {},
-    "Направи налог": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create account"
+    "Кораци" : {
+      "comment" : "Home tab and the heading above the lesson trail.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Создать аккаунт"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учёба"
           }
         }
       }
     },
-    "Направите налог": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create your account"
+    "Лако" : {
+
+    },
+    "лекција" : {
+      "comment" : "Stat caption: lessons completed.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lessons"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Создайте аккаунт"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "уроков"
           }
         }
       }
     },
-    "Напредак": {
-      "comment": "Accessibility label of the lesson progress bar.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Progress"
+    "Лекција завршена" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson complete"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Прогресс"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Урок завершён"
           }
         }
       }
     },
-    "Напредак и серија дана се чувају на серверу.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your progress and streak are saved to your account."
+    "Лекција је празна" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This lesson is empty"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ваш прогресс и серия дней сохраняются в аккаунте."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Урок пуст"
           }
         }
       }
     },
-    "Напредак у овој лекцији неће бити сачуван.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your progress in this lesson won't be saved."
+    "Лозинка" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Прогресс в этом уроке не сохранится."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль"
           }
         }
       }
+    },
+    "Милица" : {
+      "comment" : "Name field placeholder.",
+      "shouldTranslate" : false
     },
-    "Настави": {
-      "comment": "Continue: next exercise, next onboarding step.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continue"
+    "Нажимая продолжить, вы принимаете " : {
+
+    },
+    "Најмање 8 знакова." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At least 8 characters."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Далее"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не менее 8 символов."
           }
         }
       }
     },
-    "Настави где си стао.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pick up where you left off."
+    "Направи налог" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create account"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Продолжите с того места, где остановились."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать аккаунт"
           }
         }
       }
     },
-    "Настави лекцију": {
-      "comment": "Cancel button of the exit-lesson confirmation.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keep going"
+    "Направите налог" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create your account"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Продолжить урок"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создайте аккаунт"
           }
         }
       }
     },
-    "Најмање 8 знакова.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "At least 8 characters."
+    "Напредак" : {
+      "comment" : "Accessibility label of the lesson progress bar.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не менее 8 символов."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прогресс"
           }
         }
       }
     },
-    "Не удалось загрузить документ.": {},
-    "Неисправна адреса сервера.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invalid server address."
+    "Напредак и серија дана се чувају на серверу." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your progress and streak are saved to your account."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Неверный адрес сервера."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш прогресс и серия дней сохраняются в аккаунте."
           }
         }
       }
     },
-    "Нема интернет везе.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No internet connection."
+    "Напредак у овој лекцији неће бити сачуван." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your progress in this lesson won't be saved."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нет подключения к интернету."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прогресс в этом уроке не сохранится."
           }
         }
       }
     },
-    "Нема лекција": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No lessons yet"
+    "Настави" : {
+      "comment" : "Continue: next exercise, next onboarding step.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Уроков пока нет"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Далее"
           }
         }
       }
     },
-    "Нема речи за понављање": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All words reviewed"
+    "Настави где си стао." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick up where you left off."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Все слова просмотрены"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжите с того места, где остановились."
           }
         }
       }
     },
-    "Немате приступ.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You don't have access."
+    "Настави лекцију" : {
+      "comment" : "Cancel button of the exit-lesson confirmation.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep going"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нет доступа."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжить урок"
           }
         }
       }
     },
-    "Неочекиван одговор сервера.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unexpected response from the server."
+    "Не удалось загрузить документ." : {
+
+    },
+    "недеље" : {
+      "comment" : "Stat caption: weeks active.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "weeks"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Неожиданный ответ сервера."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "недель"
           }
         }
       }
     },
-    "Нешто није у реду": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Something went wrong"
+    "Неисправна адреса сервера." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid server address."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Что-то пошло не так"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неверный адрес сервера."
           }
         }
       }
     },
-    "Ништа није пронађено": {},
-    "Није нађено.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not found."
+    "Нема интернет везе." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No internet connection."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не найдено."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет подключения к интернету."
           }
         }
       }
     },
-    "Није тачно": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not quite"
+    "Нема лекција" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No lessons yet"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Неверно"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уроков пока нет"
           }
         }
       }
     },
-    "Ново достигнуће": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New badge"
+    "Нема речи за понављање" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All words reviewed"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Новый значок"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все слова просмотрены"
           }
         }
       }
     },
-    "ОК": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+    "Немате приступ." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have access."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ОК"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет доступа."
           }
         }
       }
     },
-    "Оба писма": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Both scripts"
+    "Неочекиван одговор сервера." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unexpected response from the server."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Оба алфавита"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неожиданный ответ сервера."
           }
         }
       }
     },
-    "Оба писма стоје једно уз друго — ћирилица и латиница се уче заједно, а не одвојено.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Both scripts stand side by side — Cyrillic and Latin are learned together, not separately."
+    "Нешто није у реду" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Оба алфавита идут рядом — кириллица и латиница изучаются вместе, а не по отдельности."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что-то пошло не так"
           }
         }
       }
     },
-    "Ова лекција још нема вежбе.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This lesson has no exercises yet."
+    "низ" : {
+      "comment" : "Stat caption on the lesson summary: day streak.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "streak"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "В этом уроке пока нет упражнений."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "серия"
           }
         }
       }
     },
-    "Ова недеља": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This week"
+    "Није нађено." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not found."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Эта неделя"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не найдено."
           }
         }
       }
     },
-    "Одјави се": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log out"
+    "није освојено" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "not earned"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Выйти"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "не получен"
           }
         }
       }
     },
-    "П У С Ч П С Н": {
-      "comment": "Weekday initials for the profile week strip, Monday first, space separated. Keep exactly seven.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "M T W T F S S"
+    "Није тачно" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not quite"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "П В С Ч П С В"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неверно"
           }
         }
       }
+    },
+    "Ништа није пронађено" : {
+
     },
-    "Писмо": {
-      "comment": "Script preference section in settings.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Script"
+    "Ново достигнуће" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New badge"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Алфавит"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый значок"
           }
         }
       }
     },
-    "Повторение": {},
-    "Подаци нису исправни.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "That data isn't valid."
+    "Оба писма" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Both scripts"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Данные некорректны."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оба алфавита"
           }
         }
       }
     },
-    "Подешавања": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "Оба писма стоје једно уз друго — ћирилица и латиница се уче заједно, а не одвојено." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Both scripts stand side by side — Cyrillic and Latin are learned together, not separately."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Настройки"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оба алфавита идут рядом — кириллица и латиница изучаются вместе, а не по отдельности."
           }
         }
       }
     },
-    "Политика конфиденциальности": {},
-    "Понављање": {},
-    "Понављање речи": {},
-    "Поновљено речи: %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You reviewed %lld words."
+    "Ова лекција још нема вежбе." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This lesson has no exercises yet."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Вы повторили %lld слов."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В этом уроке пока нет упражнений."
           }
         }
       }
     },
-    "Попуните празнину": {},
-    "Почни": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Get started"
+    "Ова недеља" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Начать"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Эта неделя"
           }
         }
       }
     },
-    "Преведите реч": {},
-    "Преведите реченицу": {
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Translate the sentence"
+    "Одјави се" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log out"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Переведите предложение"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти"
           }
         }
       }
     },
-    "Прекини": {
-      "comment": "Destructive button of the exit-lesson confirmation.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exit"
+    "ОК" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Прервать"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ОК"
           }
         }
       }
     },
-    "Прекинути лекцију?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exit this lesson?"
+    "Опет" : {
+
+    },
+    "освојено" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "earned"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Прервать урок?"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "получен"
           }
         }
       }
     },
-    "Претражите речи": {},
-    "Прикажи превод": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show translation"
+    "П У С Ч П С Н" : {
+      "comment" : "Weekday initials for the profile week strip, Monday first, space separated. Keep exactly seven.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "M T W T F S S"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Показать перевод"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "П В С Ч П С В"
           }
         }
       }
     },
-    "Пријави се": {
-      "comment": "Submit button on the sign-in form.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log in"
+    "Писмо" : {
+      "comment" : "Script preference section in settings.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Script"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Войти"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Алфавит"
           }
         }
       }
     },
-    "Пријавите се": {
-      "comment": "Sign-in screen heading.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log in"
+    "Повторение" : {
+
+    },
+    "погрешан одговор" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "incorrect answer"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Войти"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "неправильный ответ"
           }
         }
       }
     },
-    "Пробај поново": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try again"
+    "Подаци нису исправни." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That data isn't valid."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Повторить"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Данные некорректны."
           }
         }
       }
     },
-    "Провери": {
-      "comment": "Submits the selected answer.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Check"
+    "Подешавања" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Проверить"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
           }
         }
       }
+    },
+    "Политика конфиденциальности" : {
+
     },
-    "Промените унос или потражите другу реч.": {},
-    "Профил": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Profile"
+    "политику конфиденциальности" : {
+
+    },
+    "Понављање" : {
+
+    },
+    "Понављање речи" : {
+
+    },
+    "Поновљено речи: %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You reviewed %lld words."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Профиль"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы повторили %lld слов."
           }
         }
       }
     },
-    "РЕЧ": {},
-    "Речник": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vocabulary"
+    "Попуните празнину" : {
+
+    },
+    "Почни" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get started"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Словарь"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начать"
           }
         }
       }
     },
-    "Русский": {},
-    "Сачувано.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved."
+    "Преведите реч" : {
+
+    },
+    "Преведите реченицу" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Translate the sentence"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сохранено."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переведите предложение"
           }
         }
       }
     },
-    "Сачувај": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save"
+    "Прекини" : {
+      "comment" : "Destructive button of the exit-lesson confirmation.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сохранить"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прервать"
           }
         }
       }
     },
-    "Сервер": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Server"
+    "Прекинути лекцију?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit this lesson?"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сервер"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прервать урок?"
           }
         }
       }
+    },
+    "Претражите речи" : {
+
     },
-    "Сервер не одговара.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The server isn't responding."
+    "Пријави се" : {
+      "comment" : "Submit button on the sign-in form.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сервер не отвечает."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти"
           }
         }
       }
     },
-    "Сервер није доступан на %@.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The server isn't reachable at %@."
+    "Пријавите се" : {
+      "comment" : "Sign-in screen heading.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сервер недоступен по адресу %@."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти"
           }
         }
       }
     },
-    "Сервер још нема садржај. Покрените `npm run seed` на бекенду.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The server has no content yet. Run `npm run seed` on the backend."
+    "Прикажи превод" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show translation"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "На сервере пока нет контента. Запустите `npm run seed` на бэкенде."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показать перевод"
           }
         }
       }
     },
-    "Серија дана: %lld": {
-      "comment": "Accessibility label of the streak pill.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Day streak: %lld"
+    "Пробај поново" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Серия дней: %lld"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
           }
         }
       }
     },
-    "Сесија је истекла. Пријавите се поново.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your session expired. Please log in again."
+    "Провери" : {
+      "comment" : "Submits the selected answer.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сессия истекла. Войдите снова."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверить"
           }
         }
       }
     },
-    "Тачан одговор: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Correct answer: %@"
+    "Промените унос или потражите другу реч." : {
+
+    },
+    "Профил" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Правильный ответ: %@"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Профиль"
           }
         }
       }
     },
-    "Тачан одговор: %@ · %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Correct answer: %@ · %@"
+    "РЕЧ" : {
+
+    },
+    "речи" : {
+      "comment" : "Stat caption: words learned.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "words"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Правильный ответ: %@ · %@"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "слов"
           }
         }
       }
     },
-    "Тачно!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Correct!"
+    "Речник" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabulary"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Верно!"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Словарь"
           }
         }
       }
+    },
+    "Русский" : {
+
     },
-    "Тај налог већ постоји.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This email is already registered."
+    "Сачувај" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Этот имейл уже зарегистрирован."
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранить"
           }
         }
       }
     },
-    "Ученик": {
-      "comment": "Fallback display name before the profile has loaded.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Learner"
+    "Сачувано." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ученик"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранено."
           }
         }
       }
     },
-    "Учим": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Still learning"
+    "Сервер" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Учу"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервер"
           }
         }
       }
     },
-    "Учитај поново": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Once more"
+    "Сервер још нема садржај. Покрените `npm run seed` на бекенду." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The server has no content yet. Run `npm run seed` on the backend."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ещё раз"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На сервере пока нет контента. Запустите `npm run seed` на бэкенде."
           }
         }
       }
     },
-    "Учите српски · реч по реч": {
-      "comment": "Brand eyebrow — fixed across locales, like Android's auth_eyebrow.",
-      "shouldTranslate": false
-    },
-    "Учите српски, реч по реч.": {
-      "comment": "Brand tagline — fixed across locales, like Android's auth_tagline.",
-      "shouldTranslate": false
+    "Сервер не одговара." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The server isn't responding."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервер не отвечает."
+          }
+        }
+      }
     },
-    "Язык переводов": {},
-    "активан дан": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "active day"
+    "Сервер није доступан на %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The server isn't reachable at %@."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "активный день"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервер недоступен по адресу %@."
           }
         }
       }
     },
-    "без активности": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "no activity"
+    "Серија дана: %lld" : {
+      "comment" : "Accessibility label of the streak pill.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day streak: %lld"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "без активности"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Серия дней: %lld"
           }
         }
       }
     },
-    "завршено": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "completed"
+    "Сесија је истекла. Пријавите се поново." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your session expired. Please log in again."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "завершено"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сессия истекла. Войдите снова."
           }
         }
       }
     },
-    "закључано": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "locked"
+    "Тај налог већ постоји." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This email is already registered."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "заблокировано"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот имейл уже зарегистрирован."
           }
         }
       }
     },
-    "лекција": {
-      "comment": "Stat caption: lessons completed.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "lessons"
+    "тачан одговор" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "correct answer"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "уроков"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "правильный ответ"
           }
         }
       }
     },
-    "недеље": {
-      "comment": "Stat caption: weeks active.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "weeks"
+    "Тачан одговор: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correct answer: %@"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "недель"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Правильный ответ: %@"
           }
         }
       }
     },
-    "низ": {
-      "comment": "Stat caption on the lesson summary: day streak.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "streak"
+    "Тачан одговор: %@ · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correct answer: %@ · %@"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "серия"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Правильный ответ: %@ · %@"
           }
         }
       }
     },
-    "није освојено": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "not earned"
+    "тачно" : {
+      "comment" : "Stat caption on the lesson summary: answers correct.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "correct"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "не получен"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "верно"
           }
         }
       }
     },
-    "освојено": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "earned"
+    "Тачно!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correct!"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "получен"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Верно!"
           }
         }
       }
     },
-    "погрешан одговор": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "incorrect answer"
+    "тачност" : {
+      "comment" : "Stat caption: accuracy.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "accuracy"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "неправильный ответ"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "точность"
           }
         }
       }
     },
-    "политику конфиденциальности": {},
-    "речи": {
-      "comment": "Stat caption: words learned.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "words"
+    "Теорија" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theory"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "слов"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Теория"
           }
         }
       }
     },
-    "тачан одговор": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "correct answer"
+    "Тешко" : {
+
+    },
+    "тренутна лекција" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "current lesson"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "правильный ответ"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "текущий урок"
           }
         }
       }
     },
-    "тачно": {
-      "comment": "Stat caption on the lesson summary: answers correct.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "correct"
+    "Ћирилица" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cyrillic"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "верно"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кириллица"
           }
         }
       }
     },
-    "тачност": {
-      "comment": "Stat caption: accuracy.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "accuracy"
+    "Ученик" : {
+      "comment" : "Fallback display name before the profile has loaded.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learner"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "точность"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ученик"
           }
         }
       }
     },
-    "тренутна лекција": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "current lesson"
+    "Учим" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Still learning"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "текущий урок"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учу"
           }
         }
       }
     },
-    "„%@“": {
-      "comment": "Quotation marks around a usage example; each locale uses its own.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@”"
+    "Учитај поново" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Once more"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "«%@»"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ещё раз"
           }
         }
       }
+    },
+    "Учите српски · реч по реч" : {
+      "comment" : "Brand eyebrow — fixed across locales, like Android's auth_eyebrow.",
+      "shouldTranslate" : false
+    },
+    "Учите српски, реч по реч." : {
+      "comment" : "Brand tagline — fixed across locales, like Android's auth_tagline.",
+      "shouldTranslate" : false
     },
-    "••••••••": {}
+    "Язык переводов" : {
+
+    }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

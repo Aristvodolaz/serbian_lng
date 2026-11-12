@@ -10,6 +10,7 @@ import {
   Award,
   BarChart3,
   LogOut,
+  GraduationCap,
 } from 'lucide-react';
 
 const links = [
@@ -18,6 +19,7 @@ const links = [
   { href: '/content/sections', label: 'Sections', icon: Layers },
   { href: '/content/units', label: 'Units', icon: BookOpen },
   { href: '/content/words', label: 'Words', icon: BookOpen },
+  { href: '/content/theory', label: 'Theory', icon: GraduationCap },
   { href: '/content/badges', label: 'Badges', icon: Award },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
 ];
