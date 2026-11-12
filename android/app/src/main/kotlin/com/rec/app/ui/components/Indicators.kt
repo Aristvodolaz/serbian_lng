@@ -49,9 +49,9 @@ fun RecProgressBar(progress: Float, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(10.dp)
+            .height(8.dp)
             .clip(PillShape)
-            .background(colors.primary.copy(alpha = 0.14f))
+            .background(colors.outline)
             .semantics { progressBarRangeInfo = ProgressBarRangeInfo(target, 0f..1f) },
     ) {
         Box(
@@ -59,7 +59,7 @@ fun RecProgressBar(progress: Float, modifier: Modifier = Modifier) {
                 .fillMaxHeight()
                 .fillMaxWidth(animated)
                 .clip(PillShape)
-                .background(colors.primaryBrush),
+                .background(colors.accent),
         )
     }
 }

@@ -6,91 +6,86 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 /**
- * The app's semantic color roles. Screens and components read these through
- * `RecTheme.colors` and never hold raw hex values, so light and dark stay in
- * step. The palette follows the blue reference UI: a periwinkle ground, white
- * surfaces, a royal-blue primary and warm accents.
+ * Semantic color roles, taken from the iOS app's palette (the РЕЧ · REČ design
+ * system) so both platforms look the same. Screens read these through
+ * `RecTheme.colors` and never hold raw hex values.
  */
 @Immutable
 data class RecColors(
     /** Screen background. */
     val ground: Color,
-    /** Cards, fields, sheets. */
+    /** Cards and the tab bar. */
     val surface: Color,
-    /** Quiet fills: locked rows, tracks, inactive chips. */
+    /** Raised fills: fields, stat pills, option rows. */
     val surfaceMuted: Color,
-    /** Primary text. Also the fill of "inverse" elements such as the active tab. */
+    /** Primary text. */
     val ink: Color,
     /** Secondary text and icons. */
     val inkSoft: Color,
+    /** Navigation, selection and primary actions (indigo). */
     val primary: Color,
-    /** Lighter partner of [primary] for gradients and tints. */
     val primarySoft: Color,
+    /** Text and glyphs placed on [primary]. */
     val onPrimary: Color,
-    /** Warm highlight: streaks, the current lesson, medals. */
+    /** Current lesson, progress and streak (ochre). */
     val accent: Color,
-    /** Errors and destructive actions. */
+    /** Latin script, wrong answers and errors (oxblood). */
     val danger: Color,
+    /** Correct answers and completed lessons (good). */
     val success: Color,
-    /** Hairlines and input borders. */
+    /** Hairlines and borders. */
     val outline: Color,
-    /** Translucent fill and rim of the floating navigation bar. */
-    val glass: Color,
-    val glassBorder: Color,
+    /** Path diamonds between lessons. */
+    val thread: Color,
     val isDark: Boolean,
 ) {
-    /** The blue hero gradient. Identical in both themes, always paired with [onHero]. */
-    val heroBrush: Brush get() = Brush.linearGradient(listOf(HeroStart, HeroEnd))
-    val onHero: Color get() = Color.White
+    /** Dark navy hero for the welcome screen and the profile header; text on it is [onHero]. */
+    val heroBrush: Brush get() = Brush.linearGradient(listOf(HeroStart, HeroMid))
+    val onHero: Color get() = HeroText
 
     /** Full-bleed vertical version of the hero for the welcome screen. */
-    val welcomeBrush: Brush get() = Brush.verticalGradient(listOf(HeroStart, HeroEnd, HeroDeep))
-
-    /** Primary call-to-action fill. */
-    val primaryBrush: Brush get() = Brush.horizontalGradient(listOf(primary, primarySoft))
+    val welcomeBrush: Brush get() = Brush.verticalGradient(listOf(HeroStart, HeroMid, HeroEnd))
 
     /** Warm medal gradient for trophies and badges. */
     val medalBrush: Brush get() = Brush.linearGradient(listOf(accent, danger))
 }
 
-private val HeroStart = Color(0xFF6C93FF)
-private val HeroEnd = Color(0xFF2E5BEA)
-
-private val HeroDeep = Color(0xFF1B3BB8)
+private val HeroStart = Color(0xFF3A5580)
+private val HeroMid = Color(0xFF223A5E)
+private val HeroEnd = Color(0xFF101728)
+private val HeroText = Color(0xFFF7F1E3)
 
 val LightRecColors = RecColors(
-    ground = Color(0xFFEEF2FD),
-    surface = Color(0xFFFFFFFF),
-    surfaceMuted = Color(0xFFE4EAFA),
-    ink = Color(0xFF131A3A),
-    inkSoft = Color(0xFF5C6489),
-    primary = Color(0xFF2E5BEA),
-    primarySoft = Color(0xFF6C93FF),
-    onPrimary = Color(0xFFFFFFFF),
-    accent = Color(0xFFFF9A3D),
-    danger = Color(0xFFD93F4C),
-    success = Color(0xFF14855A),
-    outline = Color(0xFFD3DBF2),
-    glass = Color(0xD9FFFFFF),
-    glassBorder = Color(0xE6FFFFFF),
+    ground = Color(0xFFEDE7DA),
+    surface = Color(0xFFFBF8F1),
+    surfaceMuted = Color(0xFFFFFFFF),
+    ink = Color(0xFF211A16),
+    inkSoft = Color(0xFF6B5D50),
+    primary = Color(0xFF223A5E),
+    primarySoft = Color(0xFF3A5580),
+    onPrimary = Color(0xFFF6F1E3),
+    accent = Color(0xFFB9832A),
+    danger = Color(0xFF7C2530),
+    success = Color(0xFF3F7D4F),
+    outline = Color(0x21211A16),
+    thread = Color(0xFFC9BFA8),
     isDark = false,
 )
 
 val DarkRecColors = RecColors(
-    ground = Color(0xFF0B1029),
-    surface = Color(0xFF161D40),
-    surfaceMuted = Color(0xFF1E2753),
-    ink = Color(0xFFEEF2FF),
-    inkSoft = Color(0xFFA3ACD4),
-    primary = Color(0xFF8FAAFF),
-    primarySoft = Color(0xFFB4C6FF),
-    onPrimary = Color(0xFF0B1029),
-    accent = Color(0xFFFFB66B),
-    danger = Color(0xFFFF8C94),
-    success = Color(0xFF5FD39A),
-    outline = Color(0xFF2C3668),
-    glass = Color(0xD91E2753),
-    glassBorder = Color(0x1FFFFFFF),
+    ground = Color(0xFF161A25),
+    surface = Color(0xFF1D2233),
+    surfaceMuted = Color(0xFF242A3F),
+    ink = Color(0xFFEEE8DB),
+    inkSoft = Color(0xFFAFA595),
+    primary = Color(0xFF8CA2CE),
+    primarySoft = Color(0xFF5E76A8),
+    onPrimary = Color(0xFFF6F1E3),
+    accent = Color(0xFFE2B563),
+    danger = Color(0xFFD68089),
+    success = Color(0xFF74C48A),
+    outline = Color(0x24EEE8DB),
+    thread = Color(0xFF3A4258),
     isDark = true,
 )
 

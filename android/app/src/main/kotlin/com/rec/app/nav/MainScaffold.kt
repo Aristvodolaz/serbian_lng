@@ -17,9 +17,10 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoStories
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Style
+import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -38,9 +39,9 @@ import androidx.navigation.compose.rememberNavController
 import com.rec.app.R
 import com.rec.app.di.LocalAppContainer
 import com.rec.app.di.ViewModelFactory
-import com.rec.app.ui.components.GlassNavBar
-import com.rec.app.ui.components.GlassNavBarHeight
-import com.rec.app.ui.components.LocalBottomBarInset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import com.rec.app.ui.components.RecTabBar
 import com.rec.app.ui.components.NavItem
 import com.rec.app.ui.screens.dictionary.DictionaryRoute
 import com.rec.app.ui.screens.dictionary.DictionaryViewModel
@@ -58,9 +59,9 @@ import com.rec.app.ui.theme.RecTheme
 private data class BottomTab(val route: String, @StringRes val labelRes: Int, val icon: ImageVector)
 
 private val bottomTabs = listOf(
-    BottomTab(Routes.HOME, R.string.nav_home, Icons.Filled.AutoStories),
-    BottomTab(Routes.VOCABULARY, R.string.nav_vocabulary, Icons.Filled.Style),
-    BottomTab(Routes.PROFILE, R.string.nav_profile, Icons.Filled.Person),
+    BottomTab(Routes.HOME, R.string.nav_home, Icons.Filled.DirectionsWalk),
+    BottomTab(Routes.VOCABULARY, R.string.nav_vocabulary, Icons.AutoMirrored.Filled.MenuBook),
+    BottomTab(Routes.PROFILE, R.string.nav_profile, Icons.Filled.AccountCircle),
 )
 
 /** Switches top-level tabs the standard way: one copy of each, state kept across switches. */
@@ -81,17 +82,24 @@ fun MainScaffold() {
     val showBottomBar = destination == null || selectedTab >= 0
     val navItems = bottomTabs.map { NavItem(it.icon, stringResource(it.labelRes)) }
 
-    val systemNavInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-
-    // The bar floats over the content instead of sitting in its own strip, so
-    // nothing behind it is cut off; tab screens pad their scrolling content by
-    // LocalBottomBarInset to let the last item clear it.
-    Box(modifier = Modifier.fillMaxSize().background(RecTheme.colors.ground)) {
-      CompositionLocalProvider(LocalBottomBarInset provides GlassNavBarHeight + systemNavInset) {
+    Scaffold(
+        containerColor = RecTheme.colors.ground,
+        bottomBar = {
+            if (showBottomBar) {
+                RecTabBar(
+                    items = navItems,
+                    selectedIndex = selectedTab.coerceAtLeast(0),
+                    onSelect = { index ->
+                        if (index != selectedTab) navController.navigateToTab(bottomTabs[index].route)
+                    },
+                )
+            }
+        },
+    ) { padding ->
         NavHost(
             navController = navController,
             startDestination = Routes.HOME,
-            modifier = Modifier.fillMaxSize().statusBarsPadding(),
+            modifier = Modifier.padding(padding),
             // Tabs are peers, so they crossfade; pushed screens override this with a slide.
             enterTransition = { fadeIn(Motion.base()) },
             exitTransition = { fadeOut(Motion.fast()) },
@@ -147,22 +155,6 @@ fun MainScaffold() {
                     LessonRoute(lessonId = lessonId, viewModel = viewModel, onClose = { navController.popBackStack() })
                 }
             }
-        }
-      }
-
-        AnimatedVisibility(
-            visible = showBottomBar,
-            modifier = Modifier.align(Alignment.BottomCenter),
-            enter = slideInVertically(Motion.base()) { it } + fadeIn(Motion.base()),
-            exit = slideOutVertically(Motion.base()) { it } + fadeOut(Motion.fast()),
-        ) {
-            GlassNavBar(
-                items = navItems,
-                selectedIndex = selectedTab.coerceAtLeast(0),
-                onSelect = { index ->
-                    if (index != selectedTab) navController.navigateToTab(bottomTabs[index].route)
-                },
-            )
         }
     }
 }

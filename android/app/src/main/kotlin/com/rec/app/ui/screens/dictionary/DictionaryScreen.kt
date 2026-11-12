@@ -59,7 +59,6 @@ import com.rec.app.domain.model.WordAttributes
 import com.rec.app.ui.common.rememberSerbianSpeaker
 import com.rec.app.ui.components.EmptyState
 import com.rec.app.ui.components.ErrorContent
-import com.rec.app.ui.components.LocalBottomBarInset
 import com.rec.app.ui.components.RecCard
 import com.rec.app.ui.components.RecIconButton
 import com.rec.app.ui.components.RecSearchField
@@ -215,7 +214,7 @@ private fun WordList(
         state = listState,
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Spacing.sm + Spacing.xxs),
-        contentPadding = PaddingValues(top = Spacing.xs, bottom = Spacing.xxl + LocalBottomBarInset.current),
+        contentPadding = PaddingValues(top = Spacing.xs, bottom = Spacing.xxl),
     ) {
         items(state.words, key = { it.id }, contentType = { "word" }) { word ->
             WordRow(word, state.script, state.english, onClick = { onSelect(word) }, modifier = Modifier.animateItem())
@@ -381,7 +380,7 @@ private fun WordDetailPane(
                 }
             }
         }
-        Spacer(Modifier.height(Spacing.xxl + LocalBottomBarInset.current))
+        Spacer(Modifier.height(Spacing.xxl))
     }
 }
 

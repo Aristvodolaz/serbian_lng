@@ -6,13 +6,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// The system sans covers Cyrillic and Latin alike, which matters for an app
-// that shows both scripts side by side. Heavy display weights give the bold
-// headings of the reference UI.
+// Serif for headings and sentences, sans for controls and body: the same split
+// as the iOS app. Both scripts render in either face on Android.
 private val Sans = FontFamily.SansSerif
+private val Serif = FontFamily.Serif
 
-private fun style(weight: FontWeight, size: Int, lineHeight: Int, spacing: Double = 0.0) = TextStyle(
-    fontFamily = Sans,
+private fun style(
+    family: FontFamily,
+    weight: FontWeight,
+    size: Int,
+    lineHeight: Int,
+    spacing: Double = 0.0,
+) = TextStyle(
+    fontFamily = family,
     fontWeight = weight,
     fontSize = size.sp,
     lineHeight = lineHeight.sp,
@@ -20,20 +26,20 @@ private fun style(weight: FontWeight, size: Int, lineHeight: Int, spacing: Doubl
 )
 
 val RecTypography = Typography(
-    displayLarge = style(FontWeight.ExtraBold, 40, 46, -0.5),
-    displayMedium = style(FontWeight.ExtraBold, 32, 38, -0.4),
-    displaySmall = style(FontWeight.Bold, 28, 34, -0.3),
-    headlineSmall = style(FontWeight.Bold, 22, 28, -0.2),
-    titleLarge = style(FontWeight.Bold, 19, 24),
-    titleMedium = style(FontWeight.SemiBold, 16, 22),
-    titleSmall = style(FontWeight.SemiBold, 14, 20),
-    bodyLarge = style(FontWeight.Normal, 16, 24),
-    bodyMedium = style(FontWeight.Normal, 14, 21),
-    bodySmall = style(FontWeight.Normal, 12, 17),
-    labelLarge = style(FontWeight.Bold, 15, 20, 0.1),
-    labelMedium = style(FontWeight.Bold, 12, 16, 0.4),
-    labelSmall = style(FontWeight.Bold, 11, 14, 0.5),
+    displayLarge = style(Serif, FontWeight.Bold, 36, 42, -0.5),
+    displayMedium = style(Serif, FontWeight.Bold, 30, 36, -0.4),
+    displaySmall = style(Serif, FontWeight.Bold, 26, 32, -0.3),
+    headlineSmall = style(Serif, FontWeight.Bold, 22, 28, -0.2),
+    titleLarge = style(Sans, FontWeight.Bold, 19, 24),
+    titleMedium = style(Sans, FontWeight.Bold, 16, 22),
+    titleSmall = style(Sans, FontWeight.SemiBold, 14, 20),
+    bodyLarge = style(Sans, FontWeight.Normal, 16, 23),
+    bodyMedium = style(Sans, FontWeight.Normal, 14, 20),
+    bodySmall = style(Sans, FontWeight.Normal, 12, 17),
+    labelLarge = style(Sans, FontWeight.SemiBold, 15, 20, 0.1),
+    labelMedium = style(Sans, FontWeight.SemiBold, 12, 16, 0.4),
+    labelSmall = style(Sans, FontWeight.SemiBold, 11, 14, 0.6),
 )
 
 /** Counters (streak, XP, progress): tabular figures so digits don't jitter as they change. */
-val NumberStyle = style(FontWeight.Bold, 14, 18).copy(fontFeatureSettings = "tnum")
+val NumberStyle = style(Sans, FontWeight.Bold, 14, 18).copy(fontFeatureSettings = "tnum")

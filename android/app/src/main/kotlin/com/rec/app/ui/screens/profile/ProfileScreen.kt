@@ -56,7 +56,6 @@ import com.rec.app.ui.common.asString
 import com.rec.app.ui.components.BadgeMedal
 import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.components.InitialAvatar
-import com.rec.app.ui.components.LocalBottomBarInset
 import com.rec.app.ui.components.RecCard
 import com.rec.app.ui.components.RecSecondaryButton
 import com.rec.app.ui.components.SectionLabel
@@ -110,8 +109,7 @@ private fun ProfileContent(content: ProfileContentUi, onLanguage: (Boolean) -> U
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = Spacing.screen, vertical = Spacing.lg)
-            .padding(bottom = LocalBottomBarInset.current),
+            .padding(horizontal = Spacing.screen, vertical = Spacing.lg),
     ) {
         ProfileHero(content)
 
