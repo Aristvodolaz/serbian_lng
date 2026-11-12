@@ -1137,6 +1137,16 @@ export class AdminService {
     return { published: result.affected ?? 0 };
   }
 
+  async publishAllTheory(): Promise<PublishWordsResultDto> {
+    const result = await this.theoryRepo
+      .createQueryBuilder()
+      .update(TheoryTopic)
+      .set({ status: ContentStatus.PUBLISHED })
+      .where('status = :status', { status: ContentStatus.DRAFT })
+      .execute();
+    return { published: result.affected ?? 0 };
+  }
+
   /// Best-effort: publishes every valid draft exercise of a lesson, records
   /// validation failures in `skipped`. Returns the total count now published.
   private async publishLessonExercises(

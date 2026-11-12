@@ -276,6 +276,12 @@ export class AdminController {
     return this.adminService.unpublishTheory(id);
   }
 
+  @Post('theory/publish-all')
+  @ApiOkResponse({ type: PublishWordsResultDto })
+  publishAllTheory(): Promise<PublishWordsResultDto> {
+    return this.adminService.publishAllTheory();
+  }
+
   // ── Lessons ────────────────────────────────────────────────
 
   @Get('lessons')

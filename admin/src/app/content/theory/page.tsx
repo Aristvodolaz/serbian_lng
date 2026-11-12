@@ -1,7 +1,12 @@
 import { fetchAdmin } from '@/lib/api';
 import Link from 'next/link';
 import { CreateTheoryForm } from '@/components/forms/theory-form';
-import { DeleteButton, ContentPublishButton, StatusBadge } from '@/components/forms/admin-forms';
+import {
+  DeleteButton,
+  ContentPublishButton,
+  StatusBadge,
+  PublishAllTheoryButton,
+} from '@/components/forms/admin-forms';
 
 interface TheoryTopic {
   id: string;
@@ -38,7 +43,10 @@ export default async function TheoryPage({ searchParams }: { searchParams: Promi
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Theory</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">Theory</h1>
+          <PublishAllTheoryButton />
+        </div>
         <span className="text-sm text-gray-500">{theory.total} topics</span>
       </div>
 

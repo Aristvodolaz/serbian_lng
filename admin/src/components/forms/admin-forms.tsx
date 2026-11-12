@@ -198,6 +198,17 @@ export function PublishAllWordsButton() {
   );
 }
 
+// Bulk-publishes every draft theory topic.
+export function PublishAllTheoryButton() {
+  return (
+    <PublishAllButton
+      endpoint="/admin/theory/publish-all"
+      label="Publish All Theory"
+      summary={(data) => `Published: ${data?.published ?? 0} topics`}
+    />
+  );
+}
+
 // Words have no dedicated publish endpoint — toggle via PATCH status.
 export function WordStatusButton({ wordId, status }: { wordId: string; status: string }) {
   const [busy, setBusy] = useState(false);
