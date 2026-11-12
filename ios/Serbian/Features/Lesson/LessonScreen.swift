@@ -57,7 +57,7 @@ struct LessonScreen: View {
         }
         .animation(.easeOut(duration: 0.25), value: model.completion)
         .alert(
-            model.sectionLockedMessage,
+            LessonViewModel.sectionLockedMessage,
             isPresented: Binding(
                 get: { model.sectionLocked },
                 set: { _ in model.acknowledgeSectionLocked() }

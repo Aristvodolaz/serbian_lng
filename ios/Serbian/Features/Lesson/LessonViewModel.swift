@@ -98,7 +98,8 @@ final class LessonViewModel {
 
     /// 403 SECTION_LOCKED — the section's checkpoint is not passed yet.
     private static func isSectionLocked(_ error: Error) -> Bool {
-        if case let APIError.server(status, message) = error as APIError {
+        guard let apiError = error as? APIError else { return false }
+        if case let .server(status, message) = apiError {
             return status == 403 && message.contains("SECTION_LOCKED")
         }
         return false
