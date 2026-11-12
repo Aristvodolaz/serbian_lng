@@ -82,7 +82,7 @@ struct TheoryScreen: View {
 
     @ViewBuilder
     private func blockView(_ block: TheoryBlock) -> some View {
-        switch block.kind {
+        switch block.type {
         case .heading:
             DualScriptText(
                 cyrillic: block.textCyrillic ?? "",

@@ -29,7 +29,7 @@ interface SectionOption {
 
 export default async function TheoryPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const sp = await searchParams;
-  const page = parseInt(sp.page || '1');
+  const page = Number.parseInt(sp.page || '1', 10) || 1;
   const [theory, sectionsRes] = await Promise.all([
     fetchAdmin<PaginatedTheory>(`/admin/theory?page=${page}&limit=20`),
     fetchAdmin<{ data: SectionOption[] }>('/admin/sections?limit=100'),

@@ -25,11 +25,9 @@ interface SectionOption {
 export default async function TheoryDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [topic, sectionsRes] = await Promise.all([
-    fetchAdmin<TheoryTopic>(`/admin/theory/${id}`, { redirectOnError: false }),
+    fetchAdmin<TheoryTopic>(`/admin/theory/${id}`, { redirectOnError: false }).catch(() => null),
     fetchAdmin<{ data: SectionOption[] }>('/admin/sections?limit=100'),
-  ]).catch(() => {
-    notFound();
-  });
+  ]);
   if (!topic) notFound();
 
   return (

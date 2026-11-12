@@ -49,7 +49,7 @@ struct TheoryBlock: Codable, Equatable, Sendable {
         let latin: String
     }
 
-    let kind: Kind
+    let type: Kind
     let textCyrillic: String?
     let textLatin: String?
     let captionCyrillic: String?
