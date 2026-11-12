@@ -503,11 +503,8 @@ export class AdminService {
     return topic;
   }
 
-  async listTheory(
-    pagination: PaginationDto,
-    query: ListTheoryQueryDto,
-  ): Promise<PaginatedResponse<TheoryAdminResponseDto>> {
-    const { page, limit } = this.getP(pagination);
+  async listTheory(query: ListTheoryQueryDto): Promise<PaginatedResponse<TheoryAdminResponseDto>> {
+    const { page, limit } = this.getP(query);
     const [topics, total] = await this.theoryRepo.findAndCount({
       where: query.sectionId ? { sectionId: query.sectionId } : {},
       relations: { section: true },

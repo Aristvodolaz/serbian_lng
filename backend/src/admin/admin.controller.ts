@@ -234,11 +234,8 @@ export class AdminController {
 
   @Get('theory')
   @ApiOkResponse({ type: PaginatedResponse })
-  listTheory(
-    @Query() pagination: PaginationDto,
-    @Query() query: ListTheoryQueryDto,
-  ): Promise<PaginatedResponse<TheoryAdminResponseDto>> {
-    return this.adminService.listTheory(pagination, query);
+  listTheory(@Query() query: ListTheoryQueryDto): Promise<PaginatedResponse<TheoryAdminResponseDto>> {
+    return this.adminService.listTheory(query);
   }
 
   @Post('theory')

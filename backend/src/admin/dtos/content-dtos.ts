@@ -496,7 +496,7 @@ export class UpdateTheoryTopicDto {
   order?: number;
 }
 
-export class ListTheoryQueryDto {
+export class ListTheoryQueryDto extends PaginationDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
