@@ -22,7 +22,11 @@ if (!login.ok) {
   console.error(`login failed: ${login.status} ${await login.text()}`);
   process.exit(1);
 }
-const token = (await login.json()).access_token;
+const token = (await login.json()).accessToken;
+if (!token) {
+  console.error('login response has no accessToken');
+  process.exit(1);
+}
 
 const authed = (path) => fetch(`${BASE_URL}${path}`, {
   headers: { Authorization: `Bearer ${token}` },
