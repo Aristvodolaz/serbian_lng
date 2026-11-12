@@ -80,26 +80,38 @@ struct TheoryScreen: View {
         .scrollIndicators(.hidden)
     }
 
+    private func translatedLine(_ block: TheoryBlock) -> Text {
+        Text(session.languagePreference == .en ? (block.translationEn ?? "") : (block.translationRu ?? ""))
+            .font(.recCaption)
+            .foregroundStyle(Palette.inkSoft)
+    }
+
     @ViewBuilder
     private func blockView(_ block: TheoryBlock) -> some View {
         switch block.type {
         case .heading:
-            DualScriptText(
-                cyrillic: block.textCyrillic ?? "",
-                latin: block.textLatin ?? "",
-                preference: session.scriptPreference,
-                primaryFont: .recCalloutStrong,
-                secondaryFont: .recFootnote
-            )
+            VStack(alignment: .leading, spacing: 3) {
+                DualScriptText(
+                    cyrillic: block.textCyrillic ?? "",
+                    latin: block.textLatin ?? "",
+                    preference: session.scriptPreference,
+                    primaryFont: .recCalloutStrong,
+                    secondaryFont: .recFootnote
+                )
+                translatedLine(block)
+            }
             .padding(.top, Metrics.tight)
         case .paragraph:
-            DualScriptText(
-                cyrillic: block.textCyrillic ?? "",
-                latin: block.textLatin ?? "",
-                preference: session.scriptPreference,
-                primaryFont: .recBody,
-                secondaryFont: .recFootnote
-            )
+            VStack(alignment: .leading, spacing: 3) {
+                DualScriptText(
+                    cyrillic: block.textCyrillic ?? "",
+                    latin: block.textLatin ?? "",
+                    preference: session.scriptPreference,
+                    primaryFont: .recBody,
+                    secondaryFont: .recFootnote
+                )
+                translatedLine(block)
+            }
         case .table:
             blockTable(block)
         case .example:
@@ -111,9 +123,7 @@ struct TheoryScreen: View {
                     primaryFont: .recCalloutStrong,
                     secondaryFont: .recFootnote
                 )
-                Text(session.languagePreference == .en ? (block.translationEn ?? "") : (block.translationRu ?? ""))
-                    .font(.recCaption)
-                    .foregroundStyle(Palette.inkSoft)
+                translatedLine(block)
             }
             .padding(Metrics.regular)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -128,25 +138,39 @@ struct TheoryScreen: View {
 
     private func blockTable(_ block: TheoryBlock) -> some View {
         VStack(alignment: .leading, spacing: Metrics.tight) {
-            DualScriptText(
-                cyrillic: block.captionCyrillic ?? "",
-                latin: block.captionLatin ?? "",
-                preference: session.scriptPreference,
-                primaryFont: .recCalloutStrong,
-                secondaryFont: .recFootnote
-            )
+            VStack(alignment: .leading, spacing: 2) {
+                DualScriptText(
+                    cyrillic: block.captionCyrillic ?? "",
+                    latin: block.captionLatin ?? "",
+                    preference: session.scriptPreference,
+                    primaryFont: .recCalloutStrong,
+                    secondaryFont: .recFootnote
+                )
+                Text(session.languagePreference == .en ? (block.captionTranslationEn ?? "") : (block.captionTranslationRu ?? ""))
+                    .font(.recCaption)
+                    .foregroundStyle(Palette.inkSoft)
+            }
             Grid(alignment: .leading, horizontalSpacing: Metrics.tight, verticalSpacing: 6) {
                 if let headers = block.headers {
+                    let translated = session.languagePreference == .en ? block.headersTranslationEn : block.headersTranslationRu
                     GridRow {
-                        ForEach(Array(headers.enumerated()), id: \.offset) { _, cell in
-                            DualScriptText(
-                                cyrillic: cell.cyrillic,
-                                latin: cell.latin,
-                                preference: session.scriptPreference,
-                                primaryFont: .recCalloutStrong,
-                                secondaryFont: .recFootnote,
-                                alignment: .leading
-                            )
+                        ForEach(Array(headers.enumerated()), id: \.offset) { index, cell in
+                            Group {
+                                if let translated, index < translated.count {
+                                    Text(translated[index])
+                                        .font(.recCalloutStrong)
+                                        .foregroundStyle(Palette.ink)
+                                } else {
+                                    DualScriptText(
+                                        cyrillic: cell.cyrillic,
+                                        latin: cell.latin,
+                                        preference: session.scriptPreference,
+                                        primaryFont: .recCalloutStrong,
+                                        secondaryFont: .recFootnote,
+                                        alignment: .leading
+                                    )
+                                }
+                            }
                             .gridCellAnchor(.leading)
                         }
                     }

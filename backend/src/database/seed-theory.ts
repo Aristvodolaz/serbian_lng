@@ -11,6 +11,8 @@ const bitiPayload: TheoryPayload = {
       type: 'heading',
       textCyrillic: 'Глагол „бити" у садашњем времену',
       textLatin: 'Glagol „biti" u sadašnjem vremenu',
+      translationRu: 'Глагол «бити» в настоящем времени',
+      translationEn: 'The verb “biti” in the present tense',
     },
     {
       type: 'paragraph',
@@ -18,16 +20,24 @@ const bitiPayload: TheoryPayload = {
         'Глагол „бити" је нерегуларан и један од најчешћих глагола у српском језику. Служи за исказивање стања и придева.',
       textLatin:
         'Glagol „biti" je neregularan i jedan od najčešćih glagola u srpskom jeziku. Služi za iskazivanje stanja i pridava.',
+      translationRu:
+        'Глагол «бити» неправильный и один из самых частых в сербском языке. Выражает состояние и признак.',
+      translationEn:
+        'The verb “biti” is irregular and one of the most common verbs in Serbian. It expresses states and adjectives.',
     },
     {
       type: 'table',
       captionCyrillic: 'Спряжение — презент',
       captionLatin: 'Konjugacija — prezent',
+      captionTranslationRu: 'Спряжение — настоящее время',
+      captionTranslationEn: 'Conjugation — present',
       headers: [
         { cyrillic: 'Особа', latin: 'Osoba' },
         { cyrillic: 'Форма', latin: 'Forma' },
         { cyrillic: 'Пример', latin: 'Primer' },
       ],
+      headersTranslationRu: ['Лицо', 'Форма', 'Пример'],
+      headersTranslationEn: ['Person', 'Form', 'Example'],
       rows: [
         [
           { cyrillic: 'ја', latin: 'ja' },
@@ -78,6 +88,8 @@ const casesPayload: TheoryPayload = {
       type: 'heading',
       textCyrillic: 'Седам падежа српског језика',
       textLatin: 'Sedam padeža srpskog jezika',
+      translationRu: 'Семь падежей сербского языка',
+      translationEn: 'The seven cases of Serbian',
     },
     {
       type: 'paragraph',
@@ -85,15 +97,23 @@ const casesPayload: TheoryPayload = {
         'У српском језику постоји седам падежа. Сваки падеж одговара на питање и има своју улогу у реченици.',
       textLatin:
         'U srpskom jeziku postoji sedam padeža. Svaki padež odgovara na pitanje i ima svoju ulogu u rečenici.',
+      translationRu:
+        'В сербском языке семь падежей. Каждый падеж отвечает на вопрос и играет свою роль в предложении.',
+      translationEn:
+        'Serbian has seven cases. Each case answers a question and has its own role in the sentence.',
     },
     {
       type: 'table',
       captionCyrillic: 'Падежи и њихова питања',
       captionLatin: 'Padeži i njihova pitanja',
+      captionTranslationRu: 'Падежи и их вопросы',
+      captionTranslationEn: 'Cases and their questions',
       headers: [
         { cyrillic: 'Падеж', latin: 'Padež' },
         { cyrillic: 'Питање', latin: 'Pitanje' },
       ],
+      headersTranslationRu: ['Падеж', 'Вопрос'],
+      headersTranslationEn: ['Case', 'Question'],
       rows: [
         [
           { cyrillic: '1. Номинатив', latin: '1. Nominativ' },

@@ -1,6 +1,6 @@
 // Structured theory content blocks, stored as one jsonb payload.
-// Grammar text is Serbian (cyrillic + latin); RU/EN translations exist only
-// on example sentences, matching the app-wide content convention.
+// Grammar text is Serbian (cyrillic + latin); every block carries RU/EN
+// translations (paragraph text or table caption/headers; word-form cells stay Serbian).
 
 export interface Bilingual {
   cyrillic: string;
@@ -8,13 +8,29 @@ export interface Bilingual {
 }
 
 export type TheoryBlock =
-  | { type: 'heading'; textCyrillic: string; textLatin: string }
-  | { type: 'paragraph'; textCyrillic: string; textLatin: string }
+  | {
+      type: 'heading';
+      textCyrillic: string;
+      textLatin: string;
+      translationRu: string;
+      translationEn: string;
+    }
+  | {
+      type: 'paragraph';
+      textCyrillic: string;
+      textLatin: string;
+      translationRu: string;
+      translationEn: string;
+    }
   | {
       type: 'table';
       captionCyrillic: string;
       captionLatin: string;
+      captionTranslationRu: string;
+      captionTranslationEn: string;
       headers: Bilingual[];
+      headersTranslationRu: string[];
+      headersTranslationEn: string[];
       rows: Bilingual[][];
     }
   | {
@@ -68,16 +84,31 @@ export function validateTheoryPayload(payload: unknown): string | null {
         if (typeof b.textCyrillic !== 'string' || typeof b.textLatin !== 'string') {
           return `blocks[${i}] (${b.type}) requires textCyrillic and textLatin strings`;
         }
+        if (typeof b.translationRu !== 'string' || typeof b.translationEn !== 'string') {
+          return `blocks[${i}] (${b.type}) requires translationRu and translationEn strings`;
+        }
         break;
       case 'table': {
         if (
           typeof b.captionCyrillic !== 'string' ||
-          typeof b.captionLatin !== 'string'
+          typeof b.captionLatin !== 'string' ||
+          typeof b.captionTranslationRu !== 'string' ||
+          typeof b.captionTranslationEn !== 'string'
         ) {
-          return `blocks[${i}] (table) requires captionCyrillic and captionLatin strings`;
+          return `blocks[${i}] (table) requires captionCyrillic, captionLatin, captionTranslationRu and captionTranslationEn strings`;
         }
         if (!Array.isArray(b.headers) || b.headers.length === 0 || !b.headers.every(isBilingual)) {
           return `blocks[${i}] (table) requires a non-empty headers array of {cyrillic, latin}`;
+        }
+        if (
+          !Array.isArray(b.headersTranslationRu) ||
+          !Array.isArray(b.headersTranslationEn) ||
+          b.headersTranslationRu.length !== b.headers.length ||
+          b.headersTranslationEn.length !== b.headers.length ||
+          !b.headersTranslationRu.every((x: unknown) => typeof x === 'string') ||
+          !b.headersTranslationEn.every((x: unknown) => typeof x === 'string')
+        ) {
+          return `blocks[${i}] (table) requires headersTranslationRu/En string arrays the same length as headers`;
         }
         if (!Array.isArray(b.rows) || !b.rows.every((row) => Array.isArray(row))) {
           return `blocks[${i}] (table) requires a rows array of arrays`;

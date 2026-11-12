@@ -54,7 +54,11 @@ struct TheoryBlock: Codable, Equatable, Sendable {
     let textLatin: String?
     let captionCyrillic: String?
     let captionLatin: String?
+    let captionTranslationRu: String?
+    let captionTranslationEn: String?
     let headers: [Bilingual]?
+    let headersTranslationRu: [String]?
+    let headersTranslationEn: [String]?
     let rows: [[Bilingual]]?
     let cyrillic: String?
     let latin: String?

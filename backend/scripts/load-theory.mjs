@@ -1,6 +1,7 @@
 // Loads theory topics from theory.csv (repo root, built by
 // backend/scripts/build-theory-csv.js) into the admin API. Idempotent:
-// skips topics that already exist (same section + title).
+// topics that already exist (same section + title) are updated in place
+// (PATCH), so re-running refreshes payloads without touching status.
 // Usage:
 //   BASE_URL=http://host:3000 ADMIN_EMAIL=... ADMIN_PASSWORD=... \
 //     node backend/scripts/load-theory.mjs
@@ -82,44 +83,49 @@ const existingBySection = new Map();
 const existingTitles = async (sectionId) => {
   if (!existingBySection.has(sectionId)) {
     const { data } = await (await authed(`/admin/theory?limit=100&sectionId=${sectionId}`)).json();
-    existingBySection.set(sectionId, new Set(data.map((t) => t.titleCyrillic)));
+    existingBySection.set(sectionId, new Map(data.map((t) => [t.titleCyrillic, t.id])));
   }
   return existingBySection.get(sectionId);
 };
 
-let created = 0, skipped = 0, failed = 0;
+let created = 0, updated = 0, failed = 0;
 for (const topic of topics) {
   const sectionId = sectionByTitle.get(topic.sectionTitle);
   if (!sectionId) {
     console.error(`section not found: ${topic.sectionTitle} (skipping ${topic.titleCyrillic})`);
-    skipped++;
+    failed++;
     continue;
   }
-  if ((await existingTitles(sectionId)).has(topic.titleCyrillic)) {
-    console.log(`skip (exists): ${topic.titleCyrillic}`);
-    skipped++;
-    continue;
-  }
-  const res = await fetch(`${BASE_URL}/admin/theory`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      sectionId,
-      titleCyrillic: topic.titleCyrillic,
-      titleLatin: topic.titleLatin,
-      titleTranslationRu: topic.titleTranslationRu,
-      titleTranslationEn: topic.titleTranslationEn,
-      payload: topic.payload,
-    }),
+  const body = JSON.stringify({
+    sectionId,
+    titleCyrillic: topic.titleCyrillic,
+    titleLatin: topic.titleLatin,
+    titleTranslationRu: topic.titleTranslationRu,
+    titleTranslationEn: topic.titleTranslationEn,
+    payload: topic.payload,
   });
+  const existingId = (await existingTitles(sectionId)).get(topic.titleCyrillic);
+  const res = await fetch(
+    existingId ? `${BASE_URL}/admin/theory/${existingId}` : `${BASE_URL}/admin/theory`,
+    {
+      method: existingId ? 'PATCH' : 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body,
+    },
+  );
   if (!res.ok) {
     failed++;
     console.error(`fail ${topic.titleCyrillic}: ${res.status} ${await res.text()}`);
+    continue;
+  }
+  if (existingId) {
+    console.log(`updated: ${topic.titleCyrillic}`);
+    updated++;
   } else {
     console.log(`created: ${topic.titleCyrillic}`);
     created++;
-    (await existingTitles(sectionId)).add(topic.titleCyrillic);
+    (await existingTitles(sectionId)).set(topic.titleCyrillic, (await res.json()).id);
   }
 }
-console.log(`done: ${created} created, ${skipped} skipped, ${failed} failed`);
+console.log(`done: ${created} created, ${updated} updated, ${failed} failed`);
 if (failed) process.exit(1);

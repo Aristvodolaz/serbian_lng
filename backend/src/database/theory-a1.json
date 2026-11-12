@@ -8,10 +8,10 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Два писма, један језик", "textLatin": "Dva pisma, jedan jezik" },
-        { "type": "paragraph", "textCyrillic": "Српски језик се пише двема азбукама: ћирилицом и латиницом. Обе су званичне, а једно српско слово одговара тачно једном латиничном знаку, тако да се текст лако пребацује из једног писма у друго.", "textLatin": "Srpski jezik se piše dvema azbukama: ćirilicom i latinicom. Obe su zvanične, a jedno srpsko slovo odgovara tačno jednom latiničnom znaku, tako da se tekst lako prebacuje iz jednog pisma u drugo." },
-        { "type": "paragraph", "textCyrillic": "У апликацији сваки текст долази у оба писма. Ако вам је латиница лакша, почните са њом — а покушајте и да читате ћирилицу: у Србији је она свуда, на улицама, у продавницама и у новинама.", "textLatin": "U aplikaciji svaki tekst dolazi u oba pisma. Ako vam je latinica lakša, počnite sa njom — a pokušajte i da čitate ćirilicu: u Srbiji je ona svuda, na ulicama, u prodavnicama i u novinama." },
-        { "type": "table", "captionCyrillic": "Српска азбука", "captionLatin": "Srpska azbuka", "headers": [ { "cyrillic": "Ћирилица", "latin": "Ćirilica" }, { "cyrillic": "Латиница", "latin": "Latinica" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Два писма, један језик", "textLatin": "Dva pisma, jedan jezik", "translationRu": "Две азбуки, один язык", "translationEn": "Two scripts, one language" },
+        { "type": "paragraph", "textCyrillic": "Српски језик се пише двема азбукама: ћирилицом и латиницом. Обе су званичне, а једно српско слово одговара тачно једном латиничном знаку, тако да се текст лако пребацује из једног писма у друго.", "textLatin": "Srpski jezik se piše dvema azbukama: ćirilicom i latinicom. Obe su zvanične, a jedno srpsko slovo odgovara tačno jednom latiničnom znaku, tako da se tekst lako prebacuje iz jednog pisma u drugo.", "translationRu": "Сербский язык пишется двумя азбуками: кириллицей и латиницей. Обе официальные, и одно сербское слово соответствует ровно одному латинскому знаку, поэтому текст легко переводится из одного письма в другое.", "translationEn": "The Serbian language is written in two alphabets: Cyrillic and Latin. Both are official, and one Serbian letter corresponds to exactly one Latin sign, so text is easy to switch from one script to the other." },
+        { "type": "paragraph", "textCyrillic": "У апликацији сваки текст долази у оба писма. Ако вам је латиница лакша, почните са њом — а покушајте и да читате ћирилицу: у Србији је она свуда, на улицама, у продавницама и у новинама.", "textLatin": "U aplikaciji svaki tekst dolazi u oba pisma. Ako vam je latinica lakša, počnite sa njom — a pokušajte i da čitate ćirilicu: u Srbiji je ona svuda, na ulicama, u prodavnicama i u novinama.", "translationRu": "В приложении каждый текст приходит в обоих написаниях. Если латиница вам легче, начните с неё — но попробуйте и читать кириллицу: в Сербии она везде, на улицах, в магазинах и в газетах.", "translationEn": "In the app every text comes in both scripts. If Latin is easier for you, start with it — but also try reading Cyrillic: in Serbia it is everywhere, in the streets, in shops and in newspapers." },
+        { "type": "table", "captionCyrillic": "Српска азбука", "captionLatin": "Srpska azbuka", "captionTranslationRu": "Сербская азбука", "captionTranslationEn": "The Serbian alphabet", "headers": [ { "cyrillic": "Ћирилица", "latin": "Ćirilica" }, { "cyrillic": "Латиница", "latin": "Latinica" } ], "headersTranslationRu": [ "Кириллица", "Латиница" ], "headersTranslationEn": [ "Cyrillic", "Latin" ], "rows": [
           [ { "cyrillic": "а", "latin": "a" }, { "cyrillic": "a", "latin": "a" } ],
           [ { "cyrillic": "б", "latin": "b" }, { "cyrillic": "b", "latin": "b" } ],
           [ { "cyrillic": "в", "latin": "v" }, { "cyrillic": "v", "latin": "v" } ],
@@ -57,10 +57,10 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Шест особа", "textLatin": "Šest osoba" },
-        { "type": "paragraph", "textCyrillic": "Личне заменице замењују имена особа. У српском има шест особа, а заменице трећег лица разликују се по роду: он, она, оно.", "textLatin": "Lične zamenice zamenuju imena osoba. U srpskom ima šest osoba, a zamenice trećeg lica razlikuju se po rodu: on, ona, ono." },
-        { "type": "paragraph", "textCyrillic": "Заменица „ви“ (малим словом) говори о више особа, а велико „Ви“ је поштовано обраћање једној особи — као руско „вы“.", "textLatin": "Zamenica „vi“ (malim slovom) govori o više osoba, a veliko „Vi“ je poštovano obraćanje jednoj osobi — kao rusko „vy“." },
-        { "type": "table", "captionCyrillic": "Личне заменице", "captionLatin": "Lične zamenice", "headers": [ { "cyrillic": "Особа", "latin": "Osoba" }, { "cyrillic": "Заменица", "latin": "Zamenica" }, { "cyrillic": "Пример", "latin": "Primer" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Шест особа", "textLatin": "Šest osoba", "translationRu": "Шесть лиц", "translationEn": "Six persons" },
+        { "type": "paragraph", "textCyrillic": "Личне заменице замењују имена особа. У српском има шест особа, а заменице трећег лица разликују се по роду: он, она, оно.", "textLatin": "Lične zamenice zamenuju imena osoba. U srpskom ima šest osoba, a zamenice trećeg lica razlikuju se po rodu: on, ona, ono.", "translationRu": "Личные местоимения заменяют имена людей. В сербском шесть лиц, а местоимения третьего лица различаются по роду: он, она, оно.", "translationEn": "Personal pronouns replace people's names. Serbian has six persons, and the third-person pronouns differ by gender: on, ona, ono." },
+        { "type": "paragraph", "textCyrillic": "Заменица „ви“ (малим словом) говори о више особа, а велико „Ви“ је поштовано обраћање једној особи — као руско „вы“.", "textLatin": "Zamenica „vi“ (malim slovom) govori o više osoba, a veliko „Vi“ je poštovano obraćanje jednoj osobi — kao rusko „vy“.", "translationRu": "Местоимение «ви» (со строчной буквы) говорит о нескольких людях, а прописное «Ви» — вежливое обращение к одному человеку, как русское «вы».", "translationEn": "The pronoun “vi” (lowercase) speaks about more people, while the capital “Vi” is the polite form of addressing one person — like the polite Russian «вы»." },
+        { "type": "table", "captionCyrillic": "Личне заменице", "captionLatin": "Lične zamenice", "captionTranslationRu": "Личные местоимения", "captionTranslationEn": "Personal pronouns", "headers": [ { "cyrillic": "Особа", "latin": "Osoba" }, { "cyrillic": "Заменица", "latin": "Zamenica" }, { "cyrillic": "Пример", "latin": "Primer" } ], "headersTranslationRu": [ "Лицо", "Местоимение", "Пример" ], "headersTranslationEn": [ "Person", "Pronoun", "Example" ], "rows": [
           [ { "cyrillic": "1. л. јед.", "latin": "1. os." }, { "cyrillic": "ја", "latin": "ja" }, { "cyrillic": "Ја сам из Русије.", "latin": "Ja sam iz Rusije." } ],
           [ { "cyrillic": "2. л. јед.", "latin": "2. os." }, { "cyrillic": "ти", "latin": "ti" }, { "cyrillic": "Ти си мој пријатељ.", "latin": "Ti si moj prijatelj." } ],
           [ { "cyrillic": "3. л. јед.", "latin": "3. os." }, { "cyrillic": "он / она", "latin": "on / ona" }, { "cyrillic": "Она је учитељица.", "latin": "Ona je učiteljica." } ],
@@ -82,9 +82,9 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Глагол „бити“ у садашњем времену", "textLatin": "Glagol „biti“ u sadašnjem vremenu" },
-        { "type": "paragraph", "textCyrillic": "Глагол „бити“ је нерегуларан и један од најчешћих глагола у српском језику. Служи за исказивање стања и придева.", "textLatin": "Glagol „biti“ je neregularan i jedan od najčešćih glagola u srpskom jeziku. Služi za iskazivanje stanja i pridava." },
-        { "type": "table", "captionCyrillic": "Спряжение — презент", "captionLatin": "Konjugacija — prezent", "headers": [ { "cyrillic": "Особа", "latin": "Osoba" }, { "cyrillic": "Форма", "latin": "Forma" }, { "cyrillic": "Пример", "latin": "Primer" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Глагол „бити“ у садашњем времену", "textLatin": "Glagol „biti“ u sadašnjem vremenu", "translationRu": "Глагол «бити» в настоящем времени", "translationEn": "The verb \"biti\" in the present tense" },
+        { "type": "paragraph", "textCyrillic": "Глагол „бити“ је нерегуларан и један од најчешћих глагола у српском језику. Служи за исказивање стања и придева.", "textLatin": "Glagol „biti“ je neregularan i jedan od najčešćih glagola u srpskom jeziku. Služi za iskazivanje stanja i pridava.", "translationRu": "Глагол «бити» неправильный и один из самых частых в сербском языке. Выражает состояние и признак.", "translationEn": "The verb \"biti\" is irregular and one of the most common verbs in Serbian. It expresses states and adjectives." },
+        { "type": "table", "captionCyrillic": "Спряжение — презент", "captionLatin": "Konjugacija — prezent", "captionTranslationRu": "Спряжение — настоящее время", "captionTranslationEn": "Conjugation — present", "headers": [ { "cyrillic": "Особа", "latin": "Osoba" }, { "cyrillic": "Форма", "latin": "Forma" }, { "cyrillic": "Пример", "latin": "Primer" } ], "headersTranslationRu": [ "Лицо", "Форма", "Пример" ], "headersTranslationEn": [ "Person", "Form", "Example" ], "rows": [
           [ { "cyrillic": "ја", "latin": "ja" }, { "cyrillic": "сам", "latin": "sam" }, { "cyrillic": "Ја сам овде.", "latin": "Ja sam ovde." } ],
           [ { "cyrillic": "ти", "latin": "ti" }, { "cyrillic": "си", "latin": "si" }, { "cyrillic": "Ти си болесан.", "latin": "Ti si bolesan." } ],
           [ { "cyrillic": "он/она", "latin": "on/ona" }, { "cyrillic": "је", "latin": "je" }, { "cyrillic": "Она је лекар.", "latin": "Ona je lekar." } ],
@@ -105,14 +105,14 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Три групе спрежења", "textLatin": "Tri grupe konjugacije" },
-        { "type": "paragraph", "textCyrillic": "Презент је садашње време, а наставак у презенту зависи од завршетка инфинитива. Разликујемо три групе: -ам, -ем и -им.", "textLatin": "Prezent je sadašnje vreme, a nastavak u prezentu zavisi od završetka infinitiva. Razlikujemo tri grupe: -am, -em i -im." },
-        { "type": "table", "captionCyrillic": "Три групе презента", "captionLatin": "Tri grupe prezenta", "headers": [ { "cyrillic": "Група", "latin": "Grupa" }, { "cyrillic": "Инфинитив", "latin": "Infinitiv" }, { "cyrillic": "Ја", "latin": "Ja" }, { "cyrillic": "Ти", "latin": "Ti" }, { "cyrillic": "Они", "latin": "Oni" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Три групе спрежења", "textLatin": "Tri grupe konjugacije", "translationRu": "Три группы спряжения", "translationEn": "Three conjugation groups" },
+        { "type": "paragraph", "textCyrillic": "Презент је садашње време, а наставак у презенту зависи од завршетка инфинитива. Разликујемо три групе: -ам, -ем и -им.", "textLatin": "Prezent je sadašnje vreme, a nastavak u prezentu zavisi od završetka infinitiva. Razlikujemo tri grupe: -am, -em i -im.", "translationRu": "Презент — настоящее время, а окончание зависит от окончания инфинитива. Различаем три группы: -ам, -ем и -им.", "translationEn": "The present tense is called prezent, and its ending depends on the ending of the infinitive. There are three groups: -am, -em and -im." },
+        { "type": "table", "captionCyrillic": "Три групе презента", "captionLatin": "Tri grupe prezenta", "captionTranslationRu": "Три группы презента", "captionTranslationEn": "The three present-tense groups", "headers": [ { "cyrillic": "Група", "latin": "Grupa" }, { "cyrillic": "Инфинитив", "latin": "Infinitiv" }, { "cyrillic": "Ја", "latin": "Ja" }, { "cyrillic": "Ти", "latin": "Ti" }, { "cyrillic": "Они", "latin": "Oni" } ], "headersTranslationRu": [ "Группа", "Инфинитив", "Я", "Ты", "Они" ], "headersTranslationEn": [ "Group", "Infinitive", "I", "You", "They" ], "rows": [
           [ { "cyrillic": "-ам", "latin": "-am" }, { "cyrillic": "радити", "latin": "raditi" }, { "cyrillic": "радим", "latin": "radim" }, { "cyrillic": "радиш", "latin": "radiš" }, { "cyrillic": "раде", "latin": "rade" } ],
           [ { "cyrillic": "-ем", "latin": "-em" }, { "cyrillic": "писати", "latin": "pisati" }, { "cyrillic": "пишем", "latin": "pišem" }, { "cyrillic": "пишеш", "latin": "pišeš" }, { "cyrillic": "пишу", "latin": "pišu" } ],
           [ { "cyrillic": "-им", "latin": "-im" }, { "cyrillic": "говорити", "latin": "govoriti" }, { "cyrillic": "говорим", "latin": "govorim" }, { "cyrillic": "говориш", "latin": "govoriš" }, { "cyrillic": "говоре", "latin": "govore" } ]
         ] },
-        { "type": "paragraph", "textCyrillic": "Неки глаголи су нерегуларни: имати → имам, имаш, има, имамо, имате, имају. Глагол „бити“ је описан у посебној теми.", "textLatin": "Neki glagoli su neregularni: imati → imam, imaš, ima, imamo, imate, imaju. Glagol „biti“ je opisan u posebnoj temi." },
+        { "type": "paragraph", "textCyrillic": "Неки глаголи су нерегуларни: имати → имам, имаш, има, имамо, имате, имају. Глагол „бити“ је описан у посебној теми.", "textLatin": "Neki glagoli su neregularni: imati → imam, imaš, ima, imamo, imate, imaju. Glagol „biti“ je opisan u posebnoj temi.", "translationRu": "Некоторые глаголы неправильные: имати → имам, имаш, има, имамо, имате, имају. Глагол «бити» описан в отдельной теме.", "translationEn": "Some verbs are irregular: imati → imam, imaš, ima, imamo, imate, imaju. The verb “biti” is described in a separate topic." },
         { "type": "example", "cyrillic": "Учим српски сваки дан.", "latin": "Učim srpski svaki dan.", "translationRu": "Я учу сербский каждый день.", "translationEn": "I learn Serbian every day." },
         { "type": "example", "cyrillic": "Шта пишеш?", "latin": "Šta pišeš?", "translationRu": "Что ты пишешь?", "translationEn": "What are you writing?" }
       ]
@@ -127,9 +127,9 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Седам падежа српског језика", "textLatin": "Sedam padeža srpskog jezika" },
-        { "type": "paragraph", "textCyrillic": "У српском језику постоји седам падежа. Сваки падеж одговара на питање и има своју улогу у реченици.", "textLatin": "U srpskom jeziku postoji sedam padeža. Svaki padež odgovara na pitanje i ima svoju ulogu u rečenici." },
-        { "type": "table", "captionCyrillic": "Падежи и њихова питања", "captionLatin": "Padeži i njihova pitanja", "headers": [ { "cyrillic": "Падеж", "latin": "Padež" }, { "cyrillic": "Питање", "latin": "Pitanje" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Седам падежа српског језика", "textLatin": "Sedam padeža srpskog jezika", "translationRu": "Семь падежей сербского языка", "translationEn": "The seven cases of Serbian" },
+        { "type": "paragraph", "textCyrillic": "У српском језику постоји седам падежа. Сваки падеж одговара на питање и има своју улогу у реченици.", "textLatin": "U srpskom jeziku postoji sedam padeža. Svaki padež odgovara na pitanje i ima svoju ulogu u rečenici.", "translationRu": "В сербском языке семь падежей. Каждый падеж отвечает на вопрос и играет свою роль в предложении.", "translationEn": "Serbian has seven cases. Each case answers a question and has its own role in the sentence." },
+        { "type": "table", "captionCyrillic": "Падежи и њихова питања", "captionLatin": "Padeži i njihova pitanja", "captionTranslationRu": "Падежи и их вопросы", "captionTranslationEn": "Cases and their questions", "headers": [ { "cyrillic": "Падеж", "latin": "Padež" }, { "cyrillic": "Питање", "latin": "Pitanje" } ], "headersTranslationRu": [ "Падеж", "Вопрос" ], "headersTranslationEn": [ "Case", "Question" ], "rows": [
           [ { "cyrillic": "1. Номинатив", "latin": "1. Nominativ" }, { "cyrillic": "Ко? Шта?", "latin": "Ko? Šta?" } ],
           [ { "cyrillic": "2. Генитив", "latin": "2. Genitiv" }, { "cyrillic": "Кога? Чега?", "latin": "Koga? Čega?" } ],
           [ { "cyrillic": "3. Датив", "latin": "3. Dativ" }, { "cyrillic": "Коме? Чему?", "latin": "Kome? Čemu?" } ],
@@ -151,14 +151,14 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Мушки, женски и средњи род", "textLatin": "Muški, ženski i srednji rod" },
-        { "type": "paragraph", "textCyrillic": "Српске именице имају три рода: мушки, женски и средњи. Род се углавном види по завршетку једнине.", "textLatin": "Srpske imenice imaju tri roda: muški, ženski i srednji. Rod se uglavnom vidi po završetku jednine." },
-        { "type": "table", "captionCyrillic": "Род и завршеци", "captionLatin": "Rod i završeci", "headers": [ { "cyrillic": "Род", "latin": "Rod" }, { "cyrillic": "Завршетак", "latin": "Završetak" }, { "cyrillic": "Примери", "latin": "Primeri" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Мушки, женски и средњи род", "textLatin": "Muški, ženski i srednji rod", "translationRu": "Мужской, женский и средний род", "translationEn": "Masculine, feminine and neuter gender" },
+        { "type": "paragraph", "textCyrillic": "Српске именице имају три рода: мушки, женски и средњи. Род се углавном види по завршетку једнине.", "textLatin": "Srpske imenice imaju tri roda: muški, ženski i srednji. Rod se uglavnom vidi po završetku jednine.", "translationRu": "У сербских существительных три рода: мужской, женский и средний. Род обычно виден по окончанию единственного числа.", "translationEn": "Serbian nouns have three genders: masculine, feminine and neuter. The gender is usually visible in the singular ending." },
+        { "type": "table", "captionCyrillic": "Род и завршеци", "captionLatin": "Rod i završeci", "captionTranslationRu": "Род и окончания", "captionTranslationEn": "Gender and endings", "headers": [ { "cyrillic": "Род", "latin": "Rod" }, { "cyrillic": "Завршетак", "latin": "Završetak" }, { "cyrillic": "Примери", "latin": "Primeri" } ], "headersTranslationRu": [ "Род", "Окончание", "Примеры" ], "headersTranslationEn": [ "Gender", "Ending", "Examples" ], "rows": [
           [ { "cyrillic": "мушки", "latin": "muški" }, { "cyrillic": "сугласник", "latin": "suglasnik" }, { "cyrillic": "град, студент", "latin": "grad, student" } ],
           [ { "cyrillic": "женски", "latin": "ženski" }, { "cyrillic": "-а", "latin": "-a" }, { "cyrillic": "школа, жена", "latin": "škola, žena" } ],
           [ { "cyrillic": "средњи", "latin": "srednji" }, { "cyrillic": "-о, -е", "latin": "-o, -e" }, { "cyrillic": "село, дете", "latin": "selo, dete" } ]
         ] },
-        { "type": "paragraph", "textCyrillic": "Због рода се мења и придев: нови град, нова школа, ново село.", "textLatin": "Zbog roda se menja i pridev: novi grad, nova škola, novo selo." },
+        { "type": "paragraph", "textCyrillic": "Због рода се мења и придев: нови град, нова школа, ново село.", "textLatin": "Zbog roda se menja i pridev: novi grad, nova škola, novo selo.", "translationRu": "Из-за рода изменяется и прилагательное: нови град, нова школа, ново село.", "translationEn": "Because of gender the adjective changes too: novi grad, nova škola, novo selo." },
         { "type": "example", "cyrillic": "Мој град је мали.", "latin": "Moj grad je mali.", "translationRu": "Мой город маленький.", "translationEn": "My town is small." },
         { "type": "example", "cyrillic": "Моја школа је велика.", "latin": "Moja škola je velika.", "translationRu": "Моя школа большая.", "translationEn": "My school is big." }
       ]
@@ -173,15 +173,15 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Завршеци множине", "textLatin": "Završeci množine" },
-        { "type": "paragraph", "textCyrillic": "Множина има више завршетака; они зависе од рода и завршетка једнине именице.", "textLatin": "Množina ima više završetaka; oni zavise od roda i završetka jednine imenice." },
-        { "type": "table", "captionCyrillic": "Множина — типични примери", "captionLatin": "Množina — tipični primeri", "headers": [ { "cyrillic": "Једнина", "latin": "Jednina" }, { "cyrillic": "Множина", "latin": "Množina" }, { "cyrillic": "Род", "latin": "Rod" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Завршеци множине", "textLatin": "Završeci množine", "translationRu": "Окончания множественного числа", "translationEn": "Plural endings" },
+        { "type": "paragraph", "textCyrillic": "Множина има више завршетака; они зависе од рода и завршетка једнине именице.", "textLatin": "Množina ima više završetaka; oni zavise od roda i završetka jednine imenice.", "translationRu": "У множественного числа несколько окончаний; они зависят от рода и окончания единственного числа существительного.", "translationEn": "The plural has several endings; they depend on the gender and the singular ending of the noun." },
+        { "type": "table", "captionCyrillic": "Множина — типични примери", "captionLatin": "Množina — tipični primeri", "captionTranslationRu": "Множественное число — типичные примеры", "captionTranslationEn": "Plural — typical examples", "headers": [ { "cyrillic": "Једнина", "latin": "Jednina" }, { "cyrillic": "Множина", "latin": "Množina" }, { "cyrillic": "Род", "latin": "Rod" } ], "headersTranslationRu": [ "Единственное", "Множественное", "Род" ], "headersTranslationEn": [ "Singular", "Plural", "Gender" ], "rows": [
           [ { "cyrillic": "студент", "latin": "student" }, { "cyrillic": "студенти", "latin": "studenti" }, { "cyrillic": "мушки", "latin": "muški" } ],
           [ { "cyrillic": "град", "latin": "grad" }, { "cyrillic": "градови", "latin": "gradovi" }, { "cyrillic": "мушки", "latin": "muški" } ],
           [ { "cyrillic": "жена", "latin": "žena" }, { "cyrillic": "жене", "latin": "žene" }, { "cyrillic": "женски", "latin": "ženski" } ],
           [ { "cyrillic": "село", "latin": "selo" }, { "cyrillic": "села", "latin": "sela" }, { "cyrillic": "средњи", "latin": "srednji" } ]
         ] },
-        { "type": "paragraph", "textCyrillic": "Придев у множини такође се мења: нови градови, нове школе, нова села.", "textLatin": "Pridev u množini takođe se menja: novi gradovi, nove škole, nova sela." },
+        { "type": "paragraph", "textCyrillic": "Придев у множини такође се мења: нови градови, нове школе, нова села.", "textLatin": "Pridev u množini takođe se menja: novi gradovi, nove škole, nova sela.", "translationRu": "Прилагательное во множественном числе тоже изменяется: нови градови, нове школе, нова села.", "translationEn": "The adjective also changes in the plural: novi gradovi, nove škole, nova sela." },
         { "type": "example", "cyrillic": "Имам две сестре.", "latin": "Imam dve sestre.", "translationRu": "У меня две сестры.", "translationEn": "I have two sisters." },
         { "type": "example", "cyrillic": "Ови градови су стари.", "latin": "Ovi gradovi su stari.", "translationRu": "Эти города старые.", "translationEn": "These towns are old." }
       ]
@@ -196,10 +196,10 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Директни објект", "textLatin": "Direktan objekt" },
-        { "type": "paragraph", "textCyrillic": "Акузатив одговара на питање „кога? шта?“ и казује директни објект реченице (Видим град.).", "textLatin": "Akuzativ odgovara na pitanje „koga? šta?“ i kaže direktan objekat rečenice (Vidim grad.)." },
-        { "type": "paragraph", "textCyrillic": "Уз предлоге „у“ и „на“ акузатив казује смер: Идем у град.", "textLatin": "Uz predloge „u“ i „na“ akuzativ kaže smer: Idem u grad." },
-        { "type": "table", "captionCyrillic": "Акузатив једнине", "captionLatin": "Akuzativ jednine", "headers": [ { "cyrillic": "Именица", "latin": "Imenica" }, { "cyrillic": "Акузатив", "latin": "Akuzativ" }, { "cyrillic": "Пример", "latin": "Primer" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Директни објект", "textLatin": "Direktan objekt", "translationRu": "Прямой объект", "translationEn": "The direct object" },
+        { "type": "paragraph", "textCyrillic": "Акузатив одговара на питање „кога? шта?“ и казује директни објект реченице (Видим град.).", "textLatin": "Akuzativ odgovara na pitanje „koga? šta?“ i kaže direktan objekat rečenice (Vidim grad.).", "translationRu": "Винительный падеж отвечает на вопрос «кого? что?» и обозначает прямой объект предложения (Видим град. — Я вижу город.).", "translationEn": "The accusative answers the question “koga? šta?” (whom? what?) and marks the direct object of the sentence (Vidim grad. — I see the city.)." },
+        { "type": "paragraph", "textCyrillic": "Уз предлоге „у“ и „на“ акузатив казује смер: Идем у град.", "textLatin": "Uz predloge „u“ i „na“ akuzativ kaže smer: Idem u grad.", "translationRu": "С предлогами «у» и «на» винительный падеж обозначает направление: Идем у град. — Я иду в город.", "translationEn": "With the prepositions “u” and “na” the accusative expresses direction: Idem u grad. — I am going to the city." },
+        { "type": "table", "captionCyrillic": "Акузатив једнине", "captionLatin": "Akuzativ jednine", "captionTranslationRu": "Винительный падеж единственного числа", "captionTranslationEn": "The accusative singular", "headers": [ { "cyrillic": "Именица", "latin": "Imenica" }, { "cyrillic": "Акузатив", "latin": "Akuzativ" }, { "cyrillic": "Пример", "latin": "Primer" } ], "headersTranslationRu": [ "Существительное", "Винительный", "Пример" ], "headersTranslationEn": [ "Noun", "Accusative", "Example" ], "rows": [
           [ { "cyrillic": "град", "latin": "grad" }, { "cyrillic": "град", "latin": "grad" }, { "cyrillic": "Видим град.", "latin": "Vidim grad." } ],
           [ { "cyrillic": "студент", "latin": "student" }, { "cyrillic": "студента", "latin": "studenta" }, { "cyrillic": "Видим студента.", "latin": "Vidim studenta." } ],
           [ { "cyrillic": "жена", "latin": "žena" }, { "cyrillic": "жену", "latin": "ženu" }, { "cyrillic": "Видим жену.", "latin": "Vidim ženu." } ],
@@ -219,9 +219,9 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Имам, имаш, има …", "textLatin": "Imam, imaš, ima …" },
-        { "type": "paragraph", "textCyrillic": "Глагол „имати“ спада у групу -ам, али његова трећа особа множине је нерегуларна: имају. Негација гласи: немам.", "textLatin": "Glagol „imati“ spada u grupu -am, ali njegova treća osoba množine je neregularna: imaju. Negacija glasi: nemam." },
-        { "type": "table", "captionCyrillic": "Спряжение — имати", "captionLatin": "Konjugacija — imati", "headers": [ { "cyrillic": "Особа", "latin": "Osoba" }, { "cyrillic": "Форма", "latin": "Forma" }, { "cyrillic": "Пример", "latin": "Primer" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Имам, имаш, има …", "textLatin": "Imam, imaš, ima …", "translationRu": "Имам, имаш, има… («я имею», «ты имеешь»…)", "translationEn": "Imam, imaš, ima … (“I have, you have, he has…”)" },
+        { "type": "paragraph", "textCyrillic": "Глагол „имати“ спада у групу -ам, али његова трећа особа множине је нерегуларна: имају. Негација гласи: немам.", "textLatin": "Glagol „imati“ spada u grupu -am, ali njegova treća osoba množine je neregularna: imaju. Negacija glasi: nemam.", "translationRu": "Глагол «имати» относится к группе -ам, но его третье лицо множественного числа неправильное: имају. Отрицание: немам.", "translationEn": "The verb “imati” belongs to the -am group, but its third-person plural is irregular: imaju. The negation is: nemam." },
+        { "type": "table", "captionCyrillic": "Спряжение — имати", "captionLatin": "Konjugacija — imati", "captionTranslationRu": "Спряжение — имати", "captionTranslationEn": "Conjugation — imati", "headers": [ { "cyrillic": "Особа", "latin": "Osoba" }, { "cyrillic": "Форма", "latin": "Forma" }, { "cyrillic": "Пример", "latin": "Primer" } ], "headersTranslationRu": [ "Лицо", "Форма", "Пример" ], "headersTranslationEn": [ "Person", "Form", "Example" ], "rows": [
           [ { "cyrillic": "ја", "latin": "ja" }, { "cyrillic": "имам", "latin": "imam" }, { "cyrillic": "Имам речник.", "latin": "Imam rečnik." } ],
           [ { "cyrillic": "ти", "latin": "ti" }, { "cyrillic": "имаш", "latin": "imaš" }, { "cyrillic": "Имаш питање.", "latin": "Imaš pitanje." } ],
           [ { "cyrillic": "он/она", "latin": "on/ona" }, { "cyrillic": "има", "latin": "ima" }, { "cyrillic": "Она има сестру.", "latin": "Ona ima sestru." } ],
@@ -243,9 +243,9 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Где? — у граду", "textLatin": "Gde? — u gradu" },
-        { "type": "paragraph", "textCyrillic": "Локатив казује место и одговара на питање „где?“. Користи се само уз предлоге; најважнија су „у“ и „на“: у граду, на столу.", "textLatin": "Lokativ kaže mesto i odgovara na pitanje „gde?“. Koristi se samo uz predloge; najvažnija su „u“ i „na“: u gradu, na stolu." },
-        { "type": "table", "captionCyrillic": "Локатив једнине", "captionLatin": "Lokativ jednine", "headers": [ { "cyrillic": "Именица", "latin": "Imenica" }, { "cyrillic": "Локатив", "latin": "Lokativ" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Где? — у граду", "textLatin": "Gde? — u gradu", "translationRu": "Где? — у граду («в городе»)", "translationEn": "Where? — u gradu (“in the city”)" },
+        { "type": "paragraph", "textCyrillic": "Локатив казује место и одговара на питање „где?“. Користи се само уз предлоге; најважнија су „у“ и „на“: у граду, на столу.", "textLatin": "Lokativ kaže mesto i odgovara na pitanje „gde?“. Koristi se samo uz predloge; najvažnija su „u“ i „na“: u gradu, na stolu.", "translationRu": "Местный падеж обозначает место и отвечает на вопрос «где?». Употребляется только с предлогами; важнейшие — «у» и «на»: у граду, на столу.", "translationEn": "The locative expresses location and answers the question “gde?” (where?). It is used only with prepositions; the most important are “u” and “na”: u gradu, na stolu." },
+        { "type": "table", "captionCyrillic": "Локатив једнине", "captionLatin": "Lokativ jednine", "captionTranslationRu": "Местный падеж единственного числа", "captionTranslationEn": "The locative singular", "headers": [ { "cyrillic": "Именица", "latin": "Imenica" }, { "cyrillic": "Локатив", "latin": "Lokativ" } ], "headersTranslationRu": [ "Существительное", "Местный" ], "headersTranslationEn": [ "Noun", "Locative" ], "rows": [
           [ { "cyrillic": "град", "latin": "grad" }, { "cyrillic": "у граду", "latin": "u gradu" } ],
           [ { "cyrillic": "школа", "latin": "škola" }, { "cyrillic": "у школи", "latin": "u školi" } ],
           [ { "cyrillic": "село", "latin": "selo" }, { "cyrillic": "у селу", "latin": "u selu" } ],
@@ -266,9 +266,9 @@
     "payload": {
       "version": 1,
       "blocks": [
-        { "type": "heading", "textCyrillic": "Чим? — са ким?", "textLatin": "Čim? — sa kim?" },
-        { "type": "paragraph", "textCyrillic": "Инструментал казује средство или начин — без предлога: аутобусом, колима. Уз особу иде предлог „са“: са братом.", "textLatin": "Instrumental kaže sredstvo ili način — bez predloga: autobusom, kolima. Uz osobu ide predlog „sa“: sa bratom." },
-        { "type": "table", "captionCyrillic": "Инструментал једнине", "captionLatin": "Instrumental jednine", "headers": [ { "cyrillic": "Именица", "latin": "Imenica" }, { "cyrillic": "Инструментал", "latin": "Instrumental" } ], "rows": [
+        { "type": "heading", "textCyrillic": "Чим? — са ким?", "textLatin": "Čim? — sa kim?", "translationRu": "Чем? — с кем?", "translationEn": "By what? — with whom?" },
+        { "type": "paragraph", "textCyrillic": "Инструментал казује средство или начин — без предлога: аутобусом, колима. Уз особу иде предлог „са“: са братом.", "textLatin": "Instrumental kaže sredstvo ili način — bez predloga: autobusom, kolima. Uz osobu ide predlog „sa“: sa bratom.", "translationRu": "Творительный падеж обозначает средство или способ — без предлога: аутобусом, колима. С лицом идёт предлог «са»: са братом.", "translationEn": "The instrumental expresses the means or manner — without a preposition: autobusom, kolima. With a person the preposition “sa” is used: sa bratom." },
+        { "type": "table", "captionCyrillic": "Инструментал једнине", "captionLatin": "Instrumental jednine", "captionTranslationRu": "Творительный падеж единственного числа", "captionTranslationEn": "The instrumental singular", "headers": [ { "cyrillic": "Именица", "latin": "Imenica" }, { "cyrillic": "Инструментал", "latin": "Instrumental" } ], "headersTranslationRu": [ "Существительное", "Творительный" ], "headersTranslationEn": [ "Noun", "Instrumental" ], "rows": [
           [ { "cyrillic": "аутобус", "latin": "autobus" }, { "cyrillic": "аутобусом", "latin": "autobusom" } ],
           [ { "cyrillic": "кола", "latin": "kola" }, { "cyrillic": "колима", "latin": "kolima" } ],
           [ { "cyrillic": "брат", "latin": "brat" }, { "cyrillic": "са братом", "latin": "sa bratom" } ],

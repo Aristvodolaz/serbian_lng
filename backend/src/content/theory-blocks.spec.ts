@@ -4,10 +4,14 @@ const validTableBlock = {
   type: 'table',
   captionCyrillic: 'Падежи',
   captionLatin: 'Padeži',
+  captionTranslationRu: 'Падежи',
+  captionTranslationEn: 'Cases',
   headers: [
     { cyrillic: 'Ја', latin: 'Ja' },
     { cyrillic: 'Ти', latin: 'Ti' },
   ],
+  headersTranslationRu: ['Я', 'Ты'],
+  headersTranslationEn: ['I', 'You'],
   rows: [
     [
       { cyrillic: 'јесам', latin: 'jesam' },
@@ -20,8 +24,20 @@ describe('validateTheoryPayload', () => {
   const validPayload = {
     version: 1,
     blocks: [
-      { type: 'heading', textCyrillic: 'Презент', textLatin: 'Prezent' },
-      { type: 'paragraph', textCyrillic: 'Текст', textLatin: 'Tekst' },
+      {
+        type: 'heading',
+        textCyrillic: 'Презент',
+        textLatin: 'Prezent',
+        translationRu: 'Настоящее время',
+        translationEn: 'Present tense',
+      },
+      {
+        type: 'paragraph',
+        textCyrillic: 'Текст',
+        textLatin: 'Tekst',
+        translationRu: 'Текст',
+        translationEn: 'Text',
+      },
       validTableBlock,
       {
         type: 'example',
@@ -57,6 +73,21 @@ describe('validateTheoryPayload', () => {
     expect(
       validateTheoryPayload({ version: 1, blocks: [{ type: 'heading', textCyrillic: 'x' }] }),
     ).toContain('textCyrillic and textLatin');
+  });
+
+  it('rejects paragraph missing translations', () => {
+    expect(
+      validateTheoryPayload({
+        version: 1,
+        blocks: [{ type: 'paragraph', textCyrillic: 'x', textLatin: 'y' }],
+      }),
+    ).toContain('translationRu and translationEn');
+  });
+
+  it('rejects table with headers translation length mismatch', () => {
+    expect(
+      validateTheoryPayload({ version: 1, blocks: [{ ...validTableBlock, headersTranslationRu: ['x'] }] }),
+    ).toContain('headersTranslationRu');
   });
 
   it('rejects table row length mismatch and bad headers', () => {
