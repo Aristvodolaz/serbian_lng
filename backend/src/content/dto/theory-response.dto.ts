@@ -21,6 +21,7 @@ export class TheoryTopicSummaryDto {
 
 export class TheoryLibrarySectionDto {
   @ApiProperty() id: string;
+  @ApiProperty() level: string;
   @ApiProperty() titleCyrillic: string;
   @ApiProperty() titleLatin: string;
   @ApiProperty() titleTranslationRu: string;

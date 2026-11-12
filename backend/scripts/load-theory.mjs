@@ -1,5 +1,6 @@
-// Loads theory topics from backend/src/database/theory-a1.json into the admin
-// API. Idempotent: skips topics that already exist (same section + title).
+// Loads theory topics from theory.csv (repo root, built by
+// backend/scripts/build-theory-csv.js) into the admin API. Idempotent:
+// skips topics that already exist (same section + title).
 // Usage:
 //   BASE_URL=http://host:3000 ADMIN_EMAIL=... ADMIN_PASSWORD=... \
 //     node backend/scripts/load-theory.mjs
@@ -34,12 +35,44 @@ for (let p = 1; ; p++) {
   if (!data.length || p >= totalPages) break;
 }
 
-const topics = JSON.parse(
-  (await import('node:fs')).readFileSync(
-    new URL('../src/database/theory-a1.json', import.meta.url),
-    'utf8',
-  ),
-);
+// Minimal RFC-4180 single-line parser: quoted cells, doubled quotes.
+const parseCsvLine = (line) => {
+  const out = [];
+  let cur = '';
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (inQ) {
+      if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else cur += c;
+    } else if (c === '"') inQ = true;
+    else if (c === ',') { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+};
+
+const csv = (await import('node:fs'))
+  .readFileSync(new URL('../../theory.csv', import.meta.url), 'utf8')
+  .split('\n')
+  .filter(Boolean);
+const [header, ...rows] = csv;
+const cols = parseCsvLine(header);
+const HEADER = ['titleCyrillic', 'titleLatin', 'titleTranslationRu', 'titleTranslationEn', 'sectionTitle', 'payload'];
+if (cols.join(',') !== HEADER.join(',')) {
+  console.error(`theory.csv header mismatch: ${cols.join(',')}`);
+  process.exit(1);
+}
+const topics = rows
+  .map((line) => parseCsvLine(line))
+  .filter((cells) => cells.length === 6)
+  .map((cells) => {
+    const topic = Object.fromEntries(HEADER.map((h, i) => [h, cells[i]]));
+    topic.payload = JSON.parse(topic.payload);
+    return topic;
+  });
 
 const existingBySection = new Map();
 const existingTitles = async (sectionId) => {

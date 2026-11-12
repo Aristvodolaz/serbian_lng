@@ -122,6 +122,7 @@ export class ContentService {
     return {
       sections: sections.map((s) => ({
         id: s.id,
+        level: s.level,
         titleCyrillic: s.titleCyrillic,
         titleLatin: s.titleLatin,
         titleTranslationRu: s.titleTranslationRu,
