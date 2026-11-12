@@ -1,9 +1,9 @@
-titleCyrillic,titleLatin,titleTranslationRu,titleTranslationEn
-Писмо,Pismo,Алфавит,Alphabet
-Поздрави,Pozdravi,Приветствия,Greetings
-Породица,Porodica,Семья,Family
-Храна,Hrana,Еда,Food
-Бројеви,Brojevi,Числа,Numbers
-Путовање,Putovanje,Путешествие,Travel
-Људи,Ljudi,Люди,People
-Време,Vreme,Время,Time
+titleCyrillic,titleLatin,titleTranslationRu,titleTranslationEn,sectionTitle
+Писмо,Pismo,Алфавит,Alphabet,Основе
+Поздрави,Pozdravi,Приветствия,Greetings,Основе
+Бројеви,Brojevi,Числа,Numbers,Основе
+Породица,Porodica,Семья,Family,Свакодневица
+Храна,Hrana,Еда,Food,Свакодневица
+Људи,Ljudi,Люди,People,Људи и путовање
+Путовање,Putovanje,Путешествие,Travel,Људи и путовање
+Време,Vreme,Время,Time,Основе

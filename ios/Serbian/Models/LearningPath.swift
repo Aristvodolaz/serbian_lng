@@ -55,6 +55,9 @@ struct SectionPath: Codable, Identifiable, Equatable, Sendable {
     /// The section's checkpoint lesson, which sits outside the units' lesson
     /// lists, at the end of the section.
     let checkpoint: LessonSummary?
+    /// Grammar theory topics attached to the section (optional: older servers
+    /// do not send the field).
+    let theory: [TheorySummary]?
 }
 
 /// `PathResponseDto`

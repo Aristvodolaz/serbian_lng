@@ -101,6 +101,10 @@ final class RecAPI {
         try await client.send(.get("lessons/\(id)"), as: LessonDetail.self)
     }
 
+    func theory(id: String) async throws -> TheoryTopic {
+        try await client.send(.get("theory/\(id)"), as: TheoryTopic.self)
+    }
+
     func answer(lessonID: String, exerciseID: String, answerID: String) async throws -> AnswerResult {
         let request = try APIRequest.post(
             "lessons/\(lessonID)/exercises/\(exerciseID)/answer",

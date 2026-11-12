@@ -16,7 +16,7 @@ No third-party packages: URLSession, Observation, Keychain and AVFoundation only
 1. Open `Serbian.xcodeproj` and run on a simulator or device.
 2. Register a new account on the onboarding screen, or sign in with an existing one.
 
-Debug builds point at the shared dev server (`http://159.194.226.2:3000`) and Release at production, set by the `REC_API_BASE_URL` build setting per configuration — the counterpart of Android's `BASE_URL` `buildConfigField`. To work against a backend on your own machine instead, change that setting to `http://localhost:3000` (see the backend README: `docker compose up -d`, `npm run start:dev`), or override it at runtime without a rebuild.
+Debug builds point at the shared dev server (`http://13.143.151.170:3000`) and Release at production, set by the `REC_API_BASE_URL` build setting per configuration — the counterpart of Android's `BASE_URL` `buildConfigField`. To work against a backend on your own machine instead, change that setting to `http://localhost:3000` (see the backend README: `docker compose up -d`, `npm run start:dev`), or override it at runtime without a rebuild.
 
 Resolution order for the API host:
 

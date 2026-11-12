@@ -9,6 +9,7 @@ import { Unit } from '../content/entities/unit.entity';
 import { Lesson } from '../content/entities/lesson.entity';
 import { Section } from '../content/entities/section.entity';
 import { Exercise } from '../content/entities/exercise.entity';
+import { TheoryTopic } from '../content/entities/theory-topic.entity';
 import { Word } from '../vocabulary/entities/word.entity';
 import { Badge } from '../badges/entities/badge.entity';
 import { UserBadge } from '../badges/entities/user-badge.entity';
@@ -23,6 +24,7 @@ import { UserBadge } from '../badges/entities/user-badge.entity';
       Unit,
       Lesson,
       Exercise,
+      TheoryTopic,
       Word,
       Badge,
       UserBadge,

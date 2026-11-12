@@ -27,6 +27,15 @@ export class UnitPathDto {
   @ApiProperty({ type: [LessonSummaryDto] }) lessons: LessonSummaryDto[];
 }
 
+// Grammar theory topic summary embedded in the path per section (always
+// accessible — theory is never gated).
+export class TheorySummaryDto {
+  @ApiProperty() id: string;
+  @ApiProperty() titleCyrillic: string;
+  @ApiProperty() titleLatin: string;
+  @ApiProperty() order: number;
+}
+
 // A section groups units on the path. `level` is the CEFR level (null for the
 // tail pseudo-section that holds legacy units created before sections).
 // `checkpoint` is the section's checkpoint lesson (kind='checkpoint'), which
@@ -40,6 +49,7 @@ export class SectionPathDto {
   @ApiProperty({ nullable: true }) level: string | null;
   @ApiProperty() order: number;
   @ApiProperty({ type: [UnitPathDto] }) units: UnitPathDto[];
+  @ApiProperty({ type: [TheorySummaryDto] }) theory: TheorySummaryDto[];
   @ApiProperty({ type: LessonSummaryDto, nullable: true }) checkpoint: LessonSummaryDto | null;
 }
 

@@ -408,6 +408,101 @@ export class UpdateSectionDto {
   order?: number;
 }
 
+// ── Theory topic DTOs ─────────────────────────────────────────
+
+export class TheoryAdminResponseDto {
+  @ApiProperty() id: string;
+  @ApiProperty() sectionId: string;
+  @ApiProperty({ description: 'Section title (cyrillic), joined for list display' })
+  sectionTitleCyrillic: string;
+  @ApiProperty() titleCyrillic: string;
+  @ApiProperty() titleLatin: string;
+  @ApiProperty() titleTranslationRu: string;
+  @ApiProperty() titleTranslationEn: string;
+  @ApiProperty() payload: unknown;
+  @ApiProperty({ enum: ContentStatus }) status: ContentStatus;
+  @ApiProperty() order: number;
+}
+
+export class CreateTheoryTopicDto {
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  sectionId: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  titleCyrillic: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleLatin?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationEn?: string;
+
+  @ApiProperty({ description: '{version: 1, blocks: [...]} — validated against theory-blocks schema' })
+  @IsObject()
+  payload: Record<string, unknown>;
+}
+
+export class UpdateTheoryTopicDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  sectionId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  titleCyrillic?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleLatin?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationRu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  titleTranslationEn?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsObject()
+  payload?: Record<string, unknown>;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  order?: number;
+}
+
+export class ListTheoryQueryDto extends PaginationDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  sectionId?: string;
+}
+
 // ── Word DTOs ─────────────────────────────────────────────────
 
 export class WordAdminResponseDto {

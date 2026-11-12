@@ -9,6 +9,8 @@ import { Section } from '../content/entities/section.entity';
 import { Unit } from '../content/entities/unit.entity';
 import { Lesson } from '../content/entities/lesson.entity';
 import { Exercise } from '../content/entities/exercise.entity';
+import { TheoryTopic } from '../content/entities/theory-topic.entity';
+import { validateTheoryPayload } from '../content/theory-blocks';
 import { Word } from '../vocabulary/entities/word.entity';
 import { Badge } from '../badges/entities/badge.entity';
 import { UserBadge } from '../badges/entities/user-badge.entity';
@@ -45,23 +47,27 @@ import {
   CreateUnitDto,
   CreateWordDto,
   CreateSectionDto,
+  CreateTheoryTopicDto,
   ExerciseAdminResponseDto,
   ExerciseTemplateResponseDto,
   LessonAdminResponseDto,
   LessonCompletionDto,
   LessonPublishResultDto,
   ListExercisesQueryDto,
+  ListTheoryQueryDto,
   PublishAllResultDto,
   PublishIssueDto,
   PublishWordsResultDto,
   SectionAdminResponseDto,
   SectionPublishResultDto,
+  TheoryAdminResponseDto,
   UnitAdminResponseDto,
   UnitPublishResultDto,
   UpdateBadgeDto,
   UpdateExerciseDto,
   UpdateLessonDto,
   UpdateSectionDto,
+  UpdateTheoryTopicDto,
   UpdateUnitDto,
   UpdateWordDto,
   WordAdminResponseDto,
@@ -82,6 +88,8 @@ export class AdminService {
     private readonly lessonProgressRepo: Repository<UserLessonProgress>,
     @InjectRepository(UserWordProgress)
     private readonly wordProgressRepo: Repository<UserWordProgress>,
+    @InjectRepository(TheoryTopic)
+    private readonly theoryRepo: Repository<TheoryTopic>,
   ) {}
 
   private getP(p: PaginationDto): { page: number; limit: number } {
@@ -470,6 +478,125 @@ export class AdminService {
       }
     }
     return { created, updated };
+  }
+
+  // ── Theory topics ──────────────────────────────────────────
+
+  private mapTheory(t: TheoryTopic): TheoryAdminResponseDto {
+    return {
+      id: t.id,
+      sectionId: t.sectionId,
+      sectionTitleCyrillic: t.section?.titleCyrillic ?? '',
+      titleCyrillic: t.titleCyrillic,
+      titleLatin: t.titleLatin,
+      titleTranslationRu: t.titleTranslationRu,
+      titleTranslationEn: t.titleTranslationEn,
+      payload: t.payload,
+      status: t.status,
+      order: t.order,
+    };
+  }
+
+  private async loadTheory(id: string): Promise<TheoryTopic> {
+    const topic = await this.theoryRepo.findOne({ where: { id }, relations: { section: true } });
+    if (!topic) throw new NotFoundException('Theory topic not found');
+    return topic;
+  }
+
+  async listTheory(query: ListTheoryQueryDto): Promise<PaginatedResponse<TheoryAdminResponseDto>> {
+    const { page, limit } = this.getP(query);
+    const [topics, total] = await this.theoryRepo.findAndCount({
+      where: query.sectionId ? { sectionId: query.sectionId } : {},
+      relations: { section: true },
+      order: { section: { order: 'ASC' }, order: 'ASC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return PaginatedResponse.from(
+      topics.map((t) => this.mapTheory(t)),
+      total,
+      page,
+      limit,
+    );
+  }
+
+  async createTheory(dto: CreateTheoryTopicDto): Promise<TheoryAdminResponseDto> {
+    const error = validateTheoryPayload(dto.payload);
+    if (error) throw new BadRequestException(`Invalid theory payload: ${error}`);
+    const section = await this.sectionRepo.findOne({ where: { id: dto.sectionId } });
+    if (!section) throw new NotFoundException('Section not found');
+    // Two concurrent creates read the same max(order); the unique index on
+    // (sectionId, order) makes the loser fail, so it retries with a fresh max.
+    for (let attempt = 0; ; attempt++) {
+      const maxOrder = (await this.theoryRepo.find({
+        where: { sectionId: dto.sectionId },
+        order: { order: 'DESC' },
+        select: ['order'],
+        take: 1,
+      }))[0];
+      const topic = this.theoryRepo.create({
+        ...dto,
+        titleLatin: dto.titleLatin ?? '',
+        titleTranslationRu: dto.titleTranslationRu ?? '',
+        titleTranslationEn: dto.titleTranslationEn ?? '',
+        order: (maxOrder?.order ?? 0) + 1,
+      });
+      try {
+        await this.theoryRepo.save(topic);
+        topic.section = section;
+        return this.mapTheory(topic);
+      } catch (err) {
+        if (attempt >= 2 || (err as { code?: string }).code !== '23505') {
+          throw err;
+        }
+      }
+    }
+  }
+
+  async getTheory(id: string): Promise<TheoryAdminResponseDto> {
+    return this.mapTheory(await this.loadTheory(id));
+  }
+
+  async updateTheory(id: string, dto: UpdateTheoryTopicDto): Promise<TheoryAdminResponseDto> {
+    if (dto.payload) {
+      const error = validateTheoryPayload(dto.payload);
+      if (error) throw new BadRequestException(`Invalid theory payload: ${error}`);
+    }
+    const topic = await this.loadTheory(id);
+    if (dto.sectionId && dto.sectionId !== topic.sectionId) {
+      const section = await this.sectionRepo.findOne({ where: { id: dto.sectionId } });
+      if (!section) throw new NotFoundException('Section not found');
+      topic.section = section;
+    }
+    Object.assign(topic, dto);
+    await this.theoryRepo.save(topic);
+    return this.mapTheory(topic);
+  }
+
+  async deleteTheory(id: string): Promise<{ deleted: true }> {
+    const topic = await this.loadTheory(id);
+    await this.theoryRepo.remove(topic);
+    return { deleted: true };
+  }
+
+  // Theory is published separately from publishSection's cascade: a topic
+  // requires its section to already be PUBLISHED so users never see a topic
+  // from an invisible section.
+  async publishTheory(id: string): Promise<TheoryAdminResponseDto> {
+    const topic = await this.loadTheory(id);
+    if (topic.section?.status !== ContentStatus.PUBLISHED) {
+      throw new BadRequestException('Сначала опубликуйте главу');
+    }
+    topic.status = ContentStatus.PUBLISHED;
+    await this.theoryRepo.save(topic);
+    return this.mapTheory(topic);
+  }
+
+  async unpublishTheory(id: string): Promise<TheoryAdminResponseDto> {
+    const topic = await this.loadTheory(id);
+    topic.status = ContentStatus.DRAFT;
+    await this.theoryRepo.save(topic);
+    return this.mapTheory(topic);
   }
 
   /**
@@ -1004,6 +1131,16 @@ export class AdminService {
     const result = await this.wordRepo
       .createQueryBuilder()
       .update(Word)
+      .set({ status: ContentStatus.PUBLISHED })
+      .where('status = :status', { status: ContentStatus.DRAFT })
+      .execute();
+    return { published: result.affected ?? 0 };
+  }
+
+  async publishAllTheory(): Promise<PublishWordsResultDto> {
+    const result = await this.theoryRepo
+      .createQueryBuilder()
+      .update(TheoryTopic)
       .set({ status: ContentStatus.PUBLISHED })
       .where('status = :status', { status: ContentStatus.DRAFT })
       .execute();
