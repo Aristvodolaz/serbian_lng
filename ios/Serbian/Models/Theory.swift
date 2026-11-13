@@ -8,6 +8,26 @@ struct TheorySummary: Codable, Identifiable, Equatable, Sendable {
     let order: Int
 }
 
+/// `TheoryLibrarySectionDto` plus the wrapping `TheoryLibraryResponseDto`.
+/// Published theory topics grouped by published section (GET /theory/library).
+struct TheoryLibrarySection: Codable, Identifiable, Equatable, Sendable {
+    let id: String
+    let level: String
+    let titleCyrillic: String
+    let titleLatin: String
+    let titleTranslationRu: String
+    let titleTranslationEn: String
+    let topics: [TheorySummary]
+
+    func titleTranslation(matching language: LanguagePreference) -> String {
+        language == .en ? titleTranslationEn : titleTranslationRu
+    }
+}
+
+struct TheoryLibrary: Codable, Equatable, Sendable {
+    let sections: [TheoryLibrarySection]
+}
+
 /// `TheoryTopicDto`
 struct TheoryTopic: Codable, Identifiable, Equatable, Sendable {
     let id: String

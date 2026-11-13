@@ -5,8 +5,6 @@ final class PathViewModel {
     private(set) var state: LoadState<LearningPath> = .idle
     /// The lesson opened as a full-screen exercise session.
     var activeLesson: LessonSummary?
-    /// The theory topic opened as a full-screen reader.
-    var activeTheory: TheorySummary?
 
     func loadIfNeeded(using api: RecAPI) async {
         guard case .idle = state else { return }

@@ -36,6 +36,11 @@ struct MainTabView: View {
                     Label("Речник", systemImage: "character.book.closed")
                 }
 
+            TheoryLibraryScreen()
+                .tabItem {
+                    Label("Теорија", systemImage: "book.closed")
+                }
+
             ProfileScreen()
                 .tabItem {
                     Label("Профил", systemImage: "person.crop.circle")

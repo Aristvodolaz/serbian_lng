@@ -15,9 +15,6 @@ struct PathScreen: View {
                 .toolbar(.hidden, for: .navigationBar)
         }
         .task { await model.loadIfNeeded(using: session.api) }
-        .fullScreenCover(item: $model.activeTheory) { summary in
-            TheoryScreen(summary: summary)
-        }
         .fullScreenCover(item: $model.activeLesson) { lesson in
             LessonScreen(lesson: lesson) {
                 Task {
@@ -69,9 +66,6 @@ struct PathScreen: View {
                         languagePreference: session.languagePreference,
                         onSelect: { lesson in
                             model.activeLesson = lesson
-                        },
-                        onSelectTheory: { summary in
-                            model.activeTheory = summary
                         }
                     )
                 }
@@ -114,7 +108,6 @@ private struct SectionTrailSection: View {
     var scriptPreference: ScriptPreference
     var languagePreference: LanguagePreference
     var onSelect: (LessonSummary) -> Void
-    var onSelectTheory: (TheorySummary) -> Void
 
     private var units: [PathUnit] {
         section.units.sorted { $0.order < $1.order }
@@ -176,60 +169,8 @@ private struct SectionTrailSection: View {
                 )
             }
 
-            if let theory = section.theory?.sorted(by: { $0.order < $1.order }), !theory.isEmpty {
-                TheoryTrailRows(
-                    topics: theory,
-                    scriptPreference: scriptPreference,
-                    onSelect: onSelectTheory
-                )
-            }
         }
         .padding(.bottom, Metrics.loose)
-    }
-}
-
-/// Theory topic entries for a section — a quiet list under the lesson trail.
-private struct TheoryTrailRows: View {
-    var topics: [TheorySummary]
-    var scriptPreference: ScriptPreference
-    var onSelect: (TheorySummary) -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: Metrics.tight) {
-            EyebrowLabel(text: "Теорија")
-                .padding(.top, Metrics.tight)
-
-            ForEach(topics) { topic in
-                Button {
-                    onSelect(topic)
-                } label: {
-                    HStack(spacing: Metrics.tight) {
-                        Image(systemName: "book.closed.fill")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(Palette.indigo)
-                            .frame(width: Metrics.minimumTapTarget, height: Metrics.minimumTapTarget)
-                        DualScriptText(
-                            cyrillic: topic.titleCyrillic,
-                            latin: topic.titleLatin,
-                            preference: scriptPreference,
-                            primaryFont: .recCalloutStrong,
-                            secondaryFont: .recCaption
-                        )
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(Palette.thread)
-                    }
-                    .padding(.horizontal, Metrics.tight)
-                    .padding(.vertical, 4)
-                    .background(
-                        RoundedRectangle(cornerRadius: Metrics.cardCorner, style: .continuous)
-                            .fill(Palette.surfaceRaised)
-                    )
-                }
-                .buttonStyle(.plain)
-            }
-        }
     }
 }
 
