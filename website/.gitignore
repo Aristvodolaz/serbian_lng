@@ -3,4 +3,5 @@ node_modules
 .next-dev
 .env*
 !.env.example
+!.env.production.example
 next-env.d.ts

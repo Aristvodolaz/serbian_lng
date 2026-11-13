@@ -1,0 +1,17 @@
+# Website only. Runs next to the backend (port 3000) and admin (port 3001).
+name: rec-website-prod
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SITE_URL: ${SITE_URL:?set SITE_URL in .env.production}
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+    ports:
+      - "${WEB_PORT:-3002}:3002"
