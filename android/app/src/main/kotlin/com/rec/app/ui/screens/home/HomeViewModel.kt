@@ -31,6 +31,7 @@ data class LessonUi(
     val titleTranslation: String,
     val xpReward: Int,
     val status: LessonPathStatus,
+    val isCheckpoint: Boolean = false,
 )
 
 @Immutable
@@ -142,7 +143,7 @@ private fun Section.toUnits(english: Boolean): List<UnitUi> {
         )
     }.toMutableList()
     checkpoint?.let { cp ->
-        val lesson = cp.toUi(english)
+        val lesson = cp.toUi(english).copy(isCheckpoint = true)
         if (result.isNotEmpty()) {
             val last = result.last()
             result[result.lastIndex] = last.copy(lessons = last.lessons + lesson)

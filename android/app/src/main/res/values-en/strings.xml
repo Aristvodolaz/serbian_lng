@@ -139,4 +139,5 @@
     <string name="dict_grammar">Grammar</string>
     <string name="home_empty_title">Lessons are coming soon</string>
     <string name="home_empty_subtitle">There are no lessons in the path yet.</string>
+    <string name="lesson_correct_answer_format">Correct answer: %1$s</string>
 </resources>

@@ -138,4 +138,5 @@
     <string name="dict_grammar">Грамматика</string>
     <string name="home_empty_title">Уроки скоро появятся</string>
     <string name="home_empty_subtitle">В программе пока нет уроков.</string>
+    <string name="lesson_correct_answer_format">Правильный ответ: %1$s</string>
 </resources>

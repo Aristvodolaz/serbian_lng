@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-ground font-sans text-[17px] leading-[1.55] text-ink antialiased;
+  }
+  h1 {
+    @apply font-display font-bold leading-[1.05];
+    font-size: clamp(2.5rem, 1.88rem + 2.63vw, 4.25rem);
+  }
+  h2 {
+    @apply font-display font-bold leading-[1.1];
+    font-size: clamp(2rem, 1.69rem + 1.31vw, 2.875rem);
+  }
+  h3 {
+    @apply font-semibold leading-[1.3];
+    font-size: clamp(1.25rem, 1.2rem + 0.19vw, 1.375rem);
+  }
+  :focus-visible {
+    @apply outline outline-[3px] outline-offset-2 outline-ink;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-control px-6 font-medium leading-tight no-underline;
+  }
+  .btn-primary {
+    @apply btn bg-enamel text-paper hover:bg-enamel-hover active:bg-enamel-active;
+  }
+  .btn-secondary {
+    @apply btn border-[1.5px] border-field text-ink hover:border-enamel hover:bg-paper hover:text-enamel active:bg-line;
+  }
+  /* Plain text link with a 44px-tall hit area. */
+  .link {
+    @apply inline-flex min-h-11 items-center text-enamel underline underline-offset-4 hover:text-enamel-hover active:text-enamel-active;
+  }
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 md:px-10;
+  }
+}

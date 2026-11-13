@@ -3,42 +3,38 @@ package com.rec.app.ui.screens.lesson
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Diamond
-import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,18 +46,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rec.app.R
-import com.rec.app.ui.common.AnswerSound
 import com.rec.app.ui.common.asString
 import com.rec.app.ui.common.rememberAnswerHaptics
 import com.rec.app.ui.common.rememberCelebrationHaptic
@@ -69,24 +70,21 @@ import com.rec.app.ui.common.resolve
 import com.rec.app.ui.components.BadgeMedal
 import com.rec.app.ui.components.ChoiceCard
 import com.rec.app.ui.components.ChoiceState
-import com.rec.app.ui.components.CounterPill
 import com.rec.app.ui.components.ErrorContent
 import com.rec.app.ui.components.LoadingContent
 import com.rec.app.ui.components.RecAlertDialog
 import com.rec.app.ui.components.RecCard
-import com.rec.app.ui.components.RecIconButton
 import com.rec.app.ui.components.RecPrimaryButton
 import com.rec.app.ui.components.RecProgressBar
 import com.rec.app.ui.components.RecTopBar
 import com.rec.app.ui.components.StatPill
-import com.rec.app.ui.theme.Elevation
 import com.rec.app.ui.theme.Motion
-import com.rec.app.ui.theme.Radius
 import com.rec.app.ui.theme.RecTheme
 import com.rec.app.ui.theme.Spacing
+import com.rec.app.ui.common.AnswerSound
+import com.rec.app.ui.components.CounterPill
 
-/** Answers at or under this length sit two to a row, like the reference's answer grid. */
-private const val SHORT_CHOICE_LENGTH = 16
+private const val GAP = "____"
 
 @Composable
 fun LessonRoute(lessonId: String, viewModel: LessonViewModel, onClose: () -> Unit) {
@@ -157,6 +155,7 @@ private fun ExerciseContent(
     onSubmit: () -> Unit,
     onNext: () -> Unit,
 ) {
+    val colors = RecTheme.colors
     var showExitConfirm by rememberSaveable { mutableStateOf(false) }
     val requestClose = { if (state.isUntouched) onClose() else showExitConfirm = true }
     BackHandler(enabled = !state.isUntouched) { showExitConfirm = true }
@@ -185,22 +184,25 @@ private fun ExerciseContent(
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = Spacing.screen)) {
+    Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().padding(horizontal = Spacing.screen)) {
+        // Close and a thin progress track, as on the iOS lesson screen.
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.sm),
+            modifier = Modifier.fillMaxWidth().padding(top = Spacing.sm),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Spacing.md),
         ) {
-            RecIconButton(icon = Icons.Filled.Close, contentDescription = stringResource(R.string.cd_close), onClick = requestClose)
+            IconButton(onClick = requestClose) {
+                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_close), tint = colors.inkSoft)
+            }
             RecProgressBar(
                 progress = (state.exerciseNumber - if (state.isAnswered) 0 else 1).toFloat() / state.totalExercises,
                 modifier = Modifier.weight(1f),
             )
-            CounterPill("${state.exerciseNumber} / ${state.totalExercises}")
         }
 
-        // Only the question and answers slide; the header and the button stay put,
-        // so the chrome reads as stable while the content under it advances.
+        Spacer(Modifier.height(Spacing.xxl))
+
+        // Only the question and answers slide; the header and the footer stay put.
         AnimatedContent(
             targetState = state.exercise,
             contentKey = { it.id },
@@ -214,14 +216,7 @@ private fun ExerciseContent(
             ExerciseBody(exercise, state, onSelectChoice)
         }
 
-        AnswerFeedback(isCorrect = state.isCorrect)
-        RecPrimaryButton(
-            text = stringResource(if (state.isAnswered) R.string.lesson_continue else R.string.lesson_check),
-            onClick = if (state.isAnswered) onNext else onSubmit,
-            enabled = state.isAnswered || state.selectedChoiceId != null,
-            loading = state.isSubmitting,
-            modifier = Modifier.padding(top = Spacing.md, bottom = Spacing.lg),
-        )
+        AnswerFooter(state, onSubmit, onNext)
     }
 }
 
@@ -232,106 +227,103 @@ private fun ExerciseBody(exercise: ExerciseUi, state: LessonUiState.InProgress, 
     val isCurrent = exercise.id == state.exercise.id
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(vertical = Spacing.md),
-        verticalArrangement = Arrangement.spacedBy(Spacing.xl),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(Spacing.md),
     ) {
-        RecCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(Radius.xl), elevation = Elevation.raised) {
-            Column(
-                modifier = Modifier.padding(horizontal = Spacing.xl, vertical = Spacing.xxxl),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Spacing.sm),
-            ) {
-                Text(
-                    stringResource(R.string.lesson_prompt_label),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = colors.inkSoft,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    exercise.promptCyrillic,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = colors.ink,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.semantics { heading() },
-                )
-                if (exercise.promptLatin.isNotBlank() && exercise.promptLatin != exercise.promptCyrillic) {
-                    Text(
-                        exercise.promptLatin,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontStyle = FontStyle.Italic,
-                        color = colors.primary,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
+        Text(
+            stringResource(R.string.lesson_prompt_label).uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = colors.inkSoft,
+        )
+        Text(
+            gapHighlighted(exercise.promptCyrillic, colors.accent),
+            style = MaterialTheme.typography.displaySmall,
+            color = colors.ink,
+            modifier = Modifier.semantics { heading() },
+        )
+        if (exercise.promptLatin.isNotBlank() && exercise.promptLatin != exercise.promptCyrillic) {
+            Text(
+                gapHighlighted(exercise.promptLatin, colors.accent),
+                style = MaterialTheme.typography.bodyLarge,
+                fontStyle = FontStyle.Italic,
+                color = colors.danger,
+            )
         }
 
-        val columns = if (exercise.choices.size % 2 == 0 && exercise.choices.all { it.text.length <= SHORT_CHOICE_LENGTH }) 2 else 1
+        Spacer(Modifier.height(Spacing.lg))
         Column(
-            modifier = Modifier.selectableGroup(),
+            modifier = Modifier.selectableChoices(),
             verticalArrangement = Arrangement.spacedBy(Spacing.md),
         ) {
-            exercise.choices.chunked(columns).forEach { rowChoices ->
-                Row(
-                    modifier = Modifier.height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(Spacing.md),
-                ) {
-                    rowChoices.forEach { choice ->
-                        val choiceState = when {
-                            !isCurrent -> ChoiceState.NEUTRAL
-                            state.correctChoiceId == null -> if (choice.id == state.selectedChoiceId) ChoiceState.SELECTED else ChoiceState.NEUTRAL
-                            choice.id == state.correctChoiceId -> ChoiceState.CORRECT
-                            choice.id == state.selectedChoiceId -> ChoiceState.WRONG
-                            else -> ChoiceState.NEUTRAL
-                        }
-                        ChoiceCard(
-                            text = choice.text,
-                            state = choiceState,
-                            onClick = { onSelectChoice(choice.id) },
-                            modifier = Modifier.weight(1f).fillMaxHeight(),
-                        )
-                    }
+            exercise.choices.forEach { choice ->
+                val choiceState = when {
+                    !isCurrent -> ChoiceState.NEUTRAL
+                    state.correctChoiceId == null -> if (choice.id == state.selectedChoiceId) ChoiceState.SELECTED else ChoiceState.NEUTRAL
+                    choice.id == state.correctChoiceId -> ChoiceState.CORRECT
+                    choice.id == state.selectedChoiceId -> ChoiceState.WRONG
+                    else -> ChoiceState.NEUTRAL
                 }
+                ChoiceCard(
+                    text = choice.text,
+                    state = choiceState,
+                    onClick = { onSelectChoice(choice.id) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
 }
 
-/** Slides up once the answer is checked and says, in words and with an icon, how it went. */
+/** The answer area: the check button until an answer is checked, then a panel with the verdict and Continue. */
 @Composable
-private fun AnswerFeedback(isCorrect: Boolean?) {
+private fun AnswerFooter(state: LessonUiState.InProgress, onSubmit: () -> Unit, onNext: () -> Unit) {
     val colors = RecTheme.colors
-    // Holds the last verdict so the banner keeps its text while it animates out.
-    // A plain holder, not snapshot state: it is only ever written alongside isCorrect.
-    val verdictHolder = remember { booleanArrayOf(true) }
-    if (isCorrect != null) verdictHolder[0] = isCorrect
-    val lastVerdict = verdictHolder[0]
-    val tint by animateColorAsState(if (lastVerdict) colors.success else colors.danger, Motion.fast(), label = "feedback-tint")
-
-    AnimatedVisibility(
-        visible = isCorrect != null,
-        enter = expandVertically(Motion.base()) + slideInVertically(Motion.base()) { it / 2 } + fadeIn(Motion.base()),
-        exit = shrinkVertically(Motion.fast()) + fadeOut(Motion.fast()),
-    ) {
-        Row(
+    val correct = state.isCorrect
+    if (correct == null) {
+        RecPrimaryButton(
+            text = stringResource(R.string.lesson_check),
+            onClick = onSubmit,
+            enabled = state.selectedChoiceId != null,
+            loading = state.isSubmitting,
+            modifier = Modifier.padding(vertical = Spacing.lg),
+        )
+    } else {
+        val accent = if (correct) colors.success else colors.danger
+        val answer = state.exercise.choices.firstOrNull { it.id == state.correctChoiceId }?.text
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(tint.copy(alpha = 0.12f), RoundedCornerShape(Radius.md))
-                .padding(horizontal = Spacing.lg, vertical = Spacing.md)
+                .padding(vertical = Spacing.lg)
+                .background(accent.copy(alpha = 0.12f), RoundedCornerShape(16.dp))
+                .padding(Spacing.lg)
                 .semantics { liveRegion = LiveRegionMode.Polite },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing.md),
+            verticalArrangement = Arrangement.spacedBy(Spacing.sm),
         ) {
-            Icon(
-                if (lastVerdict) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
-                contentDescription = null,
-                tint = tint,
-                modifier = Modifier.size(24.dp),
-            )
-            Text(
-                stringResource(if (lastVerdict) R.string.lesson_feedback_correct else R.string.lesson_feedback_wrong),
-                style = MaterialTheme.typography.titleMedium,
-                color = tint,
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                Icon(
+                    if (correct) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
+                    contentDescription = null,
+                    tint = accent,
+                    modifier = Modifier.size(22.dp),
+                )
+                Text(
+                    stringResource(if (correct) R.string.lesson_feedback_correct else R.string.lesson_feedback_wrong),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = accent,
+                )
+            }
+            if (!correct && answer != null) {
+                Text(
+                    stringResource(R.string.lesson_correct_answer_format, answer),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.ink,
+                )
+            }
+            RecPrimaryButton(
+                text = stringResource(R.string.lesson_continue),
+                onClick = onNext,
+                enabled = !state.isSubmitting,
+                modifier = Modifier.padding(top = Spacing.xs),
             )
         }
     }
@@ -347,71 +339,64 @@ private fun FinishedContent(state: LessonUiState.Finished, onDone: () -> Unit) {
         celebrate()
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = Spacing.xxl)) {
-      Column(
-        modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = Spacing.xxl),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-      ) {
-        AnimatedVisibility(
-            visible = revealed,
-            enter = scaleIn(spring(Spring.DampingRatioMediumBouncy, Spring.StiffnessLow), initialScale = 0.4f) + fadeIn(Motion.base()),
+    Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().padding(horizontal = Spacing.xxl)) {
+        Column(
+            modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = Spacing.xxl),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
-            BadgeMedal(size = 120.dp)
-        }
-        Spacer(Modifier.height(Spacing.xxl))
-        Text(
-            stringResource(R.string.lesson_finished_title),
-            style = MaterialTheme.typography.displaySmall,
-            color = colors.ink,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.semantics { heading() },
-        )
-        Spacer(Modifier.height(Spacing.sm))
-        Text(
-            stringResource(R.string.lesson_score_format, state.correctCount, state.totalCount),
-            style = MaterialTheme.typography.bodyLarge,
-            color = colors.inkSoft,
-        )
-
-        Spacer(Modifier.height(Spacing.xl))
-        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
-            CounterPill(
-                text = stringResource(R.string.lesson_xp_earned_format, state.xpEarned),
-                containerColor = colors.primary,
-                contentColor = colors.onPrimary,
-            )
-            StatPill(
-                icon = Icons.Filled.Diamond,
-                value = state.totalXp.toString(),
-                tint = colors.primary,
-                contentDescription = stringResource(R.string.cd_xp_format, state.totalXp),
-            )
-            StatPill(
-                icon = Icons.Filled.LocalFireDepartment,
-                value = state.streakDays.toString(),
-                tint = colors.accent,
-                contentDescription = stringResource(R.string.cd_streak_format, state.streakDays),
-            )
-        }
-
-        if (state.newBadges.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = revealed,
+                enter = scaleIn(spring(Spring.DampingRatioMediumBouncy, Spring.StiffnessLow), initialScale = 0.4f) + fadeIn(Motion.base()),
+            ) {
+                BadgeMedal(size = 120.dp)
+            }
             Spacer(Modifier.height(Spacing.xxl))
-            RecCard(modifier = Modifier.fillMaxWidth()) {
-                Column(
-                    modifier = Modifier.padding(Spacing.lg),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(Spacing.xs),
-                ) {
-                    Text(stringResource(R.string.lesson_new_badge), style = MaterialTheme.typography.labelMedium, color = colors.inkSoft)
-                    state.newBadges.forEach { badge ->
-                        Text(badge.titleCyrillic, style = MaterialTheme.typography.titleMedium, color = colors.ink, textAlign = TextAlign.Center)
+            Text(
+                stringResource(R.string.lesson_finished_title),
+                style = MaterialTheme.typography.displaySmall,
+                color = colors.ink,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.semantics { heading() },
+            )
+            Spacer(Modifier.height(Spacing.sm))
+            Text(
+                stringResource(R.string.lesson_score_format, state.correctCount, state.totalCount),
+                style = MaterialTheme.typography.bodyLarge,
+                color = colors.inkSoft,
+            )
+
+            Spacer(Modifier.height(Spacing.xl))
+            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
+                CounterPill(
+                    text = stringResource(R.string.lesson_xp_earned_format, state.xpEarned),
+                    containerColor = colors.primary,
+                    contentColor = colors.onPrimary,
+                )
+                StatPill(
+                    icon = Icons.Filled.EmojiEvents,
+                    value = state.totalXp.toString(),
+                    tint = colors.primary,
+                    contentDescription = stringResource(R.string.cd_xp_format, state.totalXp),
+                )
+            }
+
+            if (state.newBadges.isNotEmpty()) {
+                Spacer(Modifier.height(Spacing.xxl))
+                RecCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(Spacing.lg),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(Spacing.xs),
+                    ) {
+                        Text(stringResource(R.string.lesson_new_badge), style = MaterialTheme.typography.labelMedium, color = colors.inkSoft)
+                        state.newBadges.forEach { badge ->
+                            Text(badge.titleCyrillic, style = MaterialTheme.typography.titleMedium, color = colors.ink, textAlign = TextAlign.Center)
+                        }
                     }
                 }
             }
         }
-
-      }
         RecPrimaryButton(
             text = stringResource(R.string.lesson_done),
             onClick = onDone,
@@ -419,3 +404,13 @@ private fun FinishedContent(state: LessonUiState.Finished, onDone: () -> Unit) {
         )
     }
 }
+
+/** Renders the `____` gap in accent and bold, since the blank is what the learner is asked to fill. */
+private fun gapHighlighted(text: String, accent: Color): AnnotatedString = buildAnnotatedString {
+    text.split(GAP).forEachIndexed { index, part ->
+        if (index > 0) withStyle(SpanStyle(color = accent, fontWeight = FontWeight.Bold)) { append(GAP) }
+        append(part)
+    }
+}
+
+private fun Modifier.selectableChoices(): Modifier = this.fillMaxWidth()

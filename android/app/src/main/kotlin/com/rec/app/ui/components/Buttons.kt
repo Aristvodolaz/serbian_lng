@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,22 +30,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.rec.app.ui.common.pressScale
-import com.rec.app.ui.theme.Elevation
 import com.rec.app.ui.theme.Motion
 import com.rec.app.ui.theme.PillShape
 import com.rec.app.ui.theme.RecTheme
 import com.rec.app.ui.theme.Sizes
 import com.rec.app.ui.theme.Spacing
 
+private val ButtonShape = RoundedCornerShape(14.dp)
+
 /**
- * The main call to action: a gradient capsule with a soft colored glow.
+ * The main call to action: a solid indigo rounded button, as on the iOS app.
  * While [loading] it keeps its size and swaps the label for a spinner, so the
  * layout doesn't jump and a second tap can't fire.
  */
@@ -59,23 +59,23 @@ fun RecPrimaryButton(
 ) {
     val colors = RecTheme.colors
     val interaction = remember { MutableInteractionSource() }
-    val alpha by animateFloatAsState(if (enabled) 1f else 0.45f, Motion.fast(), label = "button-alpha")
+    val alpha by animateFloatAsState(if (enabled) 1f else 0.4f, Motion.fast(), label = "button-alpha")
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(Sizes.button)
-            .pressScale(interaction)
+            .heightIn(min = 52.dp)
+            .pressScale(interaction, pressedScale = 0.985f)
             .graphicsLayer { this.alpha = alpha }
-            .shadow(if (enabled) Elevation.raised else 0.dp, PillShape, ambientColor = colors.primary, spotColor = colors.primary)
-            .clip(PillShape)
-            .background(colors.primaryBrush)
+            .clip(ButtonShape)
+            .background(colors.primary)
             .clickable(
                 interactionSource = interaction,
                 indication = ripple(color = colors.onPrimary),
                 enabled = enabled && !loading,
                 role = Role.Button,
                 onClick = onClick,
-            ),
+            )
+            .padding(horizontal = Spacing.xxl, vertical = Spacing.md),
         contentAlignment = Alignment.Center,
     ) {
         AnimatedContent(
@@ -106,13 +106,17 @@ fun RecSecondaryButton(
     val interaction = remember { MutableInteractionSource() }
     Surface(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().height(Sizes.button).pressScale(interaction),
-        shape = PillShape,
+        modifier = modifier.fillMaxWidth().heightIn(min = Sizes.button).pressScale(interaction),
+        shape = ButtonShape,
         color = containerColor,
         border = BorderStroke(1.5.dp, borderColor),
         interactionSource = interaction,
     ) {
-        Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.button),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             if (leadingIcon != null) {
                 Icon(leadingIcon, contentDescription = null, tint = contentColor, modifier = Modifier.size(18.dp))
                 Box(Modifier.size(Spacing.sm))
@@ -170,7 +174,7 @@ fun RecIconButton(
         modifier = modifier.size(Sizes.touchTarget).pressScale(interaction, pressedScale = 0.92f),
         shape = CircleShape,
         color = containerColor,
-        shadowElevation = if (elevated) Elevation.card else 0.dp,
+        shadowElevation = if (elevated) com.rec.app.ui.theme.Elevation.card else 0.dp,
         interactionSource = interaction,
     ) {
         Box(contentAlignment = Alignment.Center) {

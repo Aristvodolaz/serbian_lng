@@ -97,7 +97,7 @@ fun ChoiceCard(
             .heightIn(min = Sizes.button)
             .pressScale(interaction, pressedScale = 0.97f)
             .semantics { selected = state != ChoiceState.NEUTRAL }
-            .clip(RoundedCornerShape(Radius.md))
+            .clip(RoundedCornerShape(12.dp))
             .selectable(
                 selected = state == ChoiceState.SELECTED,
                 interactionSource = interaction,
@@ -106,13 +106,13 @@ fun ChoiceCard(
                 role = Role.RadioButton,
                 onClick = onClick,
             ),
-        shape = RoundedCornerShape(Radius.md),
+        shape = RoundedCornerShape(12.dp),
         color = container,
         border = BorderStroke(1.5.dp, border),
     ) {
         Row(
             modifier = Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.md),
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -120,8 +120,7 @@ fun ChoiceCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = if (answered) FontWeight.Bold else FontWeight.SemiBold,
                 color = content,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f, fill = false),
+                modifier = Modifier.weight(1f),
             )
             if (answered) {
                 Icon(
